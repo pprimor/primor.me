@@ -1,5 +1,6 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
+import I18nextProvider from '@/app/components/providers/I18nextProviderWrapper';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -14,12 +15,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <main className="flex flex-col items-center justify-center min-h-screen py-2">
-          {children}
-        </main>
-      </body>
-    </html>
+    <I18nextProvider>
+      <html lang="en">
+        <body className={inter.className}>
+            <main className="flex flex-col items-center justify-center min-h-screen py-2">
+              {children}
+            </main>
+        </body>
+      </html>
+    </I18nextProvider>
   )
 }

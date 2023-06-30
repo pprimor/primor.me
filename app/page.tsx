@@ -1,11 +1,15 @@
-import Image from 'next/image'
+"use client"
+
+import { useTranslation } from "react-i18next"
 
 export default function Home() {
+  const { t } = useTranslation()
+
   return (
-    <main>
+    <section>
       <h1 className="text-2xl">
-        Hello World!
+        {t('hello')}
       </h1>
-    </main>
+    </section>
   )
 }
