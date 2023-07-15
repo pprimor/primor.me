@@ -1,11 +1,8 @@
 import Image from 'next/image'
+import WorkInProgress from './components/wip'
 
 export default function Home() {
   return (
-    <main>
-      <h1 className="text-2xl">
-        Hello World!
-      </h1>
-    </main>
+    <WorkInProgress />
   )
 }

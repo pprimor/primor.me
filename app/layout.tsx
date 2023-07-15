@@ -1,7 +1,5 @@
 import './globals.css'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
+import Navbar from './components/navbar'
 
 export const metadata = {
   title: 'Pedro Primor',
@@ -15,8 +13,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <main className="flex flex-col items-center justify-center min-h-screen py-2">
+      <body className="antialiased max-w-xl flex flex-col mx-4 mt-8 lg:mx-auto">
+        <main>
+          <Navbar />
           {children}
         </main>
       </body>
