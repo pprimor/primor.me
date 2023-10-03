@@ -1,9 +1,11 @@
 import './globals.css'
-import Navbar from './components/navbar'
+import { Inter } from 'next/font/google'
+
+const inter = Inter({subsets: ['latin']})
 
 export const metadata = {
   title: 'Pedro Primor',
-  description: '',
+  description: 'Pedro is a software engineer based in Lisbon, Portugal. He is currently working at PageProof as a Junior Software Engineer.',
 }
 
 export default function RootLayout({
@@ -13,11 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="antialiased max-w-xl flex flex-col mx-4 mt-8 lg:mx-auto">
-        <main>
-          <Navbar />
+      <body className={`${inter.className} bg-gray-50 text-gray-950 relative`}>
+        <div className='bg-[#ffdada] absolute top-[-6rem] -z-10 right-[10rem] h-[30rem] w-[30rem] rounded-full blur-[10rem] sm:w-[70rem]'/>
+        <div className='bg-[#ecf2ff] absolute top-[-6rem] -z-10 left-[-35rem] h-[30rem] w-[50rem] rounded-full blur-[10rem] sm:w-[70rem] md:left-[-30rem] lg:left-[-25rem] xl:left-[-15rem] 2xl:left-[-5rem]'/>
           {children}
-        </main>
       </body>
     </html>
   )
