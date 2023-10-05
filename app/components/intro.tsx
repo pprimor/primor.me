@@ -33,7 +33,9 @@ export default function Intro() {
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        Hey there 👋, I&rsquo;m <b>Pedro</b>. I&rsquo;m a software engineer based in Portugal 🇵🇹 and I&rsquo;m currently working at <a href='https://pageproof.com' className='font-bold hover:underline'>PageProof</a> as a Junior Software Engineer.
+        Hey there 👋, I&rsquo;m <b>Pedro</b>.
+        <br />
+        I&rsquo;m a software engineer based in Portugal 🇵🇹 and I&rsquo;m currently working at <a href='https://pageproof.com' className='font-bold hover:underline'>PageProof</a> as a Junior Software Engineer.
       </motion.p>
       <motion.div
         className='flex flex-row flex-wrap items-center justify-center gap-4'
