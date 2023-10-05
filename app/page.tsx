@@ -1,12 +1,10 @@
 import Image from 'next/image'
-import WorkInProgress from './components/wip'
 import Intro from './components/intro'
 
 export default function Home() {
   return (
-    <main>
+    <main className='flex flex-col items-center px-4'>
       <Intro />
-      <WorkInProgress />
     </main>
   )
 }
