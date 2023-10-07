@@ -28,20 +28,20 @@ export default function Intro() {
           </motion.div>
         </div>
       </div>
-      <motion.p
+      <motion.h1
         className='mb-10 mt-4 px-4 text-2xl font-medium !leading-[1.5] sm:text-4xl'
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
       >
         Hey there 👋, I&rsquo;m <b>Pedro</b>.
         <br />
-        I&rsquo;m a software engineer based in Portugal 🇵🇹 and I&rsquo;m currently working at <a href='https://pageproof.com' className='font-bold hover:underline'>PageProof</a> as a Junior Software Engineer.
-      </motion.p>
+        I&rsquo;m a software engineer based in Portugal 🇵🇹 and I&rsquo;m currently working at <a href='https://pageproof.com' className='font-bold hover:underline'>PageProof</a> as a junior Web Developer.
+      </motion.h1>
       <motion.div
         className='flex flex-row flex-wrap items-center justify-center gap-4'
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
+        transition={{ delay: 0.1 }}
       >
         <Link 
           href='#contact' 
