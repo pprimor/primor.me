@@ -35,7 +35,7 @@ export default function Intro() {
       >
         Hey there 👋, I&rsquo;m <b>Pedro</b>.
         <br />
-        I&rsquo;m a software engineer based in Portugal 🇵🇹 and I&rsquo;m currently working at <a href='https://pageproof.com' className='font-bold hover:underline'>PageProof</a> as a Junior Software Engineer.
+        I&rsquo;m a software engineer based in Portugal 🇵🇹 and I&rsquo;m currently working at <a href='https://pageproof.com' className='font-bold hover:underline'>PageProof</a> as a junior Web Developer.
       </motion.h1>
       <motion.div
         className='flex flex-row flex-wrap items-center justify-center gap-4'
