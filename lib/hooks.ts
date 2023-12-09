@@ -8,7 +8,8 @@ export function useSectionInView(
   intersectionOptions = { threshold: 0.75 } as IntersectionOptions
 ) {
   const { ref, inView } = useInView(intersectionOptions);
-  const { lastClickedAt, setActiveSection } = useActiveSectionContext();
+  const { lastClick: lastClickedAt, setActiveSection } =
+    useActiveSectionContext();
 
   useEffect(() => {
     if (inView && Date.now() - lastClickedAt > 1000) {

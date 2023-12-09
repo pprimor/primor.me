@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useActiveSectionContext } from "../context/active-section-context";
 
 export default function Header() {
-  const { activeSection, setActiveSection, setLastClickedAt } =
+  const { activeSection, setActiveSection, setClickTime } =
     useActiveSectionContext();
 
   return (
@@ -31,7 +31,7 @@ export default function Header() {
                 href={link.hash}
                 onClick={() => {
                   setActiveSection(link.hash);
-                  setLastClickedAt(Date.now());
+                  setClickTime(Date.now());
                 }}
                 className={clsx(
                   "flex w-full items-center justify-center px-3 py-3 hover:text-gray-950 transition",
