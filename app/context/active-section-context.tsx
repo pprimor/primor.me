@@ -10,8 +10,8 @@ type ActiveSectionContextProviderProps = {
 type ActionSectionContextType = {
   activeSection: SectionHash;
   setActiveSection: React.Dispatch<React.SetStateAction<SectionHash>>;
-  lastClickedAt: number;
-  setLastClickedAt: React.Dispatch<React.SetStateAction<number>>;
+  lastClick: number;
+  setClickTime: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export const ActiveSectionContext =
@@ -21,15 +21,15 @@ export default function ActiveSectionContextProvider({
   children,
 }: ActiveSectionContextProviderProps) {
   const [activeSection, setActiveSection] = useState<SectionHash>("#home");
-  const [lastClickedAt, setLastClickedAt] = useState<number>(0);
+  const [lastClick, setClickTime] = useState<number>(0);
 
   return (
     <ActiveSectionContext.Provider
       value={{
         activeSection,
         setActiveSection,
-        lastClickedAt,
-        setLastClickedAt,
+        lastClick,
+        setClickTime,
       }}
     >
       {children}

@@ -8,13 +8,13 @@ import Link from "next/link";
 import { useActiveSectionContext } from "../context/active-section-context";
 
 export default function Header() {
-  const { activeSection, setActiveSection, setLastClickedAt } =
+  const { activeSection, setActiveSection, setClickTime } =
     useActiveSectionContext();
 
   return (
     <header className="z-[999] relative">
       <motion.div
-        className="fixed top-0 left-1/2 h-[4rem] w-full rounded-none border border-white border-opacity-40 bg-white bg-opacity-80 shadow-lg shadow-black/3 backdrop-blur-[0.5rem] sm:top-6 sm:h-[3rem] sm:w-[36rem] sm:rounded-full"
+        className="fixed top-0 left-1/2 h-[4rem] w-full rounded-none border border-white dark:borderBlack border-opacity-40 dark:bg-opacity-75 bg-white dark:bg-gray-950 bg-opacity-80 shadow-lg shadow-black/3 backdrop-blur-[0.5rem] sm:top-6 sm:h-[3rem] sm:w-[36rem] sm:rounded-full"
         initial={{ x: "-50%", y: -100, opacity: 0 }}
         animate={{ x: "-50%", y: 0, opacity: 1 }}
       />
@@ -31,12 +31,13 @@ export default function Header() {
                 href={link.hash}
                 onClick={() => {
                   setActiveSection(link.hash);
-                  setLastClickedAt(Date.now());
+                  setClickTime(Date.now());
                 }}
                 className={clsx(
-                  "flex w-full items-center justify-center px-3 py-3 hover:text-gray-950 transition",
+                  "flex w-full items-center justify-center px-3 py-3 hover:text-gray-950 transition dark:hover:text-gray-300",
                   {
-                    "text-gray-950": activeSection === link.hash,
+                    "text-gray-950 dark:text-gray-200":
+                      activeSection === link.hash,
                   }
                 )}
               >
