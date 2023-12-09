@@ -70,7 +70,7 @@ export default function Intro() {
         </Link>
         <a
           href="/CV.pdf"
-          className="group bg-white px-7 py-3 flex items-center gap-2 rounded-full focus:scale-110 hover:scale-110 active:scale-105 transition cursor-pointer borderBlack"
+          className="group bg-white dark:bg-white/10 px-7 py-3 flex items-center gap-2 rounded-full focus:scale-110 hover:scale-110 active:scale-105 transition cursor-pointer borderBlack"
         >
           Download CV{" "}
           <HiDownload className="opacity-70 group-hover:scale-110 transition" />
@@ -78,14 +78,14 @@ export default function Intro() {
         <a
           href="https://www.linkedin.com/in/pedroprimor/"
           target="_blank"
-          className="bg-white text-gray-700 p-4 flex items-center gap-2 rounded-full focus:scale-110 hover:scale-110 hover:text-gray-900 active:scale-105 transition cursor-pointer borderBlack"
+          className="bg-white dark:bg-white/10 text-gray-700 dark:text-white/60 p-4 flex items-center gap-2 rounded-full focus:scale-110 hover:scale-110 hover:text-gray-900 active:scale-105 transition cursor-pointer borderBlack"
         >
           <BsLinkedin />
         </a>
         <a
           href="https://github.com/pprimor"
           target="_blank"
-          className="bg-white text-gray-700 p-4 flex items-center gap-2 rounded-full focus:scale-110 hover:scale-110 hover:text-gray-900 active:scale-105 transition cursor-pointer borderBlack"
+          className="bg-white dark:bg-white/10 text-gray-700 dark:text-white/60 p-4 flex items-center gap-2 rounded-full focus:scale-110 hover:scale-110 hover:text-gray-900 active:scale-105 transition cursor-pointer borderBlack"
         >
           <BsGithub />
         </a>

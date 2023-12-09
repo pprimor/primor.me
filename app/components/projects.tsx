@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment } from "react";
 import SectionHeading from "./section-heading";
 import { projects } from "@/lib/data";
 import Project from "./project";

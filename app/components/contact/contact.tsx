@@ -21,7 +21,7 @@ export default function Contact() {
       ref={ref}
     >
       <SectionHeading>Contact me</SectionHeading>
-      <p className="text-gray-700">
+      <p className="text-gray-700 dark:text-gray-300">
         Please contact me directly at{" "}
         <a className="underline" href="mailto:pedro.primor@pm.me">
           pedro.primor@pm.me
@@ -43,14 +43,14 @@ export default function Contact() {
         <input
           type="email"
           name="senderEmail"
-          className="h-14 px-4 rounded-lg borderBlack"
+          className="h-14 px-4 rounded-lg borderBlack dark:bg-white dark:bg-opacity-90 dark:focus:bg-opacity-100 transition-all dark:outline-none text-black"
           placeholder="Your email"
           required
           maxLength={320}
         />
         <textarea
           name="message"
-          className="h-52 my-3 rounded-lg borderBlack p-4"
+          className="h-52 my-3 p-4 rounded-lg borderBlack dark:border-white dark:bg-white dark:bg-opacity-90 dark:focus:bg-opacity-100 transition-all dark:outline-none text-black"
           placeholder="Your message"
           required
           maxLength={1000}

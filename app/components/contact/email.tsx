@@ -23,7 +23,7 @@ export default function Email({ senderEmail, message }: EmailProps) {
       <Head />
       <Preview>{`New message from ${senderEmail}`}</Preview>
       <Tailwind>
-        <Body className="bg-gray-100 ">
+        <Body className="bg-gray-100">
           <Container>
             <Section className="bg-white borderBlack my-10 px-10 py-4 rounded-md">
               <Heading className="leading-tight">
