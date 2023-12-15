@@ -7,9 +7,31 @@ import { useSectionInView } from "@/lib/hooks";
 import sendEmail from "../../server/sendEmail";
 import SubmitButton from "./submit-button";
 import toast from "react-hot-toast";
+import { useForm } from "react-hook-form";
+
+export type ContactFormData = {
+  senderEmail: string;
+  message: string;
+};
 
 export default function Contact() {
   const { ref } = useSectionInView("#contact");
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<ContactFormData>();
+
+  async function onSubmit(data: ContactFormData) {
+    const { data: res, error } = await sendEmail(data);
+    if (res) {
+      toast.success("Message sent successfully!");
+    }
+    if (error) {
+      toast.error(error.message);
+    }
+  }
+
   return (
     <motion.section
       id="contact"
@@ -28,37 +50,23 @@ export default function Contact() {
         </a>{" "}
         or through this form.
       </p>
-      <form
-        className="flex flex-col mt-10"
-        onSubmit={async (e) => {
-          console.log(e);
-        }}
-        // action={async (formData) => {
-        //   const { data, error } = await sendEmail(formData);
-        //   if (data) {
-        //     toast.success("Message sent successfully!");
-        //   }
-        //   if (error) {
-        //     toast.error(error.message);
-        //   }
-        // }}
-      >
+      <form className="flex flex-col mt-10" onSubmit={handleSubmit(onSubmit)}>
         <input
           type="email"
-          name="senderEmail"
+          {...register("senderEmail")}
           className="h-14 px-4 rounded-lg borderBlack dark:bg-white dark:bg-opacity-90 dark:focus:bg-opacity-100 transition-all dark:outline-none text-black"
           placeholder="Your email"
           required
           maxLength={320}
         />
         <textarea
-          name="message"
+          {...register("message")}
           className="h-52 my-3 p-4 rounded-lg borderBlack dark:border-white dark:bg-white dark:bg-opacity-90 dark:focus:bg-opacity-100 transition-all dark:outline-none text-black"
           placeholder="Your message"
           required
           maxLength={1000}
         />
-        <SubmitButton />
+        <SubmitButton isSubmitting={isSubmitting} />
       </form>
     </motion.section>
   );

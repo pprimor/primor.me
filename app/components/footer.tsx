@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Footer() {
   return (
-    <footer className="text-center mt-28 mb-10">
+    <footer className="text-center sm:mt-28 sm:mb-10">
       <small className="text-gray-700 dark:text-gray-300">
         Made with{" "}
         <span role="img" aria-label="heart">
