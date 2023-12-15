@@ -11,10 +11,6 @@ const nextConfig = {
       "@react-email/tailwind",
     ],
   },
-  reactStrictMode: true,
-  env: {
-    RESEND_API_KEY: "re_2tFD3HHv_KpME2s1J8JgjxFZLW5x72NL4",
-  },
 };
 
 module.exports = nextConfig;
