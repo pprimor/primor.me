@@ -27,9 +27,11 @@ export default function ThemeContextProvider({
       if (localTheme === "dark") {
         document.documentElement.classList.add("dark");
       }
-    } else {
-      window.matchMedia("(prefers-color-scheme: dark)").matches &&
-        setTheme("dark");
+    }
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      setTheme("dark");
+      document.documentElement.classList.add("dark");
+      window.localStorage.setItem("theme", "dark");
     }
   }, []);
 
@@ -40,7 +42,7 @@ export default function ThemeContextProvider({
       window.localStorage.setItem("theme", "dark");
     } else {
       setTheme("light");
-      document.documentElement.classList.remove("dark");
+      document.documentElement.classList.remove("light");
       window.localStorage.setItem("theme", "light");
     }
   };
