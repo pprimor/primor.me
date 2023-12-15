@@ -12,13 +12,12 @@ import { useActiveSectionContext } from "../context/active-section-context";
 
 export default function Intro() {
   const { ref } = useSectionInView("#home");
-  const { setActiveSection, setClickTime } = useActiveSectionContext();
 
   return (
     <section
       id="home"
       ref={ref}
-      className="mb-24 max-w-[50rem] text-center sm:mb-0 scroll-mt-[100rem]"
+      className="mt-12 mb-48 max-w-[50rem] text-center sm:m-0 scroll-mt-[100rem]"
     >
       <div className="flex items-center justify-center">
         <div className="relative">
@@ -57,17 +56,13 @@ export default function Intro() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
-        <Link
-          href="#contact"
+        <a
+          href="mailto:pedro.primor@pm.me"
           className="group bg-gray-900 text-white px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition"
-          onClick={() => {
-            setActiveSection("#contact");
-            setClickTime(Date.now());
-          }}
         >
           Contact me
           <BsArrowRight className="opacity-70 group-hover:translate-x-1 transition" />
-        </Link>
+        </a>
         <a
           href="/CV.pdf"
           className="group bg-white dark:bg-white/10 px-7 py-3 flex items-center gap-2 rounded-full focus:scale-110 hover:scale-110 active:scale-105 transition cursor-pointer borderBlack"
