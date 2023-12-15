@@ -1,21 +1,21 @@
-"use server";
+"use client";
 
 import { Resend } from "resend";
 import Email from "../components/contact/email";
 import React from "react";
+import { ContactFormData } from "../components/contact/contact";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-const validateFormField = (value: FormDataEntryValue | null) => {
+const validateFormField = (value: string | null) => {
   if (!value || typeof value !== "string" || value.length === 0) {
     return false;
   }
   return true;
 };
 
-const sendEmail = async (formData: FormData) => {
-  const senderEmail = formData.get("senderEmail");
-  const message = formData.get("message");
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+const sendEmail = async (formData: ContactFormData) => {
+  const { senderEmail, message } = formData;
 
   if (!validateFormField(senderEmail) || !validateFormField(message)) {
     throw new Error("Invalid form data");
@@ -29,10 +29,10 @@ const sendEmail = async (formData: FormData) => {
     from: "onboarding@resend.dev",
     to: "pedro.primor@pm.me",
     subject: "Message from contact form",
-    reply_to: senderEmail as string,
+    reply_to: senderEmail,
     react: React.createElement(Email, {
-      senderEmail: senderEmail as string,
-      message: message as string,
+      senderEmail: senderEmail,
+      message: message,
     }),
   });
 };
