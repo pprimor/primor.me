@@ -57,7 +57,7 @@ export default function Intro() {
         transition={{ delay: 0.1 }}
       >
         <a
-          href="mailto:pedro.primor@pm.me"
+          href="mailto:pedro.primor@pm.me?subject=Contact%20from%20your%20website&body=Hi%20Pedro%2C%0D%0A%0D%0AI%20found%20your%20website%20and%20I%20would%20like%20to%20contact%20you%20regarding%20..."
           className="group bg-gray-900 text-white px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition"
         >
           Contact me
