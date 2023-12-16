@@ -42,7 +42,7 @@ export default function ThemeContextProvider({
       window.localStorage.setItem("theme", "dark");
     } else {
       setTheme("light");
-      document.documentElement.classList.remove("light");
+      document.documentElement.classList.remove("dark");
       window.localStorage.setItem("theme", "light");
     }
   };

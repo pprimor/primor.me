@@ -2,8 +2,26 @@ import spellingGameImage from "@/public/images/spelling.jpg";
 import websiteImage from "@/public/images/website.png";
 import React from "react";
 import { CgWorkAlt } from "react-icons/cg";
-import { IoSchool } from "react-icons/io5";
+import { IoSchool, IoLogoJavascript } from "react-icons/io5";
 import { GiArchiveResearch } from "react-icons/gi";
+import {
+  FaHtml5,
+  FaCss3,
+  FaReact,
+  FaNodeJs,
+  FaGitAlt,
+  FaUnity,
+  FaPython,
+  FaJava,
+  FaAngular,
+} from "react-icons/fa";
+import {
+  SiTypescript,
+  SiTailwindcss,
+  SiWebpack,
+  SiFlutter,
+} from "react-icons/si";
+import { TbBrandNextjs } from "react-icons/tb";
 
 export const links = [
   {
@@ -33,7 +51,7 @@ export const projects = [
     title: "My Spelling Game",
     description:
       "Developed and published a 2D mobile game for Android/iOS using Unity and C# along with a graphic designer.",
-    tags: ["Unity", "C#", "Android", "iOS"],
+    tags: ["Unity", "C#", "SQLite", "Android", "iOS"],
     image: spellingGameImage,
   },
   {
@@ -48,31 +66,55 @@ export const projects = [
 export const skills = [
   {
     name: "HTML",
-    icon: "/html5.svg",
+    icon: React.createElement(FaHtml5),
   },
   {
     name: "CSS",
-    icon: "css3",
+    icon: React.createElement(FaCss3),
   },
   {
     name: "JavaScript",
-    icon: "javascript",
+    icon: React.createElement(IoLogoJavascript),
   },
   {
     name: "TypeScript",
-    icon: "typescript",
+    icon: React.createElement(SiTypescript),
   },
   {
     name: "React",
-    icon: "react",
+    icon: React.createElement(FaReact),
+  },
+  {
+    name: "AngularJS",
+    icon: React.createElement(FaAngular),
+  },
+  {
+    name: "Next.js",
+    icon: React.createElement(TbBrandNextjs),
+  },
+  {
+    name: "Tailwind CSS",
+    icon: React.createElement(SiTailwindcss),
+  },
+  {
+    name: "Webpack",
+    icon: React.createElement(SiWebpack),
   },
   {
     name: "Node.js",
-    icon: "nodejs",
+    icon: React.createElement(FaNodeJs),
   },
   {
     name: "Git",
-    icon: "git",
+    icon: React.createElement(FaGitAlt),
+  },
+  {
+    name: "Unity",
+    icon: React.createElement(FaUnity),
+  },
+  {
+    name: "Python",
+    icon: React.createElement(FaPython),
   },
 ] as const;
 

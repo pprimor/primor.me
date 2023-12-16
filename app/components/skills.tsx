@@ -4,7 +4,7 @@ import React from "react";
 import SectionHeading from "./section-heading";
 import { skills } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
-import { animate, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default function Skills() {
   const { ref } = useSectionInView("#skills");
@@ -26,17 +26,18 @@ export default function Skills() {
     >
       <SectionHeading>Skills</SectionHeading>
       <ul className="flex flex-wrap justify-center gap-2 text-lg text-gray-800 dark:text-white/80">
-        {skills.map((skill, index) => (
+        {skills.map(({ name, icon }, index) => (
           <motion.li
             key={index}
-            className="bg-white dark:bg-white/10 borderBlack dark:border-white/10 rounded-xl px-5 py-3"
+            className="flex items-center gap-2 bg-white dark:bg-white/10 borderBlack dark:border-white/10 rounded-xl px-5 py-3"
             variants={animationVariants}
             initial="initial"
             whileInView="animate"
             viewport={{ once: true }}
             custom={index}
           >
-            {skill.name}
+            {icon}
+            {name}
           </motion.li>
         ))}
       </ul>
