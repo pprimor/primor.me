@@ -5,13 +5,16 @@ import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { projects } from "@/lib/data";
 
-type ProjectProps = (typeof projects)[number];
+type ProjectProps = (typeof projects)[number] & {
+  setDialogOpen: (value: string | null) => void;
+};
 
 export default function Project({
   title,
   description,
   tags,
   image,
+  setDialogOpen,
 }: ProjectProps) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -30,8 +33,11 @@ export default function Project({
       }}
       className="group mb-3 sm:mb-8 last:mb-0"
     >
-      <section className="group relative rounded-lg bg-gray-100 dark:bg-white/10 max-w-[42rem] border border-black/5 dark:border-white/10 overflow-hidden sm:pr-8 sm:h-[20rem] sm:group-even:pl-8 hover:bg-gray-200 dark:hover:bg-white/20 transition">
-        <div className="flex flex-col py-4 px-5 sm:pl-10 sm:pr-2 sm:pt-10 sm:max-w-[50%] sm:h-[20rem] h-full sm:group-even:ml-[20rem]">
+      <section
+        className="group relative rounded-lg bg-gray-100 dark:bg-white/10 max-w-[42rem] border border-black/5 dark:border-white/10 overflow-hidden sm:pr-8 sm:h-[20rem] sm:group-even:pl-8 hover:bg-gray-200 dark:hover:bg-white/20 transition"
+        onClick={() => setDialogOpen(title)}
+      >
+        <div className="flex flex-col py-4 px-5 sm:pl-10 sm:pr-2 sm:pt-10 sm:max-w-[50%] sm:h-[20rem] h-full sm:group-even:ml-[18rem]">
           <h3 className="text-2xl font-semibold">{title}</h3>
           <p className="mt-2 leading-relaxed text-gray-700 dark:text-white/70">
             {description}
@@ -50,7 +56,7 @@ export default function Project({
         <Image
           src={image}
           alt={title}
-          className="absolute hidden sm:block top-8 -right-40 w-[28rem] rounded-t-lg shadow-2xl
+          className="absolute hidden sm:block top-8 -right-40 w-[28rem] rounded-t-lg shadow-2xl object-center
           group-even:-right-[initial]
           group-even:-left-40
           group-hover:-translate-x-3
