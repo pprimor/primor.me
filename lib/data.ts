@@ -1,5 +1,6 @@
 import spellingGameImage from "@/public/images/spelling.jpg";
 import websiteImage from "@/public/images/website.png";
+import tableauImage from "@/public/images/tableau.png";
 import React from "react";
 import { CgWorkAlt } from "react-icons/cg";
 import { IoSchool, IoLogoJavascript } from "react-icons/io5";
@@ -15,12 +16,7 @@ import {
   FaJava,
   FaAngular,
 } from "react-icons/fa";
-import {
-  SiTypescript,
-  SiTailwindcss,
-  SiWebpack,
-  SiFlutter,
-} from "react-icons/si";
+import { SiTypescript, SiTailwindcss, SiWebpack } from "react-icons/si";
 import { TbBrandNextjs } from "react-icons/tb";
 
 export const links = [
@@ -48,18 +44,25 @@ export const links = [
 
 export const projects = [
   {
+    title: "primor.me",
+    description:
+      "Developed this website using Next.js, React, TypeScript, and Tailwind CSS.",
+    tags: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
+    image: websiteImage,
+  },
+  {
+    title: "Optimization Problems in the Postal Sector",
+    description:
+      "Explored how to model and solve a vehicle routing problem adapted to the postal sector, in general, and CTT, in particular.",
+    tags: ["Python", "CPLEX", "Tableau"],
+    image: tableauImage,
+  },
+  {
     title: "My Spelling Game",
     description:
       "Developed and published a 2D mobile game for Android/iOS using Unity and C# along with a graphic designer.",
     tags: ["Unity", "C#", "SQLite", "Android", "iOS"],
     image: spellingGameImage,
-  },
-  {
-    title: "This Website",
-    description:
-      "Developed this website using Next.js, React, TypeScript, and Tailwind CSS.",
-    tags: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
-    image: websiteImage,
   },
 ];
 
