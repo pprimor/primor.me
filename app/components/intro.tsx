@@ -1,12 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import React from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { BsArrowRight, BsGithub, BsLinkedin } from "react-icons/bs";
 import { HiDownload } from "react-icons/hi";
-import me from "@/public/images/me.png";
 import { useSectionInView } from "@/lib/hooks";
 import { useActiveSectionContext } from "../context/active-section-context";
 
@@ -26,8 +23,8 @@ export default function Intro() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ type: "tween", duration: 0.5 }}
           >
-            <Image
-              src={me}
+            <img
+              src="/images/me.png"
               alt="Pedro Primor"
               width={200}
               height={200}

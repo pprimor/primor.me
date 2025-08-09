@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useRef } from "react";
-import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { projects } from "@/lib/data";
 
@@ -53,7 +52,7 @@ export default function Project({
             ))}
           </ul>
         </div>
-        <Image
+        <img
           src={image}
           alt={title}
           className="absolute hidden sm:block top-8 -right-40 w-[28rem] rounded-t-lg shadow-2xl object-center
