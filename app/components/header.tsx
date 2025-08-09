@@ -4,7 +4,6 @@ import React from "react";
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import { links } from "@/lib/data";
-import Link from "next/link";
 import { useActiveSectionContext } from "../context/active-section-context";
 
 export default function Header() {
@@ -27,7 +26,7 @@ export default function Header() {
               initial={{ y: -100, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
             >
-              <Link
+              <a
                 href={link.hash}
                 onClick={() => {
                   setActiveSection(link.hash);
@@ -42,7 +41,7 @@ export default function Header() {
                 )}
               >
                 {link.name}
-              </Link>
+              </a>
             </motion.li>
           ))}
         </ul>
