@@ -1,8 +1,6 @@
-"use client";
-
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { projects } from "@/lib/data";
+import { projects } from "@/src/lib/data";
 
 type ProjectProps = (typeof projects)[number] & {
   setDialogOpen: (value: string | null) => void;

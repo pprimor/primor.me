@@ -1,9 +1,6 @@
-"use client";
-
-import React from "react";
 import SectionHeading from "./section-heading";
-import { skills } from "@/lib/data";
-import { useSectionInView } from "@/lib/hooks";
+import { skills } from "@/src/lib/data";
+import { useSectionInView } from "@/src/lib/hooks";
 import { motion } from "framer-motion";
 
 export default function Skills() {
@@ -24,7 +21,7 @@ export default function Skills() {
       ref={ref}
       className="mb-28 max-w-[53rem] scroll-mt-28 text-center sm:mb-40"
     >
-      <SectionHeading>Skills</SectionHeading>
+      <SectionHeading>Tech Stack</SectionHeading>
       <ul className="flex flex-wrap justify-center gap-2 text-lg text-gray-800 dark:text-white/80">
         {skills.map(({ name, icon }, index) => (
           <motion.li

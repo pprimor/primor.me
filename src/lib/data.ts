@@ -1,5 +1,5 @@
 import React from "react";
-import { CgWorkAlt } from "react-icons/cg";
+import { MdWork } from "react-icons/md";
 import { IoSchool, IoLogoJavascript } from "react-icons/io5";
 import { GiArchiveResearch } from "react-icons/gi";
 import {
@@ -13,8 +13,9 @@ import {
   FaJava,
   FaAngular,
 } from "react-icons/fa";
+import { SiVite } from "react-icons/si";
+import { IoMdAirplane } from "react-icons/io";
 import { SiTypescript, SiTailwindcss, SiWebpack } from "react-icons/si";
-import { TbBrandNextjs } from "react-icons/tb";
 
 export const links = [
   {
@@ -43,8 +44,8 @@ export const projects = [
   {
     title: "primor.me",
     description:
-      "Developed this website using Next.js, React, TypeScript, and Tailwind CSS.",
-    tags: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
+      "Developed this website using Vite, React, TypeScript, and Tailwind CSS.",
+    tags: ["Vite", "React", "TypeScript", "Tailwind CSS"],
     image: "/images/website.png",
   },
   {
@@ -89,8 +90,8 @@ export const skills = [
     icon: React.createElement(FaAngular),
   },
   {
-    name: "Next.js",
-    icon: React.createElement(TbBrandNextjs),
+    name: "Vite",
+    icon: React.createElement(SiVite),
   },
   {
     name: "Tailwind CSS",
@@ -120,31 +121,37 @@ export const skills = [
 
 export const experienceData = [
   {
-    title: "Front-End Developer",
+    title: "Software Engineer",
     company: "PageProof",
     description:
-      "Working on fixing several issues with the PageProof web app, particularly in the mobile experience.",
-    icon: React.createElement(CgWorkAlt),
+      "Developing cross-platform integrations for Canva, Microsoft Office, Adobe Creative Suite, and Final Cut Pro.",
+    icon: React.createElement(MdWork),
     date: "2023 - present",
   },
   {
     title: "Operations Research Analyst",
     company: "CTT – Correios de Portugal, S.A.",
-    description: "Operations research and data analytics project",
+    description: "Operations research and data analytics project for my master's thesis.",
     icon: React.createElement(GiArchiveResearch),
     date: "2022",
   },
   {
     title: "MSc. Student",
     company: "NOVA University Lisbon",
-    description: "MSc. in Computer Science and Engineering",
+    description: "Artificial Intelligence, Data Modelling, Information Retrieval, and Machine Learning.",
     icon: React.createElement(IoSchool),
     date: "2020 - 2022",
   },
   {
+    title: "Erasmus+ Programme ",
+    company: "Technische Universität Dresden",
+    icon: React.createElement(IoMdAirplane),
+    date: "2021",
+  },
+  {
     title: "BSc. Student",
     company: "NOVA University Lisbon",
-    description: "BSc. in Computer Science and Engineering",
+    description: "Algorithms and Data Structures, Object-Oriented Programming, Computer Architecture, and Sensors and Image Processing.",
     icon: React.createElement(IoSchool),
     date: "2017 - 2020",
   },
