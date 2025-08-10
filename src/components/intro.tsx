@@ -1,11 +1,7 @@
-"use client";
-
-import React from "react";
 import { motion } from "framer-motion";
 import { BsArrowRight, BsGithub, BsLinkedin } from "react-icons/bs";
 import { HiDownload } from "react-icons/hi";
-import { useSectionInView } from "@/lib/hooks";
-import { useActiveSectionContext } from "../context/active-section-context";
+import { useSectionInView } from "@/src/lib/hooks";
 
 export default function Intro() {
   const { ref } = useSectionInView("#home");
@@ -45,7 +41,7 @@ export default function Intro() {
         <a href="https://pageproof.com" className="font-bold hover:underline">
           PageProof
         </a>{" "}
-        as a junior Web Developer.
+        as a Software Engineer.
       </motion.h1>
       <motion.div
         className="flex flex-row flex-wrap items-center justify-center gap-4"

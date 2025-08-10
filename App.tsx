@@ -1,12 +1,12 @@
 import React from 'react';
-import './app/globals.css';
+import './src/globals.css';
 import { Toaster } from 'react-hot-toast';
-import Header from './app/components/header';
-import Footer from './app/components/footer';
-import ThemeSwitcher from './app/components/theme-switcher';
-import ActiveSectionContextProvider from './app/context/active-section-context';
-import ThemeContextProvider from './app/context/theme-context';
-import Home from './app/page';
+import Header from './src/components/header';
+import Footer from './src/components/footer';
+import ThemeSwitcher from './src/components/theme-switcher';
+import ActiveSectionContextProvider from './src/context/active-section-context';
+import ThemeContextProvider from './src/context/theme-context';
+import Home from './src/page';
 
 export default function App() {
   return (
