@@ -1,4 +1,4 @@
-import SectionHeading from "./section-heading";
+import SectionHeading from "./SectionHeading";
 import {
   VerticalTimeline,
   VerticalTimelineElement,

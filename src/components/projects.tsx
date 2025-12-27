@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
-import SectionHeading from "./section-heading";
+import SectionHeading from "./SectionHeading";
 import { projects } from "@/src/lib/data";
-import Project from "./project";
+import Project from "./Project";
 import { useSectionInView } from "@/src/lib/hooks";
 
 export default function Projects() {

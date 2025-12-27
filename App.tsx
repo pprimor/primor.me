@@ -1,9 +1,9 @@
 import React from 'react';
 import './src/globals.css';
 import { Toaster } from 'react-hot-toast';
-import Header from './src/components/header';
-import Footer from './src/components/footer';
-import ThemeSwitcher from './src/components/theme-switcher';
+import Header from './src/components/Header';
+import Footer from './src/components/Footer';
+import ThemeSwitcher from './src/components/ThemeSwitcher';
 import ActiveSectionContextProvider from './src/context/active-section-context';
 import ThemeContextProvider from './src/context/theme-context';
 import Home from './src/page';

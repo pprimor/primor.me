@@ -1,4 +1,4 @@
-import SectionHeading from "./section-heading";
+import SectionHeading from "./SectionHeading";
 import { motion } from "framer-motion";
 import { useSectionInView } from "@/src/lib/hooks";
 
