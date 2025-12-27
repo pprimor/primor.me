@@ -145,6 +145,7 @@ export const experienceData = [
   {
     title: "Erasmus+ Programme ",
     company: "Technische Universität Dresden",
+    description: "Exchange program studying Computer Science at Technische Universität Dresden.",
     icon: React.createElement(IoMdAirplane),
     date: "2021",
   },
