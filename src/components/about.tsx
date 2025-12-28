@@ -16,27 +16,25 @@ export default function About() {
     >
       <SectionHeading>About me</SectionHeading>
       <p className="mb-3">
-        <span className="font-semibold">Software engineer</span> at{" "}
+        <span className="font-semibold">Software Engineer</span> at{" "}
         <a href="https://pageproof.com/" className="underline">
           PageProof
         </a>
-        , leading the development of cross-platform integrations for{" "}
+        , specializing in the design and development of cross-platform integrations for{" "}
         <span className="font-semibold">Canva</span>,{" "}
         <span className="font-semibold">Microsoft Office</span>,{" "}
         <span className="font-semibold">Adobe Creative Suite</span>, and{" "}
-        <span className="font-semibold">Final Cut Pro</span>. Skilled in{" "}
+        <span className="font-semibold">Final Cut Pro</span>. Experienced in{" "}
         <span className="font-semibold">React</span>,{" "}
-        <span className="font-semibold">TypeScript</span>, and{" "}
-        <span className="font-semibold">Swift</span>, providing robust,
-        high-performance tools that seamlessly connect creative professionals'
-        workflows in web, mobile, and desktop environments.
+        <span className="font-semibold">TypeScript</span>,{" "}
+        <span className="font-semibold">Swift</span>, and{" "}
+        <span className="font-semibold">Electron</span>, delivering user-focused, high-performance solutions in web, desktop and mobile
+        environments.
       </p>
       <p>
-        Over the course of my career, I have built a diverse portfolio of
-        integrations and applications, from mobile-friendly web experiences to
-        workflow extensions for industry-leading platforms. I thrive in
-        translating complex requirements into elegant and maintainable solutions
-        that improve efficiency, usability, and the value the product delivers.
+        I build robust integrations and workflow extensions that connect creative ecosystems and enhance productivity.
+        My work bridges complex technical requirements with intuitive design, resulting in scalable, maintainable solutions
+        that improve efficiency, usability, and product value.
       </p>
 
     </motion.section>

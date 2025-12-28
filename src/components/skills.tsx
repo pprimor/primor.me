@@ -1,5 +1,6 @@
+import React from "react";
 import SectionHeading from "./SectionHeading";
-import { skills } from "@/src/lib/data";
+import { skillsByCategory } from "@/src/lib/data";
 import { useSectionInView } from "@/src/lib/hooks";
 import { motion } from "framer-motion";
 
@@ -15,6 +16,8 @@ export default function Skills() {
     }),
   };
 
+  let skillIndex = 0;
+
   return (
     <section
       id="skills"
@@ -22,22 +25,32 @@ export default function Skills() {
       className="mb-28 max-w-[53rem] scroll-mt-28 text-center sm:mb-40"
     >
       <SectionHeading>Tech Stack</SectionHeading>
-      <ul className="flex flex-wrap justify-center gap-2 text-lg text-gray-800 dark:text-white/80">
-        {skills.map(({ name, icon }, index) => (
-          <motion.li
-            key={index}
-            className="flex items-center gap-2 bg-white dark:bg-white/10 borderBlack dark:border-white/10 rounded-xl px-5 py-3"
-            variants={animationVariants}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-            custom={index}
-          >
-            {icon}
-            {name}
-          </motion.li>
+      <div className="flex flex-wrap justify-center gap-2 text-lg text-gray-800 dark:text-white/80">
+        {skillsByCategory.map(({ category, skills }, categoryIndex) => (
+          <React.Fragment key={category}>
+            {skills.map(({ name, icon }) => {
+              const currentIndex = skillIndex++;
+              return (
+                <motion.li
+                  key={name}
+                  className="flex items-center gap-2 bg-white dark:bg-white/10 borderBlack dark:border-white/10 rounded-xl px-5 py-3 list-none"
+                  variants={animationVariants}
+                  initial="initial"
+                  whileInView="animate"
+                  viewport={{ once: true }}
+                  custom={currentIndex}
+                >
+                  {icon}
+                  {name}
+                </motion.li>
+              );
+            })}
+            {categoryIndex < skillsByCategory.length - 1 && (
+              <div className="w-full basis-full" aria-hidden="true" />
+            )}
+          </React.Fragment>
         ))}
-      </ul>
+      </div>
     </section>
   );
 }
