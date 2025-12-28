@@ -14,7 +14,7 @@ import {
 } from "react-icons/fa";
 import { SiVite } from "react-icons/si";
 import { IoMdAirplane } from "react-icons/io";
-import { SiTypescript, SiTailwindcss, SiElectron, SiSwift, SiCsharp, SiTableau, SiOpenid, SiAndroid, SiApple, SiOcaml, SiNeo4J, SiWebgl, SiFlask } from "react-icons/si";
+import { SiTypescript, SiTailwindcss, SiElectron, SiSwift, SiCsharp, SiTableau, SiOpenid, SiAndroid, SiApple, SiOcaml, SiNeo4J, SiWebgl, SiFlask, SiSass, SiLatex } from "react-icons/si";
 import { DiDotnet, DiJava } from "react-icons/di";
 import { TbBrandOauth } from "react-icons/tb";
 
@@ -195,6 +195,14 @@ const additionalSkillIcons = [
     name: "Flask",
     icon: React.createElement(SiFlask),
   },
+  {
+    name: "SASS",
+    icon: React.createElement(SiSass),
+  },
+  {
+    name: "LaTeX",
+    icon: React.createElement(SiLatex),
+  },
 ] as const;
 
 const getSkillIcon = (skillName: string): React.ReactElement | null => {
@@ -216,7 +224,7 @@ export const experienceData = [
     title: "Software Engineer",
     company: "PageProof",
     companyUrl: "https://pageproof.com/",
-    employmentType: "Full-time",
+    employmentType: "Freelance",
     location: "Remote",
     startDate: new Date(2023, 2, 1), // Mar. 2023
     endDate: null, // Present
@@ -230,7 +238,7 @@ export const experienceData = [
       "Built and maintained PageProof's cross-platform UXP plug-in integrations for Adobe Photoshop and InDesign, streamlining creative workflows and ensuring seamless integration with PageProof",
       "Contributed to enhancing the PageProof web app, with a focus on optimizing the mobile user experience and UI responsiveness",
     ],
-    skills: ["React", "TypeScript", "Electron", "Node.js", "JavaScript", "Swift", "SwiftUI", "OAuth 2.0", "OpenID Connect"],
+    skills: ["React", "TypeScript", "Electron", "Node.js", "JavaScript", "Swift", "SwiftUI", "OAuth 2.0", "OpenID Connect", "SASS"],
     links: [],
     plugins: [
       {
@@ -273,7 +281,7 @@ export const experienceData = [
       "Modeled and solved a vehicle routing problem tailored to postal delivery constraints",
       "Developed data visualizations and insights in Tableau to support decision-making",
     ],
-    skills: ["Python", "Tableau", "Flask", "CPLEX", ],
+    skills: ["Python", "Tableau", "Flask", "CPLEX", "LaTeX"],
     links: [],
   },
   {

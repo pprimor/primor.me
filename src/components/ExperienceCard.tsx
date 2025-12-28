@@ -56,7 +56,7 @@ export default function ExperienceCard({
   const duration = calculateDuration(startDate, endDate);
   const dateRange = `${formatDate(startDate)} - ${endDate ? formatDate(endDate) : "Present"}${duration ? ` • ${duration}` : ""}`;
 
-  const cardBg = theme === "light" ? "#ffffff" : "rgba(255, 255, 255, 0.05)";
+  const cardBg = theme === "light" ? "rgba(255, 255, 255, 0.7)" : "rgba(255, 255, 255, 0.05)";
   const borderColor =
     theme === "light"
       ? "rgba(0, 0, 0, 0.08)"
