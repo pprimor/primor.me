@@ -64,7 +64,7 @@ export default function Intro() {
           <HiDownload className="opacity-70 group-hover:scale-110 transition" />
         </a>
         <a
-          href="https://www.linkedin.com/in/pedroprimor/"
+          href="https://www.linkedin.com/in/primor/"
           target="_blank"
           className="bg-white dark:bg-white/10 text-gray-700 dark:text-white/60 p-4 flex items-center gap-2 rounded-full focus:scale-110 hover:scale-110 hover:text-gray-900 active:scale-105 transition cursor-pointer borderBlack"
         >

@@ -1,6 +1,8 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { projects } from "@/src/lib/data";
+import { useTheme } from "../context/theme-context";
+import { getExperienceSkillIcons } from "@/src/lib/data";
 
 type ProjectProps = (typeof projects)[number] & {
   setDialogOpen: (value: string | null) => void;
@@ -13,7 +15,12 @@ export default function Project({
   image,
   setDialogOpen,
 }: ProjectProps) {
+  const { theme } = useTheme();
   const ref = useRef<HTMLDivElement>(null);
+  const tagIcons = getExperienceSkillIcons(tags);
+  
+  const iconBg = theme === "light" ? "#f3f4f6" : "rgba(255, 255, 255, 0.1)";
+  const textColor = theme === "light" ? "rgb(17, 24, 39)" : "rgb(243, 244, 246)";
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["0 1", "1.33 1"],
@@ -40,12 +47,19 @@ export default function Project({
             {description}
           </p>
           <ul className="flex flex-wrap mt-2 gap-2 sm:mt-auto">
-            {tags.map((tag) => (
+            {tagIcons.map((tag, idx) => (
               <li
-                key={tag}
-                className="bg-black/[0.7] px-3 py-1 text-sm tracking-wider text-white dark:text-white/70 rounded-full"
+                key={idx}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs"
+                style={{
+                  backgroundColor: iconBg,
+                  color: textColor,
+                }}
               >
-                {tag}
+                {tag.icon && (
+                  <span className="flex-shrink-0">{tag.icon}</span>
+                )}
+                <span>{tag.name}</span>
               </li>
             ))}
           </ul>
