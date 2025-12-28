@@ -4,6 +4,11 @@
 
 html {
   --line-color: #e5e7eb;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
 }
 
 html.dark {
