@@ -249,7 +249,7 @@ export const experienceData = [
       },
       {
         name: "PageProof for Adobe InDesign",
-        url: "https://exchange.adobe.com/apps/cc/c1f33c8f/pageproof-for-adobe-indesign",
+        url: "https://exchange.adobe.com/apps/cc/f4e1a940/pageproof-for-adobe-indesign",
         description: "UXP plugin for Adobe InDesign",
         image: "https://exchange-assets.azureedge.net/uxp/Extensions/f4e1a940/uxp-f4e1a940-version-1713568505383/screenshots/d27a1dab-9281-49f9-aa70-419fe76b659a.png",
       },
