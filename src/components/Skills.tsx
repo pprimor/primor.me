@@ -2,10 +2,11 @@ import React from "react";
 import SectionHeading from "./SectionHeading";
 import { skillsByCategory } from "@/src/lib/data";
 import { useSectionInView } from "@/src/lib/hooks";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 export default function Skills() {
   const { ref } = useSectionInView("#skills");
+  const shouldReduceMotion = useReducedMotion();
 
   const animationVariants = {
     initial: { opacity: 0, y: 100 },
@@ -35,8 +36,8 @@ export default function Skills() {
                   key={name}
                   className="flex items-center gap-2 bg-white dark:bg-white/10 borderBlack dark:border-white/10 rounded-xl px-5 py-3 list-none"
                   variants={animationVariants}
-                  initial="initial"
-                  whileInView="animate"
+                  initial={shouldReduceMotion ? false : "initial"}
+                  whileInView={shouldReduceMotion ? undefined : "animate"}
                   viewport={{ once: true }}
                   custom={currentIndex}
                 >

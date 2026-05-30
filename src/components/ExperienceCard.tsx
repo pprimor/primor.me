@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useTheme } from "../context/theme-context";
 import { HiExternalLink } from "react-icons/hi";
 import { getExperienceSkillIcons } from "@/src/lib/data";
@@ -50,6 +50,7 @@ export default function ExperienceCard({
   index,
 }: ExperienceCardProps) {
   const { theme } = useTheme();
+  const shouldReduceMotion = useReducedMotion();
   const [skillsExpanded, setSkillsExpanded] = useState(false);
   const skillIcons = getExperienceSkillIcons(skills);
 
@@ -70,8 +71,8 @@ export default function ExperienceCard({
   return (
     <motion.div
       className="relative"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+      whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ delay: index * 0.1 }}
     >
@@ -184,8 +185,10 @@ export default function ExperienceCard({
                   ))}
                   {skillIcons.length > 3 && (
                     <button
+                      type="button"
+                      aria-expanded={skillsExpanded}
                       onClick={() => setSkillsExpanded(!skillsExpanded)}
-                      className="text-xs px-2.5 py-1 hover:underline cursor-pointer transition-colors"
+                      className="text-xs px-2.5 py-1 hover:underline cursor-pointer transition-colors focus-ring rounded"
                       style={{ 
                         color: secondaryTextColor,
                       }}

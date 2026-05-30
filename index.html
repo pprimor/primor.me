@@ -1,8 +1,17 @@
 <!doctype html>
-<html lang="en" class="!scroll-smooth">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (function () {
+        var stored = localStorage.getItem("theme");
+        var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (stored === "dark" || (!stored && prefersDark)) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
     <!-- site-meta -->
     <link rel="icon" href="/favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
