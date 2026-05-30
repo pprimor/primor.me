@@ -1,6 +1,6 @@
 import React from 'react';
 import './src/globals.css';
-import { Toaster } from 'react-hot-toast';
+import ThemedToaster from './src/components/ThemedToaster';
 import Header from './src/components/Header';
 import Footer from './src/components/Footer';
 import ThemeSwitcher from './src/components/ThemeSwitcher';
@@ -34,7 +34,7 @@ export default function App() {
       <ThemeContextProvider>
         <ActiveSectionContextProvider>
           <Header />
-          <Toaster position="bottom-center" />
+          <ThemedToaster />
           <Home />
           <Footer />
           <ThemeSwitcher />

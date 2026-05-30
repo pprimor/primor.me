@@ -35,6 +35,14 @@ html.dark {
   @apply border border-black/10;
 }
 
+.field-error {
+  @apply mt-1 text-sm text-rose-600/90 dark:text-rose-300/90;
+}
+
+.input-error {
+  @apply border-rose-400/40 dark:border-rose-400/30;
+}
+
 .focus-ring {
   @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 dark:focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-50 dark:focus-visible:ring-offset-gray-900;
 }

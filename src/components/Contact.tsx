@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { motion, useReducedMotion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -10,6 +11,39 @@ type ContactFormData = {
   message: string;
   company?: string;
 };
+
+const GENERIC_ERROR =
+  "Couldn't send your message. Please try again or email hello@primor.me directly.";
+
+const API_ERROR_MESSAGES: Record<string, string> = {
+  "A valid email address is required": "Please enter a valid email address.",
+  "Message is required": "Please enter a message.",
+  "Message must be at most 5000 characters":
+    "Message is too long (max 5000 characters).",
+};
+
+async function parseJsonResponse(
+  response: Response
+): Promise<{ error?: string; success?: boolean }> {
+  const text = await response.text();
+  if (!text) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(text) as { error?: string; success?: boolean };
+  } catch {
+    return {};
+  }
+}
+
+function getUserFacingError(apiError?: string): string {
+  if (apiError && API_ERROR_MESSAGES[apiError]) {
+    return API_ERROR_MESSAGES[apiError];
+  }
+
+  return GENERIC_ERROR;
+}
 
 export default function Contact() {
   const { ref } = useSectionInView("#contact");
@@ -29,23 +63,27 @@ export default function Contact() {
         body: JSON.stringify(data),
       });
 
-      const result = (await response.json()) as { error?: string };
+      const result = await parseJsonResponse(response);
 
       if (!response.ok) {
-        throw new Error(result.error ?? "Failed to send message");
+        toast.error(getUserFacingError(result.error));
+        return;
       }
 
       toast.success("Message sent! I'll get back to you soon.");
       reset();
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to send message";
-      toast.error(message);
+    } catch {
+      toast.error(GENERIC_ERROR);
     }
   };
 
-  const inputClassName =
-    "mt-2 w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus-ring dark:border-white/10 dark:bg-white/10 dark:text-gray-50 dark:placeholder:text-gray-400";
+  const inputClassName = (hasError: boolean) =>
+    clsx(
+      "mt-2 w-full rounded-lg border bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus-ring dark:bg-white/10 dark:text-gray-50 dark:placeholder:text-gray-400",
+      hasError
+        ? "input-error"
+        : "border-black/10 dark:border-white/10"
+    );
 
   return (
     <motion.section
@@ -85,7 +123,7 @@ export default function Contact() {
             id="senderEmail"
             type="email"
             autoComplete="email"
-            className={inputClassName}
+            className={inputClassName(!!errors.senderEmail)}
             aria-invalid={errors.senderEmail ? "true" : "false"}
             aria-describedby={errors.senderEmail ? "senderEmail-error" : undefined}
             {...register("senderEmail", {
@@ -97,7 +135,7 @@ export default function Contact() {
             })}
           />
           {errors.senderEmail && (
-            <p id="senderEmail-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+            <p id="senderEmail-error" className="field-error" role="alert">
               {errors.senderEmail.message}
             </p>
           )}
@@ -110,7 +148,7 @@ export default function Contact() {
           <textarea
             id="message"
             rows={5}
-            className={inputClassName}
+            className={inputClassName(!!errors.message)}
             aria-invalid={errors.message ? "true" : "false"}
             aria-describedby={errors.message ? "message-error" : undefined}
             {...register("message", {
@@ -122,7 +160,7 @@ export default function Contact() {
             })}
           />
           {errors.message && (
-            <p id="message-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+            <p id="message-error" className="field-error" role="alert">
               {errors.message.message}
             </p>
           )}
