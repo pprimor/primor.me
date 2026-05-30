@@ -51,16 +51,26 @@ export const projects = [
     description:
       "Developed this website using Vite, React, TypeScript, and Tailwind CSS.",
     tags: ["Vite", "React", "TypeScript", "Tailwind CSS"],
-    image: "/images/website.png",
+    images: {
+      light: "/images/website-light.png",
+      dark: "/images/website-dark.png",
+    },
+    liveUrl: "https://primor.me",
+    repoUrl: "https://github.com/pprimor/primor.me",
   },
   {
-    title: "My Spelling Game",
+    title: "igcp-aforro",
     description:
-      "Co-developed and published a 2D mobile game for Android and iOS using Unity and C#, in collaboration with a graphic designer.",
-    tags: ["Unity", "C#", "SQLite", "Android", "iOS"],
-    image: "/images/spelling.jpg",
+      "TypeScript library and CLI for simulating Portuguese IGCP Certificados de Aforro (Series A–F), with a docs site and static rates.json for other consumers.",
+    tags: ["TypeScript", "Node.js", "Git"],
+    images: {
+      light: "/images/igcp-aforro-light.png",
+      dark: "/images/igcp-aforro-dark.png",
+    },
+    liveUrl: "https://igcp-aforro.primor.me/",
+    repoUrl: "https://github.com/pprimor/igcp-aforro",
   },
-];
+] as const;
 
 export const skillsByCategory = [
   {

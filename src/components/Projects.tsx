@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import SectionHeading from "./SectionHeading";
 import { projects } from "@/src/lib/data";
 import Project from "./Project";
