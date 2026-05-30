@@ -13,11 +13,11 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "baseUrl": ".",
-    "types": ["vite/client"],
+    "types": ["vite/client", "@cloudflare/workers-types"],
     "paths": {
       "@/*": ["./*"]
     }
   },
-  "include": ["app/**/*", "lib/**/*", "App.tsx", "main.tsx"],
+  "include": ["src/**/*", "functions/**/*", "App.tsx", "main.tsx", "vite.config.ts"],
   "exclude": ["node_modules", ".next", "out"]
 }
