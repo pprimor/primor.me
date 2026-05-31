@@ -1,5 +1,4 @@
-import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { projects, getExperienceSkillIcons } from "@/src/lib/data";
 import { useTheme } from "../context/theme-context";
 import ProjectLinks from "./ProjectLinks";
@@ -16,28 +15,18 @@ export default function Project({
   repoUrl,
 }: ProjectProps) {
   const { theme } = useTheme();
-  const ref = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
   const tagIcons = getExperienceSkillIcons(tags);
   const screenshot = theme === "light" ? images.dark : images.light;
 
   const iconBg = theme === "light" ? "#f3f4f6" : "rgba(255, 255, 255, 0.1)";
   const textColor = theme === "light" ? "rgb(17, 24, 39)" : "rgb(243, 244, 246)";
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["0 1", "1.33 1"],
-  });
-  const scaleProgress = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
-  const opacityProgress = useTransform(scrollYProgress, [0, 1], [0.5, 1]);
 
   return (
     <motion.div
-      ref={ref}
-      style={
-        shouldReduceMotion
-          ? { scale: 1, opacity: 1 }
-          : { scale: scaleProgress, opacity: opacityProgress }
-      }
+      initial={shouldReduceMotion ? false : { scale: 0.8, opacity: 0.5 }}
+      whileInView={shouldReduceMotion ? undefined : { scale: 1, opacity: 1 }}
+      viewport={{ once: true, margin: "-100px" }}
       className="group mb-3 sm:mb-8 last:mb-0"
     >
       <section className="relative max-w-[42rem] overflow-hidden rounded-lg border border-black/5 bg-gray-100 transition hover:bg-gray-200 dark:border-white/10 dark:bg-white/10 dark:hover:bg-white/20 sm:h-[20rem] sm:pr-8 sm:group-even:pl-8">

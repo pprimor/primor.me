@@ -163,7 +163,7 @@ Requires network access to production URLs for capture; commit updated images wh
 ## Deployment
 
 - Push to `main` → Actions `check` then `deploy` to Cloudflare Pages project `primor-me`
-- Pull requests → `check` only
+- Pull requests → `check` only (lint, typecheck, build, Lighthouse on `index.html`)
 - Manual: `workflow_dispatch` in GitHub Actions
 - Functions under `functions/` deploy automatically with Pages
 - Unknown paths serve the custom `404.html` with HTTP **404** (built from the second Vite entry). Do not re-add `/* /index.html 200` to [`public/_redirects`](public/_redirects) unless you introduce client-side routing; hash links (`/#contact`) still load `/` first.

@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useInView } from "react-intersection-observer";
 import SectionHeading from "./SectionHeading";
 import SubmitButton from "./contact/SubmitButton";
 import { useTheme } from "@/src/context/theme-context";
@@ -78,6 +79,10 @@ function getUserFacingError(apiError?: string): string {
 
 export default function Contact() {
   const { ref } = useSectionInView("#contact");
+  const { ref: turnstileInViewRef, inView: turnstileInView } = useInView({
+    triggerOnce: true,
+    rootMargin: "200px 0px",
+  });
   const shouldReduceMotion = useReducedMotion();
   const { theme } = useTheme();
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
@@ -98,7 +103,7 @@ export default function Contact() {
   };
 
   useEffect(() => {
-    if (!turnstileSiteKey || !turnstileContainerRef.current) {
+    if (!turnstileSiteKey || !turnstileContainerRef.current || !turnstileInView) {
       return;
     }
 
@@ -154,7 +159,7 @@ export default function Contact() {
         widgetIdRef.current = null;
       }
     };
-  }, [theme]);
+  }, [theme, turnstileInView]);
 
   const onSubmit = async (data: ContactFormData) => {
     if (turnstileSiteKey && !turnstileToken) {
@@ -278,7 +283,7 @@ export default function Contact() {
           )}
         </div>
 
-        <div className="flex flex-col items-center gap-3">
+        <div ref={turnstileInViewRef} className="flex flex-col items-center gap-3">
           {turnstileSiteKey ? (
             <div ref={turnstileContainerRef} className="min-h-[65px]" />
           ) : null}

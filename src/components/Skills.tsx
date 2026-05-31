@@ -26,7 +26,7 @@ export default function Skills() {
       className="mb-28 max-w-[53rem] scroll-mt-28 text-center sm:mb-40"
     >
       <SectionHeading>Tech Stack</SectionHeading>
-      <div className="flex flex-wrap justify-center gap-2 text-lg text-gray-800 dark:text-white/80">
+      <ul className="flex flex-wrap justify-center gap-2 text-lg text-gray-800 dark:text-white/80">
         {skillsByCategory.map(({ category, skills }, categoryIndex) => (
           <React.Fragment key={category}>
             {skills.map(({ name, icon }) => {
@@ -34,7 +34,7 @@ export default function Skills() {
               return (
                 <motion.li
                   key={name}
-                  className="flex items-center gap-2 bg-white dark:bg-white/10 borderBlack dark:border-white/10 rounded-xl px-5 py-3 list-none"
+                  className="flex items-center gap-2 bg-white dark:bg-white/10 borderBlack dark:border-white/10 rounded-xl px-5 py-3"
                   variants={animationVariants}
                   initial={shouldReduceMotion ? false : "initial"}
                   whileInView={shouldReduceMotion ? undefined : "animate"}
@@ -51,7 +51,7 @@ export default function Skills() {
             )}
           </React.Fragment>
         ))}
-      </div>
+      </ul>
     </section>
   );
 }

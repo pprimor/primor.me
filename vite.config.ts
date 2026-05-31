@@ -172,6 +172,16 @@ export default defineConfig(({ mode }) => ({
         main: path.resolve(__dirname, 'index.html'),
         notFound: path.resolve(__dirname, '404.html'),
       },
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/framer-motion')) {
+            return 'motion';
+          }
+          if (id.includes('node_modules/react-icons')) {
+            return 'icons';
+          }
+        },
+      },
     },
   },
 }));

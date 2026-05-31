@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "optimize:images": "node scripts/optimize-images.mjs"
+    "optimize:images": "node scripts/optimize-images.mjs",
+    "lighthouse": "npm run build && npx --yes @lhci/cli@0.14.0 autorun"
   },
   "dependencies": {
     "@react-email/components": "^0.0.12",

@@ -1,4 +1,5 @@
 import React from 'react';
+import { LazyMotion, domAnimation } from 'framer-motion';
 import './src/globals.css';
 import ThemedToaster from './src/components/ThemedToaster';
 import Header from './src/components/Header';
@@ -31,15 +32,17 @@ export default function App() {
       />
     
       
-      <ThemeContextProvider>
-        <ActiveSectionContextProvider>
-          <Header />
-          <ThemedToaster />
-          <Home />
-          <Footer />
-          <ThemeSwitcher />
-        </ActiveSectionContextProvider>
-      </ThemeContextProvider>
+      <LazyMotion features={domAnimation} strict>
+        <ThemeContextProvider>
+          <ActiveSectionContextProvider>
+            <Header />
+            <ThemedToaster />
+            <Home />
+            <Footer />
+            <ThemeSwitcher />
+          </ActiveSectionContextProvider>
+        </ThemeContextProvider>
+      </LazyMotion>
     </>
   );
 }
