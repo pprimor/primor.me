@@ -221,9 +221,10 @@ const additionalSkillIcons = [
 
 const getSkillIcon = (skillName: string): React.ReactElement | null => {
   for (const category of skillsByCategory) {
-    const skill = category.skills.find((s) => s.name === skillName);
-    if (skill) {
-      return skill.icon;
+    for (const skill of category.skills) {
+      if (skill.name === skillName) {
+        return skill.icon;
+      }
     }
   }
   const additionalSkill = additionalSkillIcons.find((s) => s.name === skillName);
