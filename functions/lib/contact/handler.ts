@@ -3,6 +3,7 @@ import {
   isAllowedOrigin,
   isValidEmail,
 } from "./helpers";
+import { logContactEvent, sanitizeResendError } from "./logger";
 import { renderContactEmailHtml } from "./render-email";
 
 export interface ContactEnv {
@@ -34,11 +35,15 @@ function jsonResponse(body: object, status: number): Response {
   });
 }
 
+type TurnstileVerifyResult =
+  | { ok: true }
+  | { ok: false; reason: "siteverify_http" | "verification_failed" };
+
 async function verifyTurnstile(
   secret: string,
   token: string,
   remoteIp: string | undefined
-): Promise<boolean> {
+): Promise<TurnstileVerifyResult> {
   const params = new URLSearchParams({
     secret,
     response: token,
@@ -58,11 +63,15 @@ async function verifyTurnstile(
   );
 
   if (!response.ok) {
-    return false;
+    return { ok: false, reason: "siteverify_http" };
   }
 
   const result = (await response.json()) as { success?: boolean };
-  return result.success === true;
+  if (result.success === true) {
+    return { ok: true };
+  }
+
+  return { ok: false, reason: "verification_failed" };
 }
 
 async function checkRateLimit(
@@ -90,18 +99,39 @@ export async function handleContactPost(
   env: ContactEnv
 ): Promise<Response> {
   if (!isAllowedOrigin(request)) {
+    logContactEvent({ event: "forbidden_origin", status: 403 }, "warn");
     return jsonResponse({ error: "Forbidden" }, 403);
   }
 
   if (!env.RESEND_API_KEY) {
+    logContactEvent(
+      { event: "misconfigured", status: 503, reason: "missing_resend_api_key" },
+      "error"
+    );
     return jsonResponse({ error: "Email service is not configured" }, 503);
   }
 
   if (!env.TURNSTILE_SECRET_KEY) {
+    logContactEvent(
+      {
+        event: "misconfigured",
+        status: 503,
+        reason: "missing_turnstile_secret_key",
+      },
+      "error"
+    );
     return jsonResponse({ error: "Email service is not configured" }, 503);
   }
 
   if (!env.CONTACT_RATE_LIMIT) {
+    logContactEvent(
+      {
+        event: "misconfigured",
+        status: 503,
+        reason: "missing_contact_rate_limit",
+      },
+      "error"
+    );
     return jsonResponse({ error: "Email service is not configured" }, 503);
   }
 
@@ -122,13 +152,21 @@ export async function handleContactPost(
   }
 
   const clientIp = getClientIp(request);
-  const turnstileOk = await verifyTurnstile(
+  const turnstileResult = await verifyTurnstile(
     env.TURNSTILE_SECRET_KEY,
     turnstileToken,
     clientIp !== "unknown" ? clientIp : undefined
   );
 
-  if (!turnstileOk) {
+  if (!turnstileResult.ok) {
+    logContactEvent(
+      {
+        event: "turnstile_failed",
+        status: 400,
+        reason: turnstileResult.reason,
+      },
+      "warn"
+    );
     return jsonResponse(
       { error: "Verification failed. Please try again." },
       400
@@ -137,6 +175,14 @@ export async function handleContactPost(
 
   const rateLimit = await checkRateLimit(env.CONTACT_RATE_LIMIT, clientIp);
   if (!rateLimit.allowed) {
+    logContactEvent(
+      {
+        event: "rate_limited",
+        status: 429,
+        clientIp: clientIp !== "unknown" ? clientIp : undefined,
+      },
+      "warn"
+    );
     return jsonResponse(
       { error: "Too many requests. Please try again later." },
       429
@@ -181,9 +227,19 @@ export async function handleContactPost(
   });
 
   if (!resendResponse.ok) {
-    console.error("Resend error:", await resendResponse.text());
+    const resendBody = await resendResponse.text();
+    logContactEvent(
+      {
+        event: "resend_failed",
+        status: 502,
+        resendStatus: resendResponse.status,
+        resendError: sanitizeResendError(resendBody),
+      },
+      "error"
+    );
     return jsonResponse({ error: "Failed to send message" }, 502);
   }
 
+  logContactEvent({ event: "email_sent", status: 200 }, "info");
   return jsonResponse({ success: true }, 200);
 }

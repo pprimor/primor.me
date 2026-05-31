@@ -9,3 +9,10 @@ pages_build_output_dir = "dist"
 binding = "CONTACT_RATE_LIMIT"
 id = "65bcc20e65744276b9d784c54b99063d"
 preview_id = "b4980d63db3f408a8cf7b1e94dabfc3d"
+
+[observability]
+enabled = true
+
+[observability.logs]
+invocation_logs = true
+head_sampling_rate = 1

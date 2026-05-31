@@ -237,12 +237,33 @@ describe("onRequestPost", () => {
 
   it("returns 502 when Resend returns a non-OK response", async () => {
     mockFetch({ resendOk: false });
+    const userMessage = "Hello";
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+
     const response = await postContact({
       turnstileToken: TURNSTILE_TEST_TOKEN,
       senderEmail: "user@example.com",
-      message: "Hello",
+      message: userMessage,
     });
+
     expect(response.status).toBe(502);
+
+    expect(consoleError).toHaveBeenCalled();
+    const loggedLine = String(consoleError.mock.calls[0]?.[0]);
+    const log = JSON.parse(loggedLine) as {
+      service: string;
+      event: string;
+      status: number;
+      resendStatus: number;
+    };
+
+    expect(log.service).toBe("contact-api");
+    expect(log.event).toBe("resend_failed");
+    expect(log.status).toBe(502);
+    expect(log.resendStatus).toBe(500);
+    expect(loggedLine).not.toContain(userMessage);
+
+    consoleError.mockRestore();
   });
 
   it("returns 200 and sends escaped HTML to Resend on valid payload", async () => {

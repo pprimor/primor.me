@@ -122,6 +122,29 @@ npm run test:watch
 
 Contact API tests use mocked Resend and Turnstile HTTP calls plus an isolated Miniflare KV binding from [`wrangler.toml`](wrangler.toml). No `.dev.vars` file is required for `npm test`. Contact notification HTML is rendered with React Email in [`functions/lib/contact/`](functions/lib/contact/).
 
+### Contact API observability
+
+The contact handler emits one JSON object per line via [`functions/lib/contact/logger.ts`](functions/lib/contact/logger.ts). Filter on `service:contact-api` in Cloudflare Observability.
+
+| Task | How |
+|------|-----|
+| Local Functions logs | Run `npm run dev:full`, submit the contact form, and read logs in the Wrangler terminal |
+| Live tail | `npx wrangler pages deployment tail --project-name primor-me` |
+| Production | Cloudflare dashboard → **Workers & Pages** → `primor-me` → **Observability** → filter `service:contact-api` |
+
+**Logged events**
+
+| Event | HTTP status | When |
+|-------|-------------|------|
+| `forbidden_origin` | 403 | Origin/Referer not on allowlist |
+| `misconfigured` | 503 | Missing `RESEND_API_KEY`, `TURNSTILE_SECRET_KEY`, or `CONTACT_RATE_LIMIT` |
+| `turnstile_failed` | 400 | Turnstile verification failed |
+| `rate_limited` | 429 | More than 5 submissions from one IP per hour |
+| `resend_failed` | 502 | Resend API returned a non-OK response |
+| `email_sent` | 200 | Message accepted by Resend |
+
+Message bodies, Turnstile tokens, API keys, and full sender addresses are **never** logged. Rate-limit events may include `clientIp` for abuse debugging.
+
 ## Environment variables and secrets
 
 ### Local / build (optional)
