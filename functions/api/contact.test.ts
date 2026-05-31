@@ -238,7 +238,9 @@ describe("onRequestPost", () => {
   it("returns 502 when Resend returns a non-OK response", async () => {
     mockFetch({ resendOk: false });
     const userMessage = "Hello";
-    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(vi.fn());
 
     const response = await postContact({
       turnstileToken: TURNSTILE_TEST_TOKEN,
