@@ -13,11 +13,23 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "baseUrl": ".",
-    "types": ["vite/client", "@cloudflare/workers-types"],
+    "types": [
+      "vite/client",
+      "@cloudflare/workers-types",
+      "@cloudflare/vitest-pool-workers"
+    ],
     "paths": {
       "@/*": ["./*"]
     }
   },
-  "include": ["src/**/*", "functions/**/*", "App.tsx", "main.tsx", "vite.config.ts"],
+  "include": [
+    "src/**/*",
+    "functions/**/*",
+    "App.tsx",
+    "main.tsx",
+    "vite.config.ts",
+    "vitest.config.ts",
+    "vitest-env.d.ts"
+  ],
   "exclude": ["node_modules", ".next", "out"]
 }

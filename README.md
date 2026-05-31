@@ -66,7 +66,16 @@ npm run typecheck
 npm run build
 ```
 
-Pull requests and pushes to `main` run lint, typecheck, and build via GitHub Actions. Only merges to `main` (and manual workflow runs) deploy to Cloudflare Pages.
+Pull requests and pushes to `main` run lint, typecheck, tests, and build via GitHub Actions. Only merges to `main` (and manual workflow runs) deploy to Cloudflare Pages.
+
+## Testing
+
+```bash
+npm test          # single run (CI)
+npm run test:watch
+```
+
+Contact API tests use mocked Resend and Turnstile HTTP calls plus an isolated Miniflare KV binding from [`wrangler.toml`](wrangler.toml). No `.dev.vars` file is required for `npm test`.
 
 ## Environment variables and secrets
 
@@ -163,7 +172,7 @@ Requires network access to production URLs for capture; commit updated images wh
 ## Deployment
 
 - Push to `main` → Actions `check` then `deploy` to Cloudflare Pages project `primor-me`
-- Pull requests → `check` only (lint, typecheck, build, Lighthouse on `index.html`)
+- Pull requests → `check` only (lint, typecheck, test, build, Lighthouse on `index.html`)
 - Manual: `workflow_dispatch` in GitHub Actions
 - Functions under `functions/` deploy automatically with Pages
 - Unknown paths serve the custom `404.html` with HTTP **404** (built from the second Vite entry). Do not re-add `/* /index.html 200` to [`public/_redirects`](public/_redirects) unless you introduce client-side routing; hash links (`/#contact`) still load `/` first.
