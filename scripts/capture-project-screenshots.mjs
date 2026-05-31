@@ -44,3 +44,6 @@ await captureIgcp(darkPage, "dark", "igcp-aforro-dark.png");
 
 await browser.close();
 console.log(`Captured 4 screenshots at ${WIDTH}x${HEIGHT}`);
+
+const { optimizeImages } = await import("./optimize-images.mjs");
+await optimizeImages();

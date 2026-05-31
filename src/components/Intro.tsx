@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { BsArrowRight, BsGithub, BsLinkedin } from "react-icons/bs";
 import { HiDownload } from "react-icons/hi";
 import { useSectionInView } from "@/src/lib/hooks";
+import OptimizedImage from "./OptimizedImage";
 
 export default function Intro() {
   const { ref } = useSectionInView("#home");
@@ -20,12 +21,14 @@ export default function Intro() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ type: "tween", duration: 0.5 }}
           >
-            <img
-              src="/images/me.png"
+            <OptimizedImage
+              basePath="/images/me"
               alt="Pedro Primor"
               width={200}
               height={200}
               className="w-24 object-cover drop-shadow-xl"
+              loading="eager"
+              fetchPriority="high"
             />
           </motion.div>
         </div>

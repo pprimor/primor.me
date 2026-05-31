@@ -3,6 +3,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion
 import { projects, getExperienceSkillIcons } from "@/src/lib/data";
 import { useTheme } from "../context/theme-context";
 import ProjectLinks from "./ProjectLinks";
+import OptimizedImage from "./OptimizedImage";
 
 type ProjectProps = (typeof projects)[number];
 
@@ -68,10 +69,13 @@ export default function Project({
           aria-hidden="true"
           className="pointer-events-none absolute top-8 -right-2 hidden h-[14rem] w-[20rem] overflow-hidden rounded-l-lg rounded-r-none border border-black/5 bg-gray-950 shadow-2xl transition group-even:-right-[initial] group-even:-left-2 group-even:rounded-l-none group-even:rounded-r-lg group-hover:-translate-x-3 group-hover:translate-y-3 group-hover:-rotate-2 group-even:group-hover:translate-x-3 group-even:group-hover:rotate-2 group-hover:scale-105 dark:border-white/10 dark:bg-white sm:block sm:h-[15rem] sm:w-[20rem]"
         >
-          <img
-            src={screenshot}
+          <OptimizedImage
+            basePath={screenshot}
             alt=""
             className="h-full w-full object-cover object-top"
+            width={880}
+            height={660}
+            loading="lazy"
           />
         </div>
       </section>

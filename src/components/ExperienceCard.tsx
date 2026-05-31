@@ -4,6 +4,7 @@ import { useTheme } from "../context/theme-context";
 import { HiExternalLink } from "react-icons/hi";
 import { getExperienceSkillIcons } from "@/src/lib/data";
 import { calculateDuration, formatDate } from "@/src/lib/utils";
+import OptimizedImage from "./OptimizedImage";
 
 interface Plugin {
   name: string;
@@ -224,11 +225,20 @@ export default function ExperienceCard({
                             backgroundColor: theme === "light" ? "#f3f4f6" : "rgba(31, 41, 55, 0.5)",
                           }}
                         >
-                          <img
-                            src={plugin.image}
-                            alt={plugin.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
+                          {plugin.image.startsWith("/") ? (
+                            <OptimizedImage
+                              basePath={plugin.image.replace(/\.png$/, "")}
+                              alt={plugin.name}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <img
+                              src={plugin.image}
+                              alt={plugin.name}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                          )}
                           <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
                             <div
                               className="p-1.5 rounded-full backdrop-blur-sm"

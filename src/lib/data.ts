@@ -52,8 +52,8 @@ export const projects = [
       "Developed this website using Vite, React, TypeScript, and Tailwind CSS.",
     tags: ["Vite", "React", "TypeScript", "Tailwind CSS"],
     images: {
-      light: "/images/website-light.png",
-      dark: "/images/website-dark.png",
+      light: "/images/website-light",
+      dark: "/images/website-dark",
     },
     liveUrl: "https://primor.me",
     repoUrl: "https://github.com/pprimor/primor.me",
@@ -64,8 +64,8 @@ export const projects = [
       "TypeScript library and CLI for simulating Portuguese IGCP Certificados de Aforro (Series A–F), with a docs site and static rates.json for other consumers.",
     tags: ["TypeScript", "Node.js", "Git"],
     images: {
-      light: "/images/igcp-aforro-light.png",
-      dark: "/images/igcp-aforro-dark.png",
+      light: "/images/igcp-aforro-light",
+      dark: "/images/igcp-aforro-dark",
     },
     liveUrl: "https://igcp-aforro.primor.me/",
     repoUrl: "https://github.com/pprimor/igcp-aforro",

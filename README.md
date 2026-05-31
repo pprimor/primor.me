@@ -137,7 +137,7 @@ Inspect page source in `dist/index.html` and confirm the `beacon.min.js` script 
 
 ## Project screenshots
 
-[`scripts/capture-project-screenshots.mjs`](scripts/capture-project-screenshots.mjs) regenerates light/dark PNGs for portfolio projects under `public/images/` (880×660).
+[`scripts/capture-project-screenshots.mjs`](scripts/capture-project-screenshots.mjs) regenerates light/dark PNGs for portfolio projects under `public/images/` (880×660), then runs [`scripts/optimize-images.mjs`](scripts/optimize-images.mjs) to produce WebP and AVIF variants.
 
 **Targets:** live `https://primor.me/` and `https://igcp-aforro.primor.me/`.
 
@@ -151,12 +151,14 @@ npx playwright install chromium
 **Run:**
 
 ```bash
-node scripts/capture-project-screenshots.mjs
+node scripts/capture-project-screenshots.mjs   # capture + optimize (chained)
+# or regenerate variants only:
+npm run optimize:images
 ```
 
-**Outputs:** `website-light.png`, `website-dark.png`, `igcp-aforro-light.png`, `igcp-aforro-dark.png` (paths referenced in [`src/lib/data.ts`](src/lib/data.ts)).
+**Outputs:** For each basename (`website-light`, `website-dark`, `igcp-aforro-light`, `igcp-aforro-dark`, plus `me` and `final-cut-pro-preview`), committed assets are `.png`, `.webp`, and `.avif` under `public/images/`. Project paths in [`src/lib/data.ts`](src/lib/data.ts) use extensionless base paths; [`OptimizedImage`](src/components/OptimizedImage.tsx) serves AVIF/WebP with PNG fallback.
 
-Requires network access to production URLs; commit updated images when refreshing the portfolio.
+Requires network access to production URLs for capture; commit updated images when refreshing the portfolio. One-time `npm install` pulls `sharp` (devDependency) for maintainers regenerating assets — CI does not run Sharp.
 
 ## Deployment
 
