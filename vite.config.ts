@@ -1,9 +1,12 @@
-import { defineConfig, type Plugin } from 'vite';
+import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import { absoluteUrl, siteMetadata } from './src/lib/site-metadata';
 
-function siteMetaPlugin(): Plugin {
+function siteMetaPlugin(mode: string): Plugin {
+  const env = loadEnv(mode, process.cwd(), '');
+  const cfWebAnalyticsToken = env.VITE_CF_WEB_ANALYTICS_TOKEN?.trim();
+
   return {
     name: 'site-meta',
     transformIndexHtml() {
@@ -108,16 +111,29 @@ function siteMetaPlugin(): Plugin {
           children: JSON.stringify(jsonLd),
           injectTo: 'head',
         },
+        ...(cfWebAnalyticsToken
+          ? [
+              {
+                tag: 'script',
+                attrs: {
+                  defer: true,
+                  src: 'https://static.cloudflareinsights.com/beacon.min.js',
+                  'data-cf-beacon': JSON.stringify({ token: cfWebAnalyticsToken }),
+                },
+                injectTo: 'head' as const,
+              },
+            ]
+          : []),
       ];
     },
   };
 }
 
-export default defineConfig({
-  plugins: [react(), siteMetaPlugin()],
+export default defineConfig(({ mode }) => ({
+  plugins: [react(), siteMetaPlugin(mode)],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './'),
     },
   },
-});
+}));
