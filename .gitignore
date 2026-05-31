@@ -12,6 +12,7 @@
 # vite
 /dist
 /dist-ssr
+.wrangler
 *.local
 
 # production
