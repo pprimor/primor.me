@@ -75,7 +75,7 @@ npm test          # single run (CI)
 npm run test:watch
 ```
 
-Contact API tests use mocked Resend and Turnstile HTTP calls plus an isolated Miniflare KV binding from [`wrangler.toml`](wrangler.toml). No `.dev.vars` file is required for `npm test`.
+Contact API tests use mocked Resend and Turnstile HTTP calls plus an isolated Miniflare KV binding from [`wrangler.toml`](wrangler.toml). No `.dev.vars` file is required for `npm test`. Contact notification HTML is rendered with React Email in [`functions/lib/contact/`](functions/lib/contact/).
 
 ## Environment variables and secrets
 
@@ -184,5 +184,6 @@ App.tsx, main.tsx     # entry
 src/components/       # UI sections
 src/lib/data.ts       # content (projects, experience, skills)
 functions/api/        # contact handler
+functions/lib/contact/  # React Email template + render helper
 public/images/        # static assets + project screenshots
 ```

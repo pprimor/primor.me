@@ -1,9 +1,9 @@
 import {
-  escapeHtml,
   getClientIp,
   isAllowedOrigin,
   isValidEmail,
 } from "./helpers";
+import { renderContactEmailHtml } from "./render-email";
 
 export interface ContactEnv {
   RESEND_API_KEY: string;
@@ -163,7 +163,7 @@ export async function handleContactPost(
 
   const toEmail = env.CONTACT_TO_EMAIL ?? DEFAULT_TO_EMAIL;
   const fromEmail = env.RESEND_FROM_EMAIL ?? DEFAULT_FROM_EMAIL;
-  const safeMessage = escapeHtml(message).replace(/\n/g, "<br />");
+  const html = await renderContactEmailHtml(senderEmail, message);
 
   const resendResponse = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -176,12 +176,7 @@ export async function handleContactPost(
       to: [toEmail],
       reply_to: senderEmail,
       subject: "Contact from primor.me",
-      html: `
-        <h2>New message from your website</h2>
-        <p><strong>From:</strong> ${escapeHtml(senderEmail)}</p>
-        <hr />
-        <p>${safeMessage}</p>
-      `,
+      html,
     }),
   });
 

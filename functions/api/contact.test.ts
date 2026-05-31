@@ -268,6 +268,7 @@ describe("onRequestPost", () => {
     };
 
     expect(payload.reply_to).toBe("user@example.com");
+    expect(payload.html).toContain("user@example.com");
     expect(payload.html).toContain(
       "&lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt;"
     );
