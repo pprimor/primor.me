@@ -68,6 +68,30 @@ npm run build
 
 Pull requests and pushes to `main` run lint, typecheck, tests, and build via GitHub Actions. Only merges to `main` (and manual workflow runs) deploy to Cloudflare Pages.
 
+## Editing content
+
+Portfolio copy (projects, experience, skills) lives in [`content/`](content/) as YAML. Files are validated at build and test time with [Zod](https://zod.dev/) in [`src/lib/content/`](src/lib/content/).
+
+| File | What it drives |
+|------|----------------|
+| [`content/projects.yaml`](content/projects.yaml) | Projects section |
+| [`content/experience.yaml`](content/experience.yaml) | Experience timeline |
+| [`content/skills.yaml`](content/skills.yaml) | Skills grid |
+
+**Workflow**
+
+1. Edit the relevant YAML file(s).
+2. Run `npm run dev` and check the site locally.
+3. Run `npm test` (or push a PR) — invalid dates, unknown experience `icon` keys, or missing skill icons fail with a Zod or parser error.
+
+**Dates** — use ISO `YYYY-MM-DD` (e.g. `2023-03-01`). Use `endDate: null` for current roles.
+
+**Experience icons** — `icon` must be one of: `work`, `school`, `research`, `travel` (mapped in [`src/lib/icons.ts`](src/lib/icons.ts)).
+
+**Skill icons** — category skills and [`additionalSkills`](content/skills.yaml) must have a matching entry in `skillIconComponents` inside [`src/lib/icons.ts`](src/lib/icons.ts). Skills referenced only on experience cards (e.g. CPLEX) can omit an icon; the UI shows the name without an icon.
+
+Components still import from [`src/lib/data.ts`](src/lib/data.ts), which re-exports the loaded content.
+
 ### Lighthouse CI
 
 The `check` job runs Lighthouse CI against the production build in `dist/` ([`lighthouserc.json`](lighthouserc.json)). Four URLs are collected (3 runs each):
@@ -186,7 +210,7 @@ node scripts/capture-project-screenshots.mjs   # capture + optimize (chained)
 npm run optimize:images
 ```
 
-**Outputs:** For each basename (`website-light`, `website-dark`, `igcp-aforro-light`, `igcp-aforro-dark`, plus `me` and `final-cut-pro-preview`), committed assets are `.png`, `.webp`, and `.avif` under `public/images/`. Project paths in [`src/lib/data.ts`](src/lib/data.ts) use extensionless base paths; [`OptimizedImage`](src/components/OptimizedImage.tsx) serves AVIF/WebP with PNG fallback.
+**Outputs:** For each basename (`website-light`, `website-dark`, `igcp-aforro-light`, `igcp-aforro-dark`, plus `me` and `final-cut-pro-preview`), committed assets are `.png`, `.webp`, and `.avif` under `public/images/`. Project image paths in [`content/projects.yaml`](content/projects.yaml) use extensionless base paths; [`OptimizedImage`](src/components/OptimizedImage.tsx) serves AVIF/WebP with PNG fallback.
 
 Requires network access to production URLs for capture; commit updated images when refreshing the portfolio. One-time `npm install` pulls `sharp` (devDependency) for maintainers regenerating assets — CI does not run Sharp.
 
@@ -201,10 +225,12 @@ Requires network access to production URLs for capture; commit updated images wh
 ## Project layout
 
 ```
-App.tsx, main.tsx     # entry
-src/components/       # UI sections
-src/lib/data.ts       # content (projects, experience, skills)
-functions/api/        # contact handler
+App.tsx, main.tsx       # entry
+content/              # portfolio YAML (projects, experience, skills)
+src/components/         # UI sections
+src/lib/content/        # YAML load + Zod validation
+src/lib/data.ts         # re-exports for components
+functions/api/          # contact handler
 functions/lib/contact/  # React Email template + render helper
-public/images/        # static assets + project screenshots
+public/images/          # static assets + project screenshots
 ```

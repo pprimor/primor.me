@@ -1,0 +1,126 @@
+- title: Software Engineer
+  company: PageProof
+  companyUrl: https://pageproof.com/
+  employmentType: Freelance
+  location: Remote
+  startDate: "2023-03-01"
+  endDate: null
+  icon: work
+  description:
+    - Enhanced cross-platform desktop application functionalities using Electron and Node.js, improving integration scalability and feature parity across operating systems
+    - Developed a company-wide OAuth 2.0 (RFC 6749) Authorization Server with OpenID Connect (OIDC) support, standardizing authentication across PageProof integrations
+    - Built the Canva App for PageProof using React, TypeScript, and the Canva Apps SDK, enabling seamless review workflows within Canva
+    - Implemented the Microsoft Office taskpane add-in with React, TypeScript, and Office.js to integrate PageProof's functionality directly into the Office ecosystem
+    - Led the development of the Final Cut Pro workflow extension using Swift and SwiftUI, improving review efficiency for video editing teams
+    - Built and maintained PageProof's cross-platform UXP plug-in integrations for Adobe Photoshop and InDesign, streamlining creative workflows and ensuring seamless integration with PageProof
+    - Contributed to enhancing the PageProof web app, with a focus on optimizing the mobile user experience and UI responsiveness
+  skills:
+    - React
+    - TypeScript
+    - Electron
+    - Node.js
+    - JavaScript
+    - Swift
+    - SwiftUI
+    - OAuth 2.0
+    - OpenID Connect
+    - SASS
+  links: []
+  plugins:
+    - name: PageProof for Adobe Photoshop
+      url: https://exchange.adobe.com/apps/cc/c1f33c8f/pageproof-for-adobe-photoshop
+      description: UXP plugin for Adobe Photoshop
+      image: https://exchange-assets.azureedge.net/uxp/Extensions/c1f33c8f/uxp-c1f33c8f-version-1701891129280/screenshots/9c3ab00e-813b-418e-9e4f-42406f38e9be.png
+    - name: PageProof for Adobe InDesign
+      url: https://exchange.adobe.com/apps/cc/f4e1a940/pageproof-for-adobe-indesign
+      description: UXP plugin for Adobe InDesign
+      image: https://exchange-assets.azureedge.net/uxp/Extensions/f4e1a940/uxp-f4e1a940-version-1713568505383/screenshots/d27a1dab-9281-49f9-aa70-419fe76b659a.png
+    - name: PageProof for Microsoft Office
+      url: https://marketplace.microsoft.com/en-us/product/office/WA200008498?tab=Overview
+      description: Powerful online proofing for Microsoft Office
+      image: https://store-images.s-microsoft.com/image/apps.40119.1523da56-51ff-4abf-b530-2f7ead169bd2.ce0a3cd4-4665-4394-89d2-0420e5fa5d56.202a26d1-a095-4660-b8f2-94afd3435748.png
+    - name: PageProof for Final Cut Pro
+      url: https://www.pageproof.com/integrations/final-cut-pro
+      description: Workflow extension for video editing teams
+      image: /images/final-cut-pro-preview.png
+- title: Operations Research Analyst
+  company: CTT – Correios de Portugal, S.A.
+  companyUrl: https://www.ctt.pt/
+  employmentType: Contract
+  location: Lisbon, Portugal
+  startDate: "2022-01-01"
+  endDate: "2022-09-01"
+  icon: research
+  description:
+    - Led an operations research and data analytics project focused on optimizing the last-mile delivery process
+    - Modeled and solved a vehicle routing problem tailored to postal delivery constraints
+    - Developed data visualizations and insights in Tableau to support decision-making
+  skills:
+    - Python
+    - Tableau
+    - Flask
+    - CPLEX
+    - LaTeX
+  links: []
+- title: Front-end Developer Intern
+  company: Altitude Software
+  companyUrl: https://altitudeapac.com/
+  employmentType: Internship
+  location: Lisbon, Portugal
+  startDate: "2020-04-01"
+  endDate: "2020-07-01"
+  icon: work
+  description:
+    - Rebuilt legacy ASP.NET components using React, modernizing the user interface of a contact center management platform
+    - Improved maintainability and user experience of the platform
+  skills:
+    - React
+    - JavaScript
+    - HTML
+    - CSS
+    - ASP.NET
+  links: []
+- title: MSc. Student
+  company: NOVA University Lisbon
+  companyUrl: https://www.fct.unl.pt/en/
+  employmentType: Education
+  location: Lisbon, Portugal
+  startDate: "2020-09-01"
+  endDate: "2022-12-01"
+  icon: school
+  description:
+    - Master of Science in Computer Science
+    - "Relevant coursework: Artificial Intelligence, Data Modelling, Information Retrieval, and Machine Learning"
+  skills:
+    - Python
+    - Neo4j
+  links: []
+- title: Erasmus+ Programme
+  company: Technische Universität Dresden
+  companyUrl: https://tu-dresden.de/
+  employmentType: Education
+  location: Dresden, Germany
+  startDate: "2021-04-01"
+  endDate: "2021-10-01"
+  icon: travel
+  description:
+    - Exchange program studying Computer Science at Technische Universität Dresden
+  skills: []
+  links: []
+- title: BSc. Student
+  company: NOVA University Lisbon
+  companyUrl: https://www.fct.unl.pt/en/
+  employmentType: Education
+  location: Lisbon, Portugal
+  startDate: "2017-09-01"
+  endDate: "2020-09-01"
+  icon: school
+  description:
+    - Bachelor of Science in Computer Science
+    - "Relevant coursework: Algorithms and Data Structures, Object-Oriented Programming, Sensors and Image Processing"
+  skills:
+    - Java
+    - Python
+    - OCaml
+    - WebGL
+  links: []

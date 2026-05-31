@@ -1,0 +1,41 @@
+categories:
+  - category: Frontend
+    skills:
+      - name: HTML
+      - name: CSS
+      - name: JavaScript
+      - name: TypeScript
+      - name: React
+      - name: Tailwind CSS
+      - name: Vite
+  - category: Backend
+    skills:
+      - name: Node.js
+      - name: Python
+      - name: Java
+      - name: C#
+      - name: OAuth 2.0
+      - name: OpenID Connect
+  - category: Native & Desktop
+    skills:
+      - name: Swift
+      - name: SwiftUI
+      - name: Electron
+      - name: Android
+      - name: iOS
+  - category: Data & Analytics
+    skills:
+      - name: SQLite
+      - name: Tableau
+  - category: Tools & Others
+    skills:
+      - name: Git
+      - name: Unity
+additionalSkills:
+  - OCaml
+  - ASP.NET
+  - Neo4j
+  - WebGL
+  - Flask
+  - SASS
+  - LaTeX

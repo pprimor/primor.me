@@ -1,0 +1,9 @@
+- title: Bad Role
+  company: Example Co
+  employmentType: Contract
+  startDate: not-a-date
+  endDate: null
+  icon: unknown-key
+  description:
+    - One bullet
+  skills: []
