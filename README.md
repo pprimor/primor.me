@@ -124,13 +124,13 @@ Contact API tests use mocked Resend and Turnstile HTTP calls plus an isolated Mi
 
 ### Contact API observability
 
-The contact handler emits one JSON object per line via [`functions/lib/contact/logger.ts`](functions/lib/contact/logger.ts). Filter on `service:contact-api` in Cloudflare Observability.
+The contact handler emits one JSON object per line via [`functions/lib/contact/logger.ts`](functions/lib/contact/logger.ts). Pages Functions do not support the Workers `[observability]` block in [`wrangler.toml`](wrangler.toml); use live log streaming instead.
 
 | Task | How |
 |------|-----|
 | Local Functions logs | Run `npm run dev:full`, submit the contact form, and read logs in the Wrangler terminal |
 | Live tail | `npx wrangler pages deployment tail --project-name primor-me` |
-| Production | Cloudflare dashboard → **Workers & Pages** → `primor-me` → **Observability** → filter `service:contact-api` |
+| Production | Cloudflare dashboard → **Workers & Pages** → `primor-me` → deployment → **View details** → **Functions** (live stream; filter output for `service:contact-api`) |
 
 **Logged events**
 
