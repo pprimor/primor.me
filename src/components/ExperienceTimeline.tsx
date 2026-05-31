@@ -32,11 +32,6 @@ export default function ExperienceTimeline({ items }: ExperienceTimelineProps) {
   const { theme } = useTheme();
   const lineColor = theme === "light" ? "#e5e7eb" : "rgba(255, 255, 255, 0.1)";
 
-  const getIsSameCompany = (index: number) => {
-    if (index === 0) return false;
-    return items[index].company === items[index - 1].company;
-  };
-
   return (
     <div className="relative max-w-4xl mx-auto">
       {items.length > 1 && (
@@ -65,13 +60,7 @@ export default function ExperienceTimeline({ items }: ExperienceTimelineProps) {
 
       {items.map((item, index) => (
         <div key={index} className="relative">
-          <ExperienceCard
-            {...item}
-            isFirst={index === 0}
-            isLast={index === items.length - 1}
-            isSameCompany={getIsSameCompany(index)}
-            index={index}
-          />
+          <ExperienceCard {...item} index={index} />
         </div>
       ))}
     </div>

@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useTheme } from "../context/theme-context";
 import { HiExternalLink } from "react-icons/hi";
 import { getExperienceSkillIcons } from "@/src/lib/data";
-import { calculateDuration, formatDateRange, formatDate } from "@/src/lib/utils";
+import { calculateDuration, formatDate } from "@/src/lib/utils";
 
 interface Plugin {
   name: string;
@@ -25,9 +25,6 @@ interface ExperienceCardProps {
   skills: readonly string[];
   links?: readonly { label: string; url: string }[];
   plugins?: readonly Plugin[];
-  isFirst?: boolean;
-  isLast?: boolean;
-  isSameCompany?: boolean;
   index: number;
 }
 
@@ -44,9 +41,6 @@ export default function ExperienceCard({
   skills,
   links = [],
   plugins = [],
-  isFirst = false,
-  isLast = false,
-  isSameCompany = false,
   index,
 }: ExperienceCardProps) {
   const { theme } = useTheme();
