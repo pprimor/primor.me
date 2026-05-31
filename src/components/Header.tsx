@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { motion, useReducedMotion } from "framer-motion";
 import { HiMenu, HiX } from "react-icons/hi";
-import { links } from "@/src/lib/data";
+import { links } from "@/src/lib/nav-links";
 import { useActiveSectionContext } from "../context/active-section-context";
 
 const navPillClassName =

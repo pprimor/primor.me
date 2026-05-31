@@ -174,11 +174,11 @@ export default defineConfig(({ mode }) => ({
       },
       output: {
         manualChunks(id) {
-          if (id.includes('node_modules/framer-motion')) {
-            return 'motion';
+          if (id.includes("node_modules/framer-motion")) {
+            return "motion";
           }
-          if (id.includes('node_modules/react-icons')) {
-            return 'icons';
+          if (id.includes("node_modules/react-hot-toast")) {
+            return "toast";
           }
         },
       },

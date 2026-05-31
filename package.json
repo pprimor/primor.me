@@ -14,6 +14,7 @@
     "lighthouse": "npm run build && npx --yes @lhci/cli@0.14.0 autorun"
   },
   "dependencies": {
+    "@fontsource/inter": "^5.2.5",
     "@react-email/components": "^0.0.12",
     "@react-email/tailwind": "^0.0.13",
     "@types/node": "20.3.2",
@@ -34,11 +35,11 @@
     "typescript": "5.1.3"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250317.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
-    "@cloudflare/workers-types": "^4.20250317.0",
-    "eslint-plugin-react-hooks": "^4.6.2",
     "@vitejs/plugin-react-swc": "^3.7.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
     "sharp": "^0.34.2",
     "vite": "^5.4.0",
     "wrangler": "^4.14.0"

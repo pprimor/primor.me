@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { useInView } from "react-intersection-observer";
 import SectionHeading from "./SectionHeading";
 import SubmitButton from "./contact/SubmitButton";
+import ThemedToaster from "./ThemedToaster";
 import { useTheme } from "@/src/context/theme-context";
 import { useSectionInView } from "@/src/lib/hooks";
 
@@ -203,7 +204,9 @@ export default function Contact() {
     );
 
   return (
-    <motion.section
+    <>
+      <ThemedToaster />
+      <motion.section
       id="contact"
       ref={ref}
       className="mb-28 max-w-[40rem] w-full scroll-mt-28 sm:mb-40"
@@ -300,5 +303,6 @@ export default function Contact() {
         </div>
       </form>
     </motion.section>
+    </>
   );
 }

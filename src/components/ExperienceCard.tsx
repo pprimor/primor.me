@@ -237,6 +237,8 @@ export default function ExperienceCard({
                               src={plugin.image}
                               alt={plugin.name}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              loading="lazy"
+                              decoding="async"
                             />
                           )}
                           <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
