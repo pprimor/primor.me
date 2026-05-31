@@ -68,6 +68,27 @@ npm run build
 
 Pull requests and pushes to `main` run lint, typecheck, tests, and build via GitHub Actions. Only merges to `main` (and manual workflow runs) deploy to Cloudflare Pages.
 
+### Lighthouse CI
+
+The `check` job runs Lighthouse CI against the production build in `dist/` ([`lighthouserc.json`](lighthouserc.json)). Four URLs are collected (3 runs each):
+
+| URL | Purpose |
+|-----|---------|
+| `/index.html` | Homepage baseline (Intro + About eager bundles) |
+| `/index.html#experience` | Scrolls to Experience; triggers lazy-loaded section chunk |
+| `/index.html#contact` | Scrolls to Contact; triggers Contact + toast chunks |
+| `/404.html` | Custom 404 entry (`noindex`, separate bundle) |
+
+Hash routes mirror in-page nav: the browser scrolls to the section `id` on load, which fires the same `useInView` lazy imports as user navigation. LHCI groups assertions by document URL (hash is stripped), so home and hash runs share the homepage performance gate (error ≥ 0.9).
+
+PR builds do not receive `VITE_TURNSTILE_SITE_KEY` or `VITE_CF_WEB_ANALYTICS_TOKEN`, so Lighthouse runs against the same secret-free output as CI.
+
+```bash
+npm run lighthouse   # build + LHCI autorun (12 Lighthouse runs)
+```
+
+Reports upload to temporary public storage; local artifacts land in `.lighthouseci/` (gitignored).
+
 ## Testing
 
 ```bash
@@ -172,7 +193,7 @@ Requires network access to production URLs for capture; commit updated images wh
 ## Deployment
 
 - Push to `main` → Actions `check` then `deploy` to Cloudflare Pages project `primor-me`
-- Pull requests → `check` only (lint, typecheck, test, build, Lighthouse on `index.html`)
+- Pull requests → `check` only (lint, typecheck, test, build, Lighthouse on home, deferred sections, and 404)
 - Manual: `workflow_dispatch` in GitHub Actions
 - Functions under `functions/` deploy automatically with Pages
 - Unknown paths serve the custom `404.html` with HTTP **404** (built from the second Vite entry). Do not re-add `/* /index.html 200` to [`public/_redirects`](public/_redirects) unless you introduce client-side routing; hash links (`/#contact`) still load `/` first.

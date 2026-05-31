@@ -2,16 +2,36 @@
   "ci": {
     "collect": {
       "staticDistDir": "./dist",
-      "url": ["/index.html"],
+      "url": [
+        "http://localhost/index.html",
+        "http://localhost/index.html#experience",
+        "http://localhost/index.html#contact",
+        "http://localhost/404.html"
+      ],
       "numberOfRuns": 3
     },
     "assert": {
-      "assertions": {
-        "categories:performance": ["warn", { "minScore": 0.85 }],
-        "categories:accessibility": ["warn", { "minScore": 0.9 }],
-        "categories:best-practices": ["warn", { "minScore": 0.9 }],
-        "categories:seo": ["error", { "minScore": 0.95 }]
-      }
+      "assertMatrix": [
+        {
+          "matchingUrlPattern": "index\\.html$",
+          "assertions": {
+            "categories:performance": ["error", { "minScore": 0.9 }],
+            "categories:accessibility": ["warn", { "minScore": 0.9 }],
+            "categories:best-practices": ["warn", { "minScore": 0.9 }],
+            "categories:seo": ["error", { "minScore": 0.95 }]
+          }
+        },
+        {
+          "matchingUrlPattern": "404\\.html",
+          "assertions": {
+            "categories:performance": ["warn", { "minScore": 0.9 }],
+            "categories:accessibility": ["warn", { "minScore": 0.9 }],
+            "categories:best-practices": ["warn", { "minScore": 0.9 }],
+            "categories:seo": ["warn", { "minScore": 0.6 }],
+            "meta-description": "off"
+          }
+        }
+      ]
     },
     "upload": {
       "target": "temporary-public-storage"
