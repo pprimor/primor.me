@@ -3,7 +3,7 @@
 import "react";
 
 declare module "react" {
-  interface ImgHTMLAttributes<T> {
+  interface ImgHTMLAttributes {
     fetchPriority?: "high" | "low" | "auto";
   }
 }
