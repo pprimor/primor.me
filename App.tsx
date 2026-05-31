@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { LazyMotion, domAnimation } from 'framer-motion';
 import './src/globals.css';
 import Header from './src/components/Header';
 import Footer from './src/components/Footer';
-import ThemeSwitcher from './src/components/ThemeSwitcher';
+
+const ThemeSwitcher = lazy(() => import('./src/components/ThemeSwitcher'));
 import ActiveSectionContextProvider from './src/context/active-section-context';
 import ThemeContextProvider from './src/context/theme-context';
 import Home from './src/page';
@@ -37,7 +38,9 @@ export default function App() {
             <Header />
             <Home />
             <Footer />
-            <ThemeSwitcher />
+            <Suspense fallback={null}>
+              <ThemeSwitcher />
+            </Suspense>
           </ActiveSectionContextProvider>
         </ThemeContextProvider>
       </LazyMotion>
