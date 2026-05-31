@@ -3,13 +3,55 @@ import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import { absoluteUrl, siteMetadata } from './src/lib/site-metadata';
 
+const notFoundTitle = `Page not found — ${siteMetadata.author}`;
+const notFoundDescription =
+  'This page does not exist on primor.me. Return to the homepage.';
+
+function analyticsBeacon(cfWebAnalyticsToken: string) {
+  return {
+    tag: 'script' as const,
+    attrs: {
+      defer: true,
+      src: 'https://static.cloudflareinsights.com/beacon.min.js',
+      'data-cf-beacon': JSON.stringify({ token: cfWebAnalyticsToken }),
+    },
+    injectTo: 'head' as const,
+  };
+}
+
 function siteMetaPlugin(mode: string): Plugin {
   const env = loadEnv(mode, process.cwd(), '');
   const cfWebAnalyticsToken = env.VITE_CF_WEB_ANALYTICS_TOKEN?.trim();
 
   return {
     name: 'site-meta',
-    transformIndexHtml() {
+    transformIndexHtml(_html, ctx) {
+      const isNotFoundPage = ctx.filename.endsWith('404.html');
+      const analyticsTags = cfWebAnalyticsToken
+        ? [analyticsBeacon(cfWebAnalyticsToken)]
+        : [];
+
+      if (isNotFoundPage) {
+        return [
+          {
+            tag: 'title',
+            children: notFoundTitle,
+            injectTo: 'head',
+          },
+          {
+            tag: 'meta',
+            attrs: { name: 'description', content: notFoundDescription },
+            injectTo: 'head',
+          },
+          {
+            tag: 'meta',
+            attrs: { name: 'robots', content: 'noindex' },
+            injectTo: 'head',
+          },
+          ...analyticsTags,
+        ];
+      }
+
       const ogImage = absoluteUrl(siteMetadata.ogImagePath);
       const canonical = siteMetadata.siteUrl + '/';
 
@@ -111,19 +153,7 @@ function siteMetaPlugin(mode: string): Plugin {
           children: JSON.stringify(jsonLd),
           injectTo: 'head',
         },
-        ...(cfWebAnalyticsToken
-          ? [
-              {
-                tag: 'script',
-                attrs: {
-                  defer: true,
-                  src: 'https://static.cloudflareinsights.com/beacon.min.js',
-                  'data-cf-beacon': JSON.stringify({ token: cfWebAnalyticsToken }),
-                },
-                injectTo: 'head' as const,
-              },
-            ]
-          : []),
+        ...analyticsTags,
       ];
     },
   };
@@ -134,6 +164,14 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './'),
+    },
+  },
+  build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        notFound: path.resolve(__dirname, '404.html'),
+      },
     },
   },
 }));

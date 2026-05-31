@@ -127,6 +127,7 @@ Requires network access to production URLs; commit updated images when refreshin
 - Pull requests → `check` only
 - Manual: `workflow_dispatch` in GitHub Actions
 - Functions under `functions/` deploy automatically with Pages
+- Unknown paths serve the custom `404.html` with HTTP **404** (built from the second Vite entry). Do not re-add `/* /index.html 200` to [`public/_redirects`](public/_redirects) unless you introduce client-side routing; hash links (`/#contact`) still load `/` first.
 
 ## Project layout
 
