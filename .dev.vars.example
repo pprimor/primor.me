@@ -1,3 +1,5 @@
 RESEND_API_KEY=re_your_api_key_here
 CONTACT_TO_EMAIL=hello@primor.me
 RESEND_FROM_EMAIL=Portfolio <hello@primor.me>
+# Cloudflare Turnstile secret. Use test secret 1x0000000000000000000000000000000AA locally.
+TURNSTILE_SECRET_KEY=

@@ -2,15 +2,21 @@ interface Env {
   RESEND_API_KEY: string;
   CONTACT_TO_EMAIL?: string;
   RESEND_FROM_EMAIL?: string;
+  TURNSTILE_SECRET_KEY: string;
+  CONTACT_RATE_LIMIT: KVNamespace;
 }
 
 type ContactBody = {
   senderEmail?: string;
   message?: string;
   company?: string;
+  turnstileToken?: string;
 };
 
 const MAX_MESSAGE_LENGTH = 5000;
+const MAX_SUBMISSIONS_PER_HOUR = 5;
+const HOUR_MS = 3_600_000;
+const RATE_LIMIT_TTL_SECONDS = 3600;
 const DEFAULT_TO_EMAIL = "hello@primor.me";
 const DEFAULT_FROM_EMAIL = "Portfolio <hello@primor.me>";
 const ALLOWED_ORIGINS = new Set([
@@ -60,6 +66,71 @@ function isAllowedOrigin(request: Request): boolean {
   }
 }
 
+function getClientIp(request: Request): string {
+  const cfConnectingIp = request.headers.get("CF-Connecting-IP");
+  if (cfConnectingIp) {
+    return cfConnectingIp;
+  }
+
+  const forwardedFor = request.headers.get("X-Forwarded-For");
+  if (forwardedFor) {
+    return forwardedFor.split(",")[0]?.trim() ?? "unknown";
+  }
+
+  return "unknown";
+}
+
+async function verifyTurnstile(
+  secret: string,
+  token: string,
+  remoteIp: string | undefined
+): Promise<boolean> {
+  const params = new URLSearchParams({
+    secret,
+    response: token,
+  });
+
+  if (remoteIp) {
+    params.set("remoteip", remoteIp);
+  }
+
+  const response = await fetch(
+    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: params.toString(),
+    }
+  );
+
+  if (!response.ok) {
+    return false;
+  }
+
+  const result = (await response.json()) as { success?: boolean };
+  return result.success === true;
+}
+
+async function checkRateLimit(
+  kv: KVNamespace,
+  ip: string
+): Promise<{ allowed: boolean }> {
+  const hourBucket = Math.floor(Date.now() / HOUR_MS);
+  const key = `contact:${ip}:${hourBucket}`;
+  const current = await kv.get(key);
+  const count = current ? Number.parseInt(current, 10) : 0;
+
+  if (count >= MAX_SUBMISSIONS_PER_HOUR) {
+    return { allowed: false };
+  }
+
+  await kv.put(key, String(count + 1), {
+    expirationTtl: RATE_LIMIT_TTL_SECONDS,
+  });
+
+  return { allowed: true };
+}
+
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   const { request, env } = context;
 
@@ -68,6 +139,14 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   }
 
   if (!env.RESEND_API_KEY) {
+    return jsonResponse({ error: "Email service is not configured" }, 503);
+  }
+
+  if (!env.TURNSTILE_SECRET_KEY) {
+    return jsonResponse({ error: "Email service is not configured" }, 503);
+  }
+
+  if (!env.CONTACT_RATE_LIMIT) {
     return jsonResponse({ error: "Email service is not configured" }, 503);
   }
 
@@ -80,6 +159,33 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
   if (body.company) {
     return jsonResponse({ error: "Invalid submission" }, 400);
+  }
+
+  const turnstileToken = body.turnstileToken?.trim() ?? "";
+  if (!turnstileToken) {
+    return jsonResponse({ error: "Verification required" }, 400);
+  }
+
+  const clientIp = getClientIp(request);
+  const turnstileOk = await verifyTurnstile(
+    env.TURNSTILE_SECRET_KEY,
+    turnstileToken,
+    clientIp !== "unknown" ? clientIp : undefined
+  );
+
+  if (!turnstileOk) {
+    return jsonResponse(
+      { error: "Verification failed. Please try again." },
+      400
+    );
+  }
+
+  const rateLimit = await checkRateLimit(env.CONTACT_RATE_LIMIT, clientIp);
+  if (!rateLimit.allowed) {
+    return jsonResponse(
+      { error: "Too many requests. Please try again later." },
+      429
+    );
   }
 
   const senderEmail = body.senderEmail?.trim() ?? "";

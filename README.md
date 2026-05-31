@@ -29,19 +29,31 @@ npm run preview      # after build
 ## Local development with contact API
 
 ```bash
-cp .dev.vars.example .dev.vars   # add real RESEND_API_KEY
-npm run dev:full                 # Wrangler proxies Vite + Functions
+cp .dev.vars.example .dev.vars   # add RESEND_API_KEY + TURNSTILE_SECRET_KEY
+cp .env.example .env             # optional: VITE_TURNSTILE_SITE_KEY for the widget
+npm run dev                      # terminal 1 → Vite on :5173
+npm run dev:full                 # terminal 2 → Wrangler Pages + Functions on :8788
 ```
 
-Variables from [`.dev.vars.example`](.dev.vars.example):
+Open **http://localhost:8788** (not 5173) so `/api/contact` hits the local Function.
 
-| Variable | Required | Purpose |
-|----------|----------|---------|
-| `RESEND_API_KEY` | Yes | Resend API key |
-| `CONTACT_TO_EMAIL` | No | Inbox (default `hello@primor.me`) |
-| `RESEND_FROM_EMAIL` | No | From header (default in code) |
+Variables from [`.dev.vars.example`](.dev.vars.example) and [`.env.example`](.env.example):
 
-`.dev.vars` is gitignored; never commit secrets.
+| Variable | File | Required | Purpose |
+|----------|------|----------|---------|
+| `RESEND_API_KEY` | `.dev.vars` | Yes (for send) | Resend API key |
+| `CONTACT_TO_EMAIL` | `.dev.vars` | No | Inbox (default `hello@primor.me`) |
+| `RESEND_FROM_EMAIL` | `.dev.vars` | No | From header (default in code) |
+| `TURNSTILE_SECRET_KEY` | `.dev.vars` | Yes (for `dev:full`) | Server-side Turnstile verify |
+| `VITE_TURNSTILE_SITE_KEY` | `.env` | No | Client widget (hidden if unset) |
+
+For local Turnstile testing, use Cloudflare [test keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/):
+
+- Site key: `1x00000000000000000000AA` (always passes)
+- Secret: `1x0000000000000000000000000000000AA`
+- Dummy response token: `1x000000000000000000000000AA`
+
+`.dev.vars` and `.env` are gitignored; never commit secrets.
 
 ## Development
 
@@ -71,8 +83,33 @@ Pull requests and pushes to `main` run lint, typecheck, and build via GitHub Act
 |------------------|-------|----------|
 | `RESEND_API_KEY` | Cloudflare Pages → Settings → Environment variables | Contact API |
 | `CONTACT_TO_EMAIL`, `RESEND_FROM_EMAIL` | Same (optional) | Contact overrides |
+| `TURNSTILE_SECRET_KEY` | Pages env (Production + Preview) | Turnstile siteverify |
+| `VITE_TURNSTILE_SITE_KEY` | GitHub Actions secret | Turnstile widget on deploy build |
 | `VITE_CF_WEB_ANALYTICS_TOKEN` | GitHub Actions secret | Analytics beacon on deploy build |
 | `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` | GitHub Actions secrets | `wrangler pages deploy` |
+
+### Contact form hardening (Turnstile + KV)
+
+The contact API layers **origin allowlist**, **honeypot**, **Turnstile**, and **KV rate limiting** (5 submissions per IP per hour) before calling Resend.
+
+#### Cloudflare dashboard (one-time)
+
+1. **Turnstile** → create a widget for `primor.me` (Managed mode recommended). Copy the **site key** (build-time) and **secret key** (Pages env).
+2. **KV** — create the rate-limit namespace (requires `CLOUDFLARE_API_TOKEN` locally):
+
+   ```bash
+   npx wrangler kv namespace create CONTACT_RATE_LIMIT
+   npx wrangler kv namespace create CONTACT_RATE_LIMIT --preview
+   ```
+
+   Paste the returned `id` and `preview_id` into [`wrangler.toml`](wrangler.toml) (`CONTACT_RATE_LIMIT` binding).
+3. **Pages** → project `primor-me` → **Settings → Functions**:
+   - Bind KV namespace `CONTACT_RATE_LIMIT` to the namespace above.
+   - Add `TURNSTILE_SECRET_KEY` for Production and Preview (same vars as Resend).
+
+4. **GitHub** → repository secret `VITE_TURNSTILE_SITE_KEY` (site key from step 1).
+
+Rate limits apply per IP (`CF-Connecting-IP`). Users behind shared NAT may share a cap; acceptable for a personal portfolio.
 
 ## Analytics
 

@@ -1,3 +1,11 @@
 name = "primor-me"
 compatibility_date = "2024-01-01"
 pages_build_output_dir = "dist"
+
+# Create namespaces: npx wrangler kv namespace create CONTACT_RATE_LIMIT
+# and: npx wrangler kv namespace create CONTACT_RATE_LIMIT --preview
+# Then paste the returned ids below and bind CONTACT_RATE_LIMIT in Pages → Settings → Functions.
+[[kv_namespaces]]
+binding = "CONTACT_RATE_LIMIT"
+id = "65bcc20e65744276b9d784c54b99063d"
+preview_id = "b4980d63db3f408a8cf7b1e94dabfc3d"
