@@ -61,7 +61,9 @@ export default function Intro() {
           <BsArrowRight className="opacity-70 group-hover:translate-x-1 transition" />
         </a>
         <a
-          href="/CV.pdf"
+          href="https://cv.primor.me/CV.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
           className="group bg-white dark:bg-white/10 px-7 py-3 flex items-center gap-2 rounded-full focus-ring hover:scale-110 active:scale-105 transition cursor-pointer borderBlack"
         >
           Download CV{" "}
