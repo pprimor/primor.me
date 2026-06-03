@@ -29,7 +29,7 @@ export function sanitizeResendError(body: string): string {
       return truncate(parsed.message);
     }
   } catch {
-    // fall through to raw body
+    return truncate(trimmed);
   }
 
   return truncate(trimmed);

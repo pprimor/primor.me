@@ -3,11 +3,11 @@ import { LazyMotion, domAnimation } from 'framer-motion';
 import './src/globals.css';
 import Header from './src/components/Header';
 import Footer from './src/components/Footer';
-
-const ThemeSwitcher = lazy(() => import('./src/components/ThemeSwitcher'));
 import ActiveSectionContextProvider from './src/context/active-section-context';
 import ThemeContextProvider from './src/context/theme-context';
 import Home from './src/page';
+
+const ThemeSwitcher = lazy(() => import('./src/components/ThemeSwitcher'));
 
 export default function App() {
   return (
@@ -30,7 +30,6 @@ export default function App() {
           background: "linear-gradient(-270deg, #0f6f31 0%, #128739 40%)",
         }}
       />
-    
       
       <LazyMotion features={domAnimation} strict>
         <ThemeContextProvider>
