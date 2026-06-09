@@ -9,10 +9,12 @@
   description:
     - Enhanced cross-platform desktop application functionalities using Electron and Node.js, improving integration scalability and feature parity across operating systems
     - Developed a company-wide OAuth 2.0 (RFC 6749) Authorization Server with OpenID Connect (OIDC) support, standardizing authentication across PageProof integrations
+    - Built the PageProof for Jira backend service with TypeScript and Azure Functions, powering an Atlassian Forge issue panel that links proofs to Jira issues, syncs approval status, and delivers approved files into Jira
     - Built the Canva App for PageProof using React, TypeScript, and the Canva Apps SDK, enabling seamless review workflows within Canva
     - Implemented the Microsoft Office taskpane add-in with React, TypeScript, and Office.js to integrate PageProof's functionality directly into the Office ecosystem
     - Led the development of the Final Cut Pro workflow extension using Swift and SwiftUI, improving review efficiency for video editing teams
     - Built and maintained PageProof's cross-platform UXP plug-in integrations for Adobe Photoshop and InDesign, streamlining creative workflows and ensuring seamless integration with PageProof
+    - Built the PageProof XTension for QuarkXPress with a cross-platform native extension and embedded React and TypeScript UI, enabling proof creation and in-layout comment review directly within QuarkXPress
     - Contributed to enhancing the PageProof web app, with a focus on optimizing the mobile user experience and UI responsiveness
   skills:
     - React
