@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import clsx from "clsx";
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { HiMenu, HiX } from "react-icons/hi";
 import { links } from "@/src/lib/nav-links";
 import { useActiveSectionContext } from "../context/active-section-context";
@@ -41,7 +41,7 @@ export default function Header() {
 
   return (
     <header className="z-[999] relative">
-      <motion.nav
+      <m.nav
         aria-label="Main navigation"
         className="fixed top-0 left-1/2 w-full sm:top-6 sm:w-max sm:max-w-[calc(100vw-2rem)]"
         initial={shouldReduceMotion ? false : { x: "-50%", y: -100, opacity: 0 }}
@@ -88,7 +88,7 @@ export default function Header() {
         >
           <ul className="flex items-center gap-1 px-1 text-[1rem] font-medium text-gray-500">
             {links.map((link) => (
-              <motion.li
+              <m.li
                 key={link.hash}
                 className="flex items-center"
                 initial={shouldReduceMotion ? false : { y: -100, opacity: 0 }}
@@ -108,11 +108,11 @@ export default function Header() {
                 >
                   {link.name}
                 </a>
-              </motion.li>
+              </m.li>
             ))}
           </ul>
         </div>
-      </motion.nav>
+      </m.nav>
     </header>
   );
 }

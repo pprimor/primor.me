@@ -1,7 +1,8 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { BsArrowRight, BsGithub, BsLinkedin } from "react-icons/bs";
 import { HiDownload } from "react-icons/hi";
 import { useSectionInView } from "@/src/lib/hooks";
+import { siteMetadata } from "@/src/lib/site-metadata";
 import OptimizedImage from "./OptimizedImage";
 
 export default function Intro() {
@@ -16,7 +17,7 @@ export default function Intro() {
     >
       <div className="flex items-center justify-center">
         <div className="relative">
-          <motion.div
+          <m.div
             initial={shouldReduceMotion ? false : { opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ type: "tween", duration: 0.5 }}
@@ -30,24 +31,41 @@ export default function Intro() {
               loading="eager"
               fetchPriority="high"
             />
-          </motion.div>
+          </m.div>
         </div>
       </div>
-      <motion.h1
-        className="mb-10 mt-4 px-4 text-2xl font-medium !leading-[1.5] sm:text-4xl"
+      <m.div
+        className="mb-10 mt-4 px-4"
         initial={shouldReduceMotion ? false : { opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        Hey there 👋, I&rsquo;m <b>Pedro</b>.
-        <br />
-        I&rsquo;m a software engineer based in Portugal 🇵🇹 and I&rsquo;m
-        currently working at{" "}
-        <a href="https://pageproof.com" className="font-bold hover:underline">
-          PageProof
-        </a>{" "}
-        as a Software Engineer.
-      </motion.h1>
-      <motion.div
+        <h1 className="text-2xl font-medium !leading-[1.5] sm:text-4xl">
+          Hey there 👋, I&rsquo;m <b>Pedro</b>.
+        </h1>
+        <p className="mt-4 text-lg leading-relaxed text-gray-700 dark:text-white/80 sm:text-xl">
+          I build integrations and workflow tools for creative teams —{" "}
+          <span className="font-semibold">Canva</span>,{" "}
+          <span className="font-semibold">Adobe</span>,{" "}
+          <span className="font-semibold">Office</span>, and{" "}
+          <span className="font-semibold">Final Cut Pro</span>.
+        </p>
+        <p className="mt-4 text-base leading-relaxed text-gray-700 dark:text-white/70 sm:text-lg">
+          Software Engineer at{" "}
+          <a href="https://pageproof.com" className="font-semibold hover:underline">
+            PageProof
+          </a>{" "}
+          in Portugal 🇵🇹. Open to select freelance projects.
+        </p>
+        <p className="mt-4 text-base text-gray-600 dark:text-white/60">
+          <a
+            href={`mailto:${siteMetadata.contactEmail}`}
+            className="font-medium underline decoration-gray-400 underline-offset-4 hover:text-gray-900 dark:hover:text-white"
+          >
+            {siteMetadata.contactEmail}
+          </a>
+        </p>
+      </m.div>
+      <m.div
         className="flex flex-row flex-wrap items-center justify-center gap-4"
         initial={shouldReduceMotion ? false : { opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
@@ -87,7 +105,7 @@ export default function Intro() {
         >
           <BsGithub />
         </a>
-      </motion.div>
+      </m.div>
     </section>
   );
 }

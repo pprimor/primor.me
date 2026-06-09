@@ -1,8 +1,9 @@
 export const siteMetadata = {
   siteUrl: "https://primor.me",
   title: "Pedro Primor — Software Engineer",
+  contactEmail: "hello@primor.me",
   description:
-    "Software Engineer at PageProof in Portugal. Cross-platform integrations for Canva, Office, Adobe & Final Cut Pro. React, TypeScript, Swift.",
+    "Software Engineer at PageProof in Portugal. Cross-platform integrations for Canva, Office, Adobe & Final Cut Pro. Open to select freelance projects.",
   author: "Pedro Primor",
   ogImagePath: "/images/og.png",
   ogImageAlt: "Pedro Primor",

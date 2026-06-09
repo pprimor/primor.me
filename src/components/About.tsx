@@ -1,5 +1,5 @@
 import SectionHeading from "./SectionHeading";
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { useSectionInView } from "@/src/lib/hooks";
 
 export default function About() {
@@ -7,7 +7,7 @@ export default function About() {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <motion.section
+    <m.section
       id="about"
       ref={ref}
       className="mb-28 max-w-[50rem] text-center leading-8 sm:mb-40 scroll-mt-28"
@@ -38,6 +38,6 @@ export default function About() {
         that improve efficiency, usability, and product value.
       </p>
 
-    </motion.section>
+    </m.section>
   );
 }

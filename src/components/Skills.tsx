@@ -2,7 +2,7 @@ import React from "react";
 import SectionHeading from "./SectionHeading";
 import { skillsByCategory } from "@/src/lib/data";
 import { useSectionInView } from "@/src/lib/hooks";
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 
 export default function Skills() {
   const { ref } = useSectionInView("#skills");
@@ -32,7 +32,7 @@ export default function Skills() {
             {skills.map(({ name, icon }) => {
               const currentIndex = skillIndex++;
               return (
-                <motion.li
+                <m.li
                   key={name}
                   className="flex items-center gap-2 bg-white dark:bg-white/10 borderBlack dark:border-white/10 rounded-xl px-5 py-3"
                   variants={animationVariants}
@@ -43,7 +43,7 @@ export default function Skills() {
                 >
                   {icon}
                   {name}
-                </motion.li>
+                </m.li>
               );
             })}
             {categoryIndex < skillsByCategory.length - 1 && (

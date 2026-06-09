@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { projects, getExperienceSkillIcons } from "@/src/lib/data";
 import { useTheme } from "../context/theme-context";
 import ProjectLinks from "./ProjectLinks";
@@ -23,7 +23,7 @@ export default function Project({
   const textColor = theme === "light" ? "rgb(17, 24, 39)" : "rgb(243, 244, 246)";
 
   return (
-    <motion.div
+    <m.div
       initial={shouldReduceMotion ? false : { scale: 0.8, opacity: 0.5 }}
       whileInView={shouldReduceMotion ? undefined : { scale: 1, opacity: 1 }}
       viewport={{ once: true, margin: "-100px" }}
@@ -68,6 +68,6 @@ export default function Project({
           />
         </div>
       </section>
-    </motion.div>
+    </m.div>
   );
 }

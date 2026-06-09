@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { useTheme } from "../context/theme-context";
 import { HiExternalLink } from "react-icons/hi";
 import { getExperienceSkillIcons } from "@/src/lib/data";
@@ -64,7 +64,7 @@ export default function ExperienceCard({
   const iconBg = theme === "light" ? "#f3f4f6" : "rgba(255, 255, 255, 0.1)";
 
   return (
-    <motion.div
+    <m.div
       className="relative"
       initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
       whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
@@ -295,7 +295,7 @@ export default function ExperienceCard({
           </div>
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 }
 

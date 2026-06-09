@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -9,6 +9,7 @@ import SubmitButton from "./contact/SubmitButton";
 import ThemedToaster from "./ThemedToaster";
 import { useTheme } from "@/src/context/theme-context";
 import { useSectionInView } from "@/src/lib/hooks";
+import { siteMetadata } from "@/src/lib/site-metadata";
 
 type ContactFormData = {
   senderEmail: string;
@@ -19,8 +20,7 @@ type ContactFormData = {
 const TURNSTILE_SCRIPT_ID = "cf-turnstile-script";
 const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
 
-const GENERIC_ERROR =
-  "Couldn't send your message. Please try again or email hello@primor.me directly.";
+const GENERIC_ERROR = `Couldn't send your message. Please try again or email ${siteMetadata.contactEmail} directly.`;
 
 const API_ERROR_MESSAGES: Record<string, string> = {
   "A valid email address is required": "Please enter a valid email address.",
@@ -206,7 +206,7 @@ export default function Contact() {
   return (
     <>
       <ThemedToaster />
-      <motion.section
+      <m.section
       id="contact"
       ref={ref}
       className="mb-28 max-w-[40rem] w-full scroll-mt-28 sm:mb-40"
@@ -216,7 +216,8 @@ export default function Contact() {
     >
       <SectionHeading>Contact me</SectionHeading>
       <p className="mb-8 text-center text-gray-700 dark:text-white/70">
-        Have a question or want to work together? Send me a message.
+        Building an integration, plugin, or internal tool? Tell me about your
+        project and I&rsquo;ll get back to you within a few days.
       </p>
 
       <form
@@ -294,15 +295,15 @@ export default function Contact() {
           <p className="text-sm text-gray-500 dark:text-gray-400">
             Or email me directly at{" "}
             <a
-              href="mailto:hello@primor.me"
+              href={`mailto:${siteMetadata.contactEmail}`}
               className="underline hover:text-gray-900 dark:hover:text-gray-200"
             >
-              hello@primor.me
+              {siteMetadata.contactEmail}
             </a>
           </p>
         </div>
       </form>
-    </motion.section>
+    </m.section>
     </>
   );
 }
