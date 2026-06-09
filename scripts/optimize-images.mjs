@@ -10,6 +10,7 @@ const IMAGE_NAMES = [
   "igcp-aforro-dark",
   "me",
   "final-cut-pro-preview",
+  "canva-preview",
 ];
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");

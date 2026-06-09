@@ -27,6 +27,10 @@
     - SASS
   links: []
   plugins:
+    - name: PageProof for Canva
+      url: https://pageproof.com/integrations/canva
+      description: Seamless review workflows within Canva
+      image: /images/canva-preview.png
     - name: PageProof for Adobe Photoshop
       url: https://exchange.adobe.com/apps/cc/c1f33c8f/pageproof-for-adobe-photoshop
       description: UXP plugin for Adobe Photoshop
