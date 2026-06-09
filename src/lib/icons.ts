@@ -8,9 +8,7 @@ import {
   FaReact,
   FaNodeJs,
   FaGitAlt,
-  FaUnity,
   FaPython,
-  FaDatabase,
 } from "react-icons/fa";
 import { SiVite } from "react-icons/si";
 import { IoMdAirplane } from "react-icons/io";
@@ -19,17 +17,15 @@ import {
   SiTailwindcss,
   SiElectron,
   SiSwift,
-  SiCsharp,
   SiTableau,
   SiOpenid,
-  SiAndroid,
-  SiApple,
   SiOcaml,
   SiNeo4J,
   SiWebgl,
   SiFlask,
   SiSass,
   SiLatex,
+  SiAzurefunctions,
 } from "react-icons/si";
 import { DiDotnet, DiJava } from "react-icons/di";
 import { TbBrandOauth } from "react-icons/tb";
@@ -62,18 +58,14 @@ const skillIconComponents: Record<string, IconType> = {
   "Node.js": FaNodeJs,
   Python: FaPython,
   Java: DiJava,
-  "C#": SiCsharp,
   "OAuth 2.0": TbBrandOauth,
   "OpenID Connect": SiOpenid,
   Swift: SiSwift,
   SwiftUI: SiSwift,
   Electron: SiElectron,
-  Android: SiAndroid,
-  iOS: SiApple,
-  SQLite: FaDatabase,
   Tableau: SiTableau,
   Git: FaGitAlt,
-  Unity: FaUnity,
+  "Azure Functions": SiAzurefunctions,
   OCaml: SiOcaml,
   "ASP.NET": DiDotnet,
   Neo4j: SiNeo4J,

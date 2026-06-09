@@ -25,7 +25,7 @@ export default function Skills() {
       ref={ref}
       className="mb-28 max-w-[53rem] scroll-mt-28 text-center sm:mb-40"
     >
-      <SectionHeading>Tech Stack</SectionHeading>
+      <SectionHeading>Core technologies</SectionHeading>
       <ul className="flex flex-wrap justify-center gap-2 text-lg text-gray-800 dark:text-white/80">
         {skillsByCategory.map(({ category, skills }, categoryIndex) => (
           <React.Fragment key={category}>

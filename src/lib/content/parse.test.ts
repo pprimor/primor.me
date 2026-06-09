@@ -55,11 +55,13 @@ describe("parseExperienceYaml", () => {
 describe("parseSkillsYaml", () => {
   it("parses production skills.yaml with icons on every category skill", () => {
     const categories = parseSkillsYaml(readContent("skills"));
-    expect(categories.length).toBeGreaterThanOrEqual(5);
-    const frontend = categories.find((c) => c.category === "Frontend");
-    expect(frontend?.skills.some((s) => s.name === "React" && s.icon)).toBe(
-      true,
-    );
+    expect(categories).toHaveLength(5);
+    const backend = categories.find((c) => c.category === "Backend & Cloud");
+    expect(
+      backend?.skills.some(
+        (s) => s.name === "Azure Functions" && s.icon,
+      ),
+    ).toBe(true);
   });
 });
 
