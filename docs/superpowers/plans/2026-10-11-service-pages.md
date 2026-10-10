@@ -30,7 +30,7 @@
 1. **Hydration mismatch.** The props the island hydrates with must equal the props used for the server render, or React re-renders the form on top of itself. Task 6 parses the embedded props JSON back out of the HTML and compares it to the expected props.
 2. **Content that contains `<`, `</script>` or `&`.** FAQ answers or pitches with these characters must not break out of the JSON-LD or props `<script>` tags. Task 2 tests `safeJson` against `</script><!--`.
 3. **A `service` value with newlines or control characters.** It must not reach the email subject as-is. Task 4 tests that whitespace is collapsed to single spaces.
-4. **Failure responses from the endpoint.** A 400 with a JSON error, a 502 with a plain-text body, or a network failure must all show a useful message, keep what the visitor typed, and let them retry. Task 5 tests all three in `submitInquiry`. The component resets Turnstile on error.
+4. **Failure responses from the endpoint.** A 400 with a JSON error, a 502 with a plain-text body, or a network failure must all show a useful message, keep what the visitor typed, and let them retry. Covered by the existing `submitContact` tests on `feat/hire-mobile-og`. The component resets Turnstile on error.
 5. **A renamed plugin in `experience.yaml`.** It must fail the build loudly, not silently drop the proof link. Task 1 tests the error message.
 
 ---
@@ -49,8 +49,7 @@
 | `src/lib/link-target.ts` (new) | `linkTargetProps(href)` |
 | `src/lib/service-pages-plugin.ts` (new) | Vite plugin: dev middleware + emits `sitemap.xml` |
 | `src/services/meta.ts` (new) | `servicePageMeta`, `overviewPageMeta` (JSON-LD graphs) |
-| `src/services/inquiry.ts` (new) | `submitInquiry` and the error copy (pure) |
-| `src/services/turnstile.ts` (new) | Lazy Turnstile script loader (DOM) |
+| `src/desktop/contact.ts`, `src/desktop/useTurnstile.ts` (from `feat/hire-mobile-og`) | Reused: `service` field; `useTurnstile` options |
 | `src/services/ContactForm.tsx` (new) | Form component; `FORM_ROOT_ID`, `FORM_PROPS_ID` |
 | `src/services/ContactSection.tsx` (new) | Heading + form root + embedded props JSON |
 | `src/services/ui.tsx` (new) | `H1`, `H2`, `linkClass` |
@@ -1160,157 +1159,75 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 
 ### Task 5: Contact form
 
+> Amended after rebasing onto `feat/hire-mobile-og`, which already ships `src/desktop/contact.ts` (`submitContact`, `validateContact`, friendly API-error mapping) and `src/desktop/useTurnstile.ts`. This task reuses them instead of adding `inquiry.ts`/`turnstile.ts`.
+
 **Files:**
-- Create: `src/services/inquiry.ts`, `src/services/turnstile.ts`, `src/services/ContactForm.tsx`
-- Test: `src/services/inquiry.test.ts`, `src/services/ContactForm.test.ts`
+- Modify: `src/desktop/contact.ts` (`ContactFields` gains `service?: string`), `src/desktop/useTurnstile.ts` (options)
+- Create: `src/services/ContactForm.tsx`
+- Test: `src/desktop/contact.test.ts`, `src/services/ContactForm.test.ts`
 
 **Interfaces:**
-- Consumes: `POST /api/contact` with `{ senderEmail, message, service, company, turnstileToken }` (Task 4).
+- Consumes: `POST /api/contact` `service` field (Task 4); `submitContact(fields, token, fetchFn?)`, `validateContact(fields)`, `GENERIC_ERROR` from `src/desktop/contact.ts`.
 - Produces:
-  - `OTHER_SERVICE = "Something else"`
-  - `type InquiryInput = { senderEmail: string; message: string; service: string; company: string; turnstileToken: string | null }`
-  - `type SubmitResult = { ok: true } | { ok: false; error: string }`
-  - `submitInquiry(input: InquiryInput, fetchImpl?: typeof fetch): Promise<SubmitResult>`
-  - `GENERIC_ERROR`, `VERIFY_FIRST` (strings)
+  - `useTurnstile(options?: { siteKey?: string | null; theme?: "light" | "dark"; load?: boolean })`. Defaults: the env site key, `"light"`, `true`. `HireForm` keeps calling `useTurnstile()` unchanged.
+  - `OTHER_SERVICE = "Something else"` (in `ContactForm.tsx`)
   - `type ContactFormProps = { services: readonly string[]; selected?: string; turnstileSiteKey: string | null; contactEmail: string }`
   - `default ContactForm(props: ContactFormProps)`
   - `FORM_ROOT_ID = "contact-form"`, `FORM_PROPS_ID = "contact-form-props"`
 
-- [ ] **Step 1: Write the failing tests for `submitInquiry`**
+- [ ] **Step 1: Failing test, `service` reaches the endpoint**
 
-Create `src/services/inquiry.test.ts`:
-
-```ts
-import { describe, expect, it, vi } from "vitest";
-import { GENERIC_ERROR, VERIFY_FIRST, submitInquiry, type InquiryInput } from "./inquiry";
-
-const input: InquiryInput = {
-  senderEmail: "  client@example.com ",
-  message: " Need a plugin ",
-  service: "Canva Apps",
-  company: "",
-  turnstileToken: "tok",
-};
-
-function fetchReturning(response: Response | Error) {
-  return vi.fn<typeof fetch>(async () => {
-    if (response instanceof Error) throw response;
-    return response;
-  });
-}
-
-describe("submitInquiry", () => {
-  it("posts trimmed fields, the service, the honeypot and the token", async () => {
-    const fetchMock = fetchReturning(Response.json({ success: true }));
-    await expect(submitInquiry(input, fetchMock)).resolves.toEqual({ ok: true });
-    const [url, init] = fetchMock.mock.calls[0]!;
-    expect(url).toBe("/api/contact");
-    expect(init?.method).toBe("POST");
-    expect(JSON.parse(String(init?.body))).toEqual({
-      senderEmail: "client@example.com",
-      message: "Need a plugin",
-      service: "Canva Apps",
-      company: "",
-      turnstileToken: "tok",
-    });
-  });
-
-  it("does not post without a Turnstile token", async () => {
-    const fetchMock = fetchReturning(Response.json({ success: true }));
-    await expect(submitInquiry({ ...input, turnstileToken: null }, fetchMock)).resolves.toEqual({
-      ok: false,
-      error: VERIFY_FIRST,
-    });
-    expect(fetchMock).not.toHaveBeenCalled();
-  });
-
-  it("shows the server's error message on a JSON error response", async () => {
-    const fetchMock = fetchReturning(
-      Response.json({ error: "Too many requests. Please try again later." }, { status: 429 }),
-    );
-    await expect(submitInquiry(input, fetchMock)).resolves.toEqual({
-      ok: false,
-      error: "Too many requests. Please try again later.",
-    });
-  });
-
-  it("falls back to the generic error on a non-JSON error response", async () => {
-    const fetchMock = fetchReturning(new Response("Bad gateway", { status: 502 }));
-    await expect(submitInquiry(input, fetchMock)).resolves.toEqual({ ok: false, error: GENERIC_ERROR });
-  });
-
-  it("falls back to the generic error when the network fails", async () => {
-    const fetchMock = fetchReturning(new TypeError("Failed to fetch"));
-    await expect(submitInquiry(input, fetchMock)).resolves.toEqual({ ok: false, error: GENERIC_ERROR });
-  });
-});
-```
-
-- [ ] **Step 2: Run to verify failure**
-
-Run: `npx vitest run src/services/inquiry.test.ts`
-Expected: FAIL, module not found.
-
-- [ ] **Step 3: Implement `inquiry.ts`**
+Add to `describe("submitContact", …)` in `src/desktop/contact.test.ts`:
 
 ```ts
-import { siteMetadata } from "../lib/site-metadata";
-
-export const OTHER_SERVICE = "Something else";
-
-export const GENERIC_ERROR = `Couldn't send your message. Please try again, or email ${siteMetadata.contactEmail} directly.`;
-export const VERIFY_FIRST = "Please wait for the verification check to finish, then send again.";
-
-export type InquiryInput = {
-  senderEmail: string;
-  message: string;
-  service: string;
-  /** Honeypot: empty for people, filled by bots. */
-  company: string;
-  turnstileToken: string | null;
-};
-
-export type SubmitResult = { ok: true } | { ok: false; error: string };
-
-export async function submitInquiry(
-  input: InquiryInput,
-  fetchImpl: typeof fetch = fetch,
-): Promise<SubmitResult> {
-  if (!input.turnstileToken) return { ok: false, error: VERIFY_FIRST };
-
-  let response: Response;
-  try {
-    response = await fetchImpl("/api/contact", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        senderEmail: input.senderEmail.trim(),
-        message: input.message.trim(),
-        service: input.service,
-        company: input.company,
-        turnstileToken: input.turnstileToken,
-      }),
-    });
-  } catch {
-    return { ok: false, error: GENERIC_ERROR };
-  }
-
-  if (response.ok) return { ok: true };
-
-  const body = (await response.json().catch(() => null)) as { error?: unknown } | null;
-  return {
-    ok: false,
-    error: typeof body?.error === "string" ? body.error : GENERIC_ERROR,
-  };
-}
+  it("passes the service through to /api/contact", async () => {
+    const fetchFn = respond(200, { success: true });
+    await submitContact({ ...valid, service: "Canva Apps" }, "tok", fetchFn);
+    const [, init] = fetchFn.mock.calls[0] as unknown as [string, RequestInit];
+    expect(JSON.parse(init.body as string)).toMatchObject({ service: "Canva Apps" });
+  });
 ```
 
-- [ ] **Step 4: Run to verify pass**
+Run: `npx vitest run src/desktop/contact.test.ts`
+Expected: FAIL at typecheck level only if vitest typechecks (it does not), so the run will PASS at runtime: the spread already forwards unknown keys. That makes this a type change, not a behaviour change. Verify RED with `npm run typecheck` instead.
+Expected: `Object literal may only specify known properties, and 'service' does not exist in type 'ContactFields'`.
 
-Run: `npx vitest run src/services/inquiry.test.ts`
-Expected: PASS (5 tests).
+- [ ] **Step 2: Add the field**
 
-- [ ] **Step 5: Write the failing render test for `ContactForm`**
+In `src/desktop/contact.ts`:
+
+```ts
+export type ContactFields = { senderEmail: string; message: string; company?: string; service?: string };
+```
+
+Run: `npm run typecheck && npx vitest run src/desktop/contact.test.ts`
+Expected: no type errors; PASS.
+
+- [ ] **Step 3: `useTurnstile` options**
+
+Change `src/desktop/useTurnstile.ts`. Rename the module constant to `envSiteKey` and give the hook options. The effect is gated on `load` so the service pages can defer the script until the form is near the viewport.
+
+```ts
+const envSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+
+type TurnstileOptions = {
+  /** Defaults to VITE_TURNSTILE_SITE_KEY; null disables the widget. */
+  siteKey?: string | null;
+  theme?: "light" | "dark";
+  /** False defers loading the script until it becomes true. */
+  load?: boolean;
+};
+
+/** Renders a Cloudflare Turnstile widget into `container` and tracks its token. */
+export function useTurnstile({ siteKey = envSiteKey ?? null, theme = "light", load = true }: TurnstileOptions = {}) {
+```
+
+In the effect, replace `if (!siteKey) return;` with `if (!siteKey || !load) return;`, pass `theme` to `render`, and set the dependency array to `[siteKey, theme, load]`. `enabled` stays `Boolean(siteKey)`.
+
+Run: `npm run typecheck && npm test`
+Expected: all pass. `HireForm` is unchanged and still type-checks.
+
+- [ ] **Step 4: Failing render test for `ContactForm`**
 
 Create `src/services/ContactForm.test.ts`:
 
@@ -1362,71 +1279,21 @@ describe("ContactForm (server render)", () => {
 });
 ```
 
-- [ ] **Step 6: Run to verify failure**
-
 Run: `npx vitest run src/services/ContactForm.test.ts`
 Expected: FAIL, module not found.
 
-- [ ] **Step 7: Implement the Turnstile loader**
+- [ ] **Step 5: Implement `ContactForm.tsx`**
 
-Create `src/services/turnstile.ts`:
-
-```ts
-export type TurnstileApi = {
-  render: (
-    container: HTMLElement,
-    options: {
-      sitekey: string;
-      theme?: "light" | "dark" | "auto";
-      callback: (token: string) => void;
-      "expired-callback"?: () => void;
-      "error-callback"?: () => void;
-    },
-  ) => string;
-  reset: (widgetId: string) => void;
-  remove: (widgetId: string) => void;
-};
-
-declare global {
-  interface Window {
-    turnstile?: TurnstileApi;
-  }
-}
-
-const SCRIPT_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
-
-let loading: Promise<TurnstileApi> | null = null;
-
-/** Loads Cloudflare Turnstile once, on demand. */
-export function loadTurnstile(): Promise<TurnstileApi> {
-  if (window.turnstile) return Promise.resolve(window.turnstile);
-  loading ??= new Promise<TurnstileApi>((resolve, reject) => {
-    const script = document.createElement("script");
-    script.src = SCRIPT_SRC;
-    script.async = true;
-    script.onload = () =>
-      window.turnstile ? resolve(window.turnstile) : reject(new Error("Turnstile did not initialise"));
-    script.onerror = () => {
-      loading = null;
-      reject(new Error("Turnstile failed to load"));
-    };
-    document.head.appendChild(script);
-  });
-  return loading;
-}
-```
-
-- [ ] **Step 8: Implement `ContactForm.tsx`**
-
-Fixed element IDs (not `useId`) because the island hydrates `ContactForm` as its own root while the server rendered it inside the page tree; `useId` values would differ. There is one form per page.
+Fixed element IDs (not `useId`) because the island hydrates `ContactForm` as its own root while the server rendered it inside the page tree; there is one form per page.
 
 ```tsx
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { OTHER_SERVICE, submitInquiry } from "./inquiry";
-import { loadTurnstile, type TurnstileApi } from "./turnstile";
+import { submitContact, validateContact } from "../desktop/contact";
+import { useTurnstile } from "../desktop/useTurnstile";
 
 export const FORM_ROOT_ID = "contact-form";
 export const FORM_PROPS_ID = "contact-form-props";
+export const OTHER_SERVICE = "Something else";
 
 export type ContactFormProps = {
   services: readonly string[];
@@ -1447,86 +1314,58 @@ const fieldClass =
 const mailLinkClass =
   "text-term-link underline decoration-term-muted underline-offset-4 hover:decoration-current";
 
-export default function ContactForm({
-  services,
-  selected,
-  turnstileSiteKey,
-  contactEmail,
-}: ContactFormProps) {
+export default function ContactForm({ services, selected, turnstileSiteKey, contactEmail }: ContactFormProps) {
   const [ready, setReady] = useState(false);
+  const [nearView, setNearView] = useState(false);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
-  const [token, setToken] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
-  const widgetRef = useRef<HTMLDivElement>(null);
-  const widgetId = useRef<string | null>(null);
-  const api = useRef<TurnstileApi | null>(null);
+  const turnstile = useTurnstile({ siteKey: turnstileSiteKey, theme: "dark", load: nearView });
 
   useEffect(() => setReady(true), []);
 
   // Load Turnstile only when the form is about to be seen.
   useEffect(() => {
     const form = formRef.current;
-    const container = widgetRef.current;
-    if (!turnstileSiteKey || !form || !container) return;
-    let cancelled = false;
+    if (!form) return;
     const observer = new IntersectionObserver(
       (entries) => {
         if (!entries.some((entry) => entry.isIntersecting)) return;
         observer.disconnect();
-        loadTurnstile().then(
-          (turnstile) => {
-            if (cancelled) return;
-            api.current = turnstile;
-            widgetId.current = turnstile.render(container, {
-              sitekey: turnstileSiteKey,
-              theme: "dark",
-              callback: setToken,
-              "expired-callback": () => setToken(null),
-              "error-callback": () => setToken(null),
-            });
-          },
-          () => {
-            if (cancelled) return;
-            setStatus({
-              kind: "error",
-              message: `Couldn't load the spam check. Email me at ${contactEmail} instead.`,
-            });
-          },
-        );
+        setNearView(true);
       },
       { rootMargin: "200px 0px" },
     );
     observer.observe(form);
-    return () => {
-      cancelled = true;
-      observer.disconnect();
-      if (widgetId.current && api.current) api.current.remove(widgetId.current);
-      widgetId.current = null;
-    };
-  }, [turnstileSiteKey, contactEmail]);
+    return () => observer.disconnect();
+  }, []);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    setStatus({ kind: "sending" });
-    const result = await submitInquiry({
+    const fields = {
       senderEmail: String(data.get("senderEmail") ?? ""),
       message: String(data.get("message") ?? ""),
       service: String(data.get("service") ?? ""),
       company: String(data.get("company") ?? ""),
-      turnstileToken: token,
-    });
+    };
+    const errors = validateContact(fields);
+    const firstError = errors.senderEmail ?? errors.message;
+    if (firstError) {
+      setStatus({ kind: "error", message: firstError });
+      return;
+    }
+    setStatus({ kind: "sending" });
+    const result = await submitContact(fields, turnstile.token);
     if (result.ok) {
       setStatus({ kind: "sent" });
       return;
     }
     setStatus({ kind: "error", message: result.error });
     // A Turnstile token is single-use; get a fresh one for the retry.
-    if (widgetId.current && api.current) api.current.reset(widgetId.current);
-    setToken(null);
+    turnstile.reset();
   }
 
-  const unavailable = !turnstileSiteKey;
+  const unavailable = !turnstile.enabled;
   const emailLink = (
     <a href={`mailto:${contactEmail}`} className={mailLinkClass}>
       {contactEmail}
@@ -1540,7 +1379,7 @@ export default function ContactForm({
           Thanks, your message is on its way. I&apos;ll reply by email.
         </p>
       ) : (
-        <form ref={formRef} onSubmit={onSubmit} className="space-y-4">
+        <form ref={formRef} onSubmit={onSubmit} noValidate className="space-y-4">
           <div>
             <label htmlFor="contact-email" className={labelClass}>
               Your email
@@ -1559,12 +1398,7 @@ export default function ContactForm({
             <label htmlFor="contact-service" className={labelClass}>
               What do you need?
             </label>
-            <select
-              id="contact-service"
-              name="service"
-              defaultValue={selected ?? OTHER_SERVICE}
-              className={fieldClass}
-            >
+            <select id="contact-service" name="service" defaultValue={selected ?? OTHER_SERVICE} className={fieldClass}>
               {[...services, OTHER_SERVICE].map((service) => (
                 <option key={service} value={service}>
                   {service}
@@ -1576,14 +1410,7 @@ export default function ContactForm({
             <label htmlFor="contact-message" className={labelClass}>
               About the project
             </label>
-            <textarea
-              id="contact-message"
-              name="message"
-              required
-              rows={6}
-              maxLength={5000}
-              className={fieldClass}
-            />
+            <textarea id="contact-message" name="message" required rows={6} maxLength={5000} className={fieldClass} />
           </div>
           <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
             <label htmlFor="contact-company">Company</label>
@@ -1592,7 +1419,7 @@ export default function ContactForm({
           {unavailable ? (
             <p>The form is unavailable right now. Email me at {emailLink}.</p>
           ) : (
-            <div ref={widgetRef} className="min-h-[65px]" />
+            <div ref={turnstile.container} className="min-h-[65px]" />
           )}
           <noscript>
             <p>This form needs JavaScript. Email me at {emailLink}.</p>
@@ -1620,18 +1447,18 @@ export default function ContactForm({
 }
 ```
 
-- [ ] **Step 9: Run to verify pass**
+- [ ] **Step 6: Run to verify pass**
 
-Run: `npx vitest run src/services/ContactForm.test.ts src/services/inquiry.test.ts`
-Expected: PASS (10 tests). If the `selected=""` or `disabled=""` regexes miss because React 19 serialises boolean attributes differently, print `html` once, adjust the regex to React's actual output, and keep the assertion's meaning.
+Run: `npx vitest run src/services/ContactForm.test.ts src/desktop/contact.test.ts`
+Expected: PASS. If a boolean-attribute regex misses because of React 19's serialisation, print `html` once, match React's actual output, and keep the assertion's meaning.
 
-- [ ] **Step 10: Lint, typecheck, commit**
+- [ ] **Step 7: Lint, typecheck, full tests, commit**
 
-Run: `npm run lint && npm run typecheck`
+Run: `npm run lint && npm run typecheck && npm test`
 
 ```bash
-git add src/services/inquiry.ts src/services/inquiry.test.ts src/services/turnstile.ts src/services/ContactForm.tsx src/services/ContactForm.test.ts
-git commit -m "feat(services): contact form with lazy Turnstile and inquiry submission
+git add src/desktop/contact.ts src/desktop/contact.test.ts src/desktop/useTurnstile.ts src/services/ContactForm.tsx src/services/ContactForm.test.ts
+git commit -m "feat(services): contact form reusing the hire form's submit and Turnstile
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ```
