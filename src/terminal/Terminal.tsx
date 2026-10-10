@@ -34,7 +34,7 @@ function initialEntries(): Entry[] {
     entry([
       { art: BANNER, label: "primor" },
       blank,
-      line(tone("🚧 primor.me is being rebuilt. This terminal is what's here for now.", "warn")),
+      line(tone("*** primor.me is being rebuilt. This terminal is what's here for now. ***", "warn")),
     ]),
     entry(run("whoami", ctx).lines, "whoami"),
     entry(run("help", ctx).lines, "help"),
@@ -50,7 +50,7 @@ const toneClass: Record<NonNullable<Segment["tone"]>, string> = {
 };
 
 const interactiveClass =
-  "underline decoration-term-muted underline-offset-4 hover:decoration-current focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-term-fg";
+  "underline decoration-term-muted underline-offset-2 hover:decoration-current focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-term-fg";
 
 function SegmentView({
   segment,
@@ -99,7 +99,7 @@ function LineView({
       <div>
         <pre
           aria-hidden="true"
-          className="overflow-x-auto text-[11px] leading-tight text-term-accent sm:text-[13px]"
+          className="overflow-x-auto text-[11px] text-term-accent sm:text-[13px]"
         >
           {value.art}
         </pre>
@@ -219,12 +219,12 @@ export default function Terminal({ onExit, active = true }: TerminalProps) {
   return (
     <div
       ref={scrollRef}
-      className="h-full cursor-text overflow-y-auto overscroll-contain bg-term-bg px-3 py-2 font-mono text-base leading-relaxed text-term-fg sm:text-sm"
+      className="h-full cursor-text overflow-y-auto overscroll-contain bg-term-bg px-3 py-2 font-mono text-base leading-snug text-term-fg sm:text-[13px] sm:leading-[1.2]"
       onClick={focusInput}
     >
       <div role="log" aria-live="polite" aria-label="Terminal output">
         {entries.map((e) => (
-          <div key={e.id} className="[&+&]:mt-3">
+          <div key={e.id}>
             {e.input !== undefined && (
               <div className="whitespace-pre-wrap break-words">
                 <Prompt /> {e.input}
