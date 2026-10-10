@@ -1,6 +1,7 @@
+import { isWindowed } from "../lib/data";
 import { calculateDuration, formatDateRange } from "../lib/utils";
 import { blank, cmd, hanging, line, link, tone, type Line } from "./lines";
-import type { Command, RunResult, ShellContext } from "./types";
+import type { Command, Content, RunResult, ShellContext } from "./types";
 
 function out(lines: Line[]): RunResult {
   return { lines };
@@ -132,6 +133,25 @@ const hire: Command = {
   run: () => ({ lines: [line(tone("Opening the contact form…", "muted"))], open: "hire" }),
 };
 
+const open: Command = {
+  name: "open",
+  summary: "open a desktop window",
+  run: (args, { content }) => {
+    const [target] = args;
+    if (target === undefined) return error("open: missing operand — try 'ls integrations'");
+    const id = target.toLowerCase();
+    if (id === "readme" || id === "hire") return { lines: [], open: id };
+    const integration = content.integrations.find((i) => i.id === id);
+    if (integration && isWindowed(integration)) return { lines: [], open: integration.id };
+    if (integration) {
+      return out([
+        line(`${integration.host} has no window here: `, link(displayUrl(integration.listing.url), integration.listing.url)),
+      ]);
+    }
+    return error(`open: ${target}: no such window`);
+  },
+};
+
 const cv: Command = {
   name: "cv",
   summary: "download my CV (PDF)",
@@ -148,11 +168,34 @@ export const files: Record<string, Command> = {
   "contact.txt": contact,
 };
 
+function integrationsListing(content: Content): Line {
+  return line(
+    ...content.integrations.flatMap((i, n) => [
+      n ? "  " : "",
+      isWindowed(i)
+        ? { text: i.id, run: `open ${i.id}`, tone: "accent" as const }
+        : { text: i.id, href: i.listing.url },
+    ]),
+  );
+}
+
 const ls: Command = {
   name: "ls",
   summary: "list files",
-  run: () =>
-    out([line(...Object.keys(files).flatMap((f, i) => [i ? "  " : "", { text: f, run: `cat ${f}`, tone: "accent" as const }]))]),
+  run: (args, { content }) => {
+    const [dir] = args;
+    if (dir === undefined) {
+      return out([
+        line(
+          ...Object.keys(files).flatMap((f, i) => [i ? "  " : "", { text: f, run: `cat ${f}`, tone: "accent" as const }]),
+          "  ",
+          { text: "integrations/", run: "ls integrations", tone: "accent" },
+        ),
+      ]);
+    }
+    if (dir.replace(/\/$/, "") === "integrations") return out([integrationsListing(content)]);
+    return error(`ls: cannot access '${dir}': No such file or directory`);
+  },
 };
 
 const cat: Command = {
@@ -236,7 +279,7 @@ const help: Command = {
 };
 
 const registry: readonly Command[] = [
-  help, whoami, about, experience, projects, skills, contact, hire, cv,
+  help, whoami, about, experience, projects, skills, contact, hire, open, cv,
   ls, cat, history, clear, echo, date, exit, sudo,
 ];
 

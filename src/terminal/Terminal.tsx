@@ -5,7 +5,7 @@ import {
   type KeyboardEvent,
   type MouseEvent,
 } from "react";
-import { experienceData, projects, skills } from "../lib/data";
+import { experienceData, integrations, projects, skills } from "../lib/data";
 import { siteMetadata } from "../lib/site-metadata";
 import { blank, line, tone, type Line, type Segment } from "./lines";
 import { quickCommands } from "./commands";
@@ -13,7 +13,7 @@ import Prompt from "./Prompt";
 import { complete, run, stepHistory, type ShellContext } from "./shell";
 import type { App } from "./types";
 
-const content = { projects, experience: experienceData, skills, site: siteMetadata };
+const content = { projects, experience: experienceData, skills, site: siteMetadata, integrations };
 
 const BANNER = String.raw`            _
  _ __  _ __(_)_ __ ___   ___  _ __

@@ -1,4 +1,5 @@
-import type { ExperienceEntry, Project, Skills } from "../lib/data";
+import type { WindowId } from "../desktop/ids";
+import type { ExperienceEntry, Integration, Project, Skills } from "../lib/data";
 import type { siteMetadata } from "../lib/site-metadata";
 import type { Line } from "./lines";
 
@@ -7,6 +8,7 @@ export type Content = {
   experience: readonly ExperienceEntry[];
   skills: Skills;
   site: typeof siteMetadata;
+  integrations: readonly Integration[];
 };
 
 export type ShellContext = {
@@ -17,7 +19,7 @@ export type ShellContext = {
 };
 
 /** Desktop windows a command can ask to open. */
-export type App = "hire";
+export type App = Exclude<WindowId, "term">;
 
 export type RunResult = { lines: Line[]; clear?: true; exit?: true; open?: App };
 
