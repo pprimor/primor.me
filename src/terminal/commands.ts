@@ -132,20 +132,23 @@ const services: Command = {
   summary: "what I can build for you",
   run: (_args, { content }) => {
     const width = Math.max(...content.services.map((s) => s.name.length)) + 2;
-    return out([
-      heading("Services"),
-      ...content.services.map((s) =>
-        hanging(
-          2 + width,
-          "  ",
-          link(s.name, servicePath(s.slug)),
-          " ".repeat(width - s.name.length),
-          tone(s.summary, "muted"),
+    return {
+      open: "web",
+      lines: [
+        heading("Services"),
+        ...content.services.map((s) =>
+          hanging(
+            2 + width,
+            "  ",
+            link(s.name, servicePath(s.slug)),
+            " ".repeat(width - s.name.length),
+            tone(s.summary, "muted"),
+          ),
         ),
-      ),
-      blank,
-      line("  ", link("All services and a contact form", SERVICES_PATH)),
-    ]);
+        blank,
+        line("  ", link("All services and a contact form", SERVICES_PATH)),
+      ],
+    };
   },
 };
 

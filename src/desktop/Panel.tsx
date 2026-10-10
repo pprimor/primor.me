@@ -1,11 +1,18 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { formatClock } from "./geometry";
 import { PANEL_HEIGHT } from "./useWindowState";
+import { isPlainLeftClick } from "../lib/link-intercept";
 import { linkTargetProps } from "../lib/link-target";
 
 export type MenuItem =
   | { label: string; icon: ReactNode; onSelect: () => void }
-  | { label: string; icon: ReactNode; href: string };
+  | {
+      label: string;
+      icon: ReactNode;
+      href: string;
+      /** Plain left-clicks open this in a desktop window instead; other clicks follow the link. */
+      onOpen?: () => void;
+    };
 
 function Clock() {
   const [now, setNow] = useState(() => new Date());
@@ -68,7 +75,13 @@ function ApplicationsMenu({ items }: { items: readonly MenuItem[] }) {
                   role="menuitem"
                   href={item.href}
                   className={itemClass}
-                  onClick={() => setOpen(false)}
+                  onClick={(event) => {
+                    setOpen(false);
+                    if (item.onOpen && isPlainLeftClick(event)) {
+                      event.preventDefault();
+                      item.onOpen();
+                    }
+                  }}
                   {...linkTargetProps(item.href)}
                 >
                   {item.icon}

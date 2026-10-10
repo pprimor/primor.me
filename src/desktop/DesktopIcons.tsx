@@ -1,4 +1,5 @@
 import type { MenuItem } from "./Panel";
+import { isPlainLeftClick } from "../lib/link-intercept";
 import { linkTargetProps } from "../lib/link-target";
 
 const iconClass =
@@ -20,6 +21,12 @@ export default function DesktopIcons({ items }: { items: readonly MenuItem[] }) 
               href={item.href}
               className={iconClass}
               {...linkTargetProps(item.href)}
+              onClick={(event) => {
+                if (item.onOpen && isPlainLeftClick(event)) {
+                  event.preventDefault();
+                  item.onOpen();
+                }
+              }}
             >
               {item.icon}
               <span className={labelClass}>{item.label}</span>

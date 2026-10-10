@@ -18,7 +18,7 @@ export type ShellContext = {
 };
 
 /** Desktop windows a command can ask to open. */
-export type App = "hire";
+export type App = "hire" | "web";
 
 export type RunResult = { lines: Line[]; clear?: true; exit?: true; open?: App };
 

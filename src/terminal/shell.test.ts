@@ -120,6 +120,10 @@ describe("run", () => {
     ]);
   });
 
+  it("services asks the desktop to open the browser window", () => {
+    expect(run("services", ctx).open).toBe("web");
+  });
+
   it("offers services as a mobile quick command", () => {
     expect(quickCommands).toContain("services");
   });

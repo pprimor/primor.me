@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { linkTargetProps } from "../lib/link-target";
 import { siteMetadata } from "../lib/site-metadata";
 import { linkClass } from "./ui";
 
@@ -11,7 +12,7 @@ export default function PageShell({ path, children }: { path: string; children: 
         <nav aria-label="Breadcrumb" className="font-mono text-sm text-term-muted">
           <ol className="flex flex-wrap gap-x-1">
             <li>
-              <a href="/" className={linkClass}>
+              <a href="/" target="_top" className={linkClass}>
                 primor.me
               </a>
             </li>
@@ -44,22 +45,22 @@ export default function PageShell({ path, children }: { path: string; children: 
             </a>
           </li>
           <li>
-            <a href={siteMetadata.profiles.github} className={linkClass}>
+            <a href={siteMetadata.profiles.github} className={linkClass} {...linkTargetProps(siteMetadata.profiles.github)}>
               GitHub
             </a>
           </li>
           <li>
-            <a href={siteMetadata.profiles.linkedin} className={linkClass}>
+            <a href={siteMetadata.profiles.linkedin} className={linkClass} {...linkTargetProps(siteMetadata.profiles.linkedin)}>
               LinkedIn
             </a>
           </li>
           <li>
-            <a href={siteMetadata.cvUrl} className={linkClass}>
+            <a href={siteMetadata.cvUrl} className={linkClass} {...linkTargetProps(siteMetadata.cvUrl)}>
               CV (PDF)
             </a>
           </li>
           <li>
-            <a href="/" className={linkClass}>
+            <a href="/" target="_top" className={linkClass}>
               Back to the desktop
             </a>
           </li>

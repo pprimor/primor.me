@@ -71,6 +71,17 @@ describe("renderServicePages", () => {
     for (const item of services.overview.also) expect(html).toContain(item.name);
   });
 
+  it("keeps framed navigation sane: off-site links open a tab, home links leave the frame", () => {
+    const html = page("/services/adobe-uxp-plugins/");
+    for (const plugin of services.services[0]!.shipped) {
+      expect(html).toMatch(new RegExp(`href="${plugin.url}"[^>]*target="_blank"`));
+    }
+    expect(html).toMatch(/href="https:\/\/github\.com\/pprimor"[^>]*target="_blank"/);
+    const homeLinks = html.match(/<a href="\/"[^>]*>/g) ?? [];
+    expect(homeLinks.length).toBeGreaterThan(0);
+    for (const a of homeLinks) expect(a).toContain('target="_top"');
+  });
+
   it("omits analytics without a token", () => {
     const [overview] = renderServicePages({ assets, turnstileSiteKey: null });
     expect(overview!.html).not.toContain("cloudflareinsights");

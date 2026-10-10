@@ -1,4 +1,5 @@
 import type { Service } from "../lib/content";
+import { linkTargetProps } from "../lib/link-target";
 import { servicePath } from "../lib/service-paths";
 import type { ContactFormProps } from "./ContactForm";
 import ContactSection from "./ContactSection";
@@ -17,7 +18,7 @@ export default function ServicePage({ service, process, form }: Props) {
       <ul className="mt-3 space-y-3">
         {service.shipped.map((plugin) => (
           <li key={plugin.url}>
-            <a href={plugin.url} className={`${linkClass} font-mono`}>
+            <a href={plugin.url} className={`${linkClass} font-mono`} {...linkTargetProps(plugin.url)}>
               {plugin.name}
             </a>
             {plugin.description && <p className="text-term-muted">{plugin.description}</p>}
