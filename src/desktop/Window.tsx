@@ -1,4 +1,5 @@
 import { useRef, type PointerEvent, type ReactNode } from "react";
+import { TITLE_ACTIVE, TITLE_INACTIVE } from "./chrome";
 import { TITLE_BAR_HEIGHT, moveBy, resizeBy, type Rect } from "./geometry";
 
 const MIN_SIZE = { width: 320, height: 200 };
@@ -114,7 +115,7 @@ export default function Window({
         }`}
         style={{
           height: TITLE_BAR_HEIGHT - 2,
-          background: focused ? "linear-gradient(90deg, #000080, #1084d0)" : "#7b7b7b",
+          background: focused ? TITLE_ACTIVE : TITLE_INACTIVE,
         }}
       >
         <span aria-hidden="true" className="font-mono text-[11px]">
