@@ -23,7 +23,7 @@ const MIDDLE: Column = { x: 0.44, w: 0.22 };
 const RIGHT: Column = { x: 0.69, w: 0.3 };
 
 /** Height each window needs to show its content without clipping. */
-const MIN_HEIGHT: Record<"readme" | PanelId, number> = {
+export const MIN_HEIGHT: Record<"readme" | PanelId, number> = {
   readme: 280,
   photoshop: 430,
   jira: 330,
