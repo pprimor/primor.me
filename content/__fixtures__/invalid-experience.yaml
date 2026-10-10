@@ -3,7 +3,6 @@
   employmentType: Contract
   startDate: not-a-date
   endDate: null
-  icon: unknown-key
   description:
     - One bullet
   skills: []

@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { experienceIconKeys } from "../icons";
 
 const isoDateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -41,7 +40,6 @@ export const experienceEntrySchema = z.object({
   location: z.string().optional(),
   startDate: isoDateSchema,
   endDate: isoDateSchema.nullable(),
-  icon: z.enum(experienceIconKeys),
   description: z.array(z.string()).min(1),
   skills: z.array(z.string()),
   links: z.array(experienceLinkSchema).optional(),

@@ -1,8 +1,3 @@
-export {
-  projects,
-  experienceData,
-  skillsByCategory,
-  getExperienceSkillIcons,
-} from "./content";
+export { projects, experienceData, skills } from "./content";
 
-export type { Project, ExperienceEntry, SkillCategory } from "./content";
+export type { Project, ExperienceEntry, SkillCategory, Skills } from "./content";

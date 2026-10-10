@@ -180,12 +180,6 @@ export default defineConfig(({ mode }) => ({
           ) {
             return 'react-vendor';
           }
-          if (id.includes("node_modules/framer-motion")) {
-            return "motion";
-          }
-          if (id.includes("node_modules/react-hot-toast")) {
-            return "toast";
-          }
         },
       },
     },

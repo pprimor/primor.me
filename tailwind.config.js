@@ -11,24 +11,38 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: [
-          "Inter",
-          "ui-sans-serif",
-          "system-ui",
-          "sans-serif",
-          "Apple Color Emoji",
-          "Segoe UI Emoji",
-          "Segoe UI Symbol",
-          "Noto Color Emoji",
+        ui: ["Tahoma", "Verdana", "DejaVu Sans", "Segoe UI", "sans-serif"],
+        mono: [
+          "ui-monospace",
+          "SFMono-Regular",
+          "Menlo",
+          "Consolas",
+          "Liberation Mono",
+          "monospace",
         ],
       },
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      colors: {
+        x11: {
+          face: "#c0c0c0",
+          light: "#ffffff",
+          shadow: "#808080",
+          dark: "#1f1f1f",
+          desktop: "#2f6f6f",
+        },
+        // xterm's default 16-colour palette; blue and red are nudged brighter to pass AA on black.
+        term: {
+          bg: "#000000",
+          fg: "#e5e5e5",
+          muted: "#7f7f7f",
+          accent: "#00cd00",
+          path: "#6e6eff",
+          heading: "#ffffff",
+          link: "#00cdcd",
+          error: "#ff5555",
+          warn: "#cdcd00",
+        },
       },
     },
   },
   plugins: [],
-  darkMode: "class",
 };
