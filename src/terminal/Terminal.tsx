@@ -36,7 +36,6 @@ function initialEntries(): Entry[] {
     entry([
       { art: BANNER, label: "primor" },
       blank,
-      line(tone("*** primor.me is being rebuilt. This terminal is what's here for now. ***", "warn")),
     ]),
     entry(run("whoami", ctx).lines, "whoami"),
     entry(run("help", ctx).lines, "help"),
