@@ -50,6 +50,13 @@ describe("submitContact", () => {
     expect(result).toEqual({ ok: false, error: "Please complete the verification check." });
     expect(fetchFn).not.toHaveBeenCalled();
   });
+
+  it("passes the service through to /api/contact", async () => {
+    const fetchFn = respond(200, { success: true });
+    await submitContact({ ...valid, service: "Canva Apps" }, "tok", fetchFn);
+    const [, init] = fetchFn.mock.calls[0] as unknown as [string, RequestInit];
+    expect(JSON.parse(init.body as string)).toMatchObject({ service: "Canva Apps" });
+  });
 });
 
 describe("mailtoLink", () => {
