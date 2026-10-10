@@ -8,9 +8,8 @@ import {
 import { experienceData, projects, skills } from "../lib/data";
 import { siteMetadata } from "../lib/site-metadata";
 import { blank, line, tone, type Line, type Segment } from "./lines";
+import Prompt from "./Prompt";
 import { complete, run, stepHistory, type ShellContext } from "./shell";
-
-const PROMPT = "guest@primor.me:~$";
 
 const content = { projects, experience: experienceData, skills, site: siteMetadata };
 
@@ -35,7 +34,7 @@ function initialEntries(): Entry[] {
     entry([
       { art: BANNER, label: "primor" },
       blank,
-      line(tone("🚧 primor.me is being rebuilt. This terminal is what's here for now.", "accent")),
+      line(tone("🚧 primor.me is being rebuilt. This terminal is what's here for now.", "warn")),
     ]),
     entry(run("whoami", ctx).lines, "whoami"),
     entry(run("help", ctx).lines, "help"),
@@ -47,6 +46,7 @@ const toneClass: Record<NonNullable<Segment["tone"]>, string> = {
   accent: "text-term-accent",
   heading: "font-bold text-term-heading",
   error: "text-term-error",
+  warn: "text-term-warn",
 };
 
 const interactiveClass =
@@ -121,10 +121,6 @@ function LineView({
       ))}
     </div>
   );
-}
-
-function PromptLabel() {
-  return <span className="text-term-accent">{PROMPT}</span>;
 }
 
 type TerminalProps = {
@@ -231,7 +227,7 @@ export default function Terminal({ onExit, active = true }: TerminalProps) {
           <div key={e.id} className="[&+&]:mt-3">
             {e.input !== undefined && (
               <div className="whitespace-pre-wrap break-words">
-                <PromptLabel /> {e.input}
+                <Prompt /> {e.input}
               </div>
             )}
             {e.lines.map((l, i) => (
@@ -242,7 +238,7 @@ export default function Terminal({ onExit, active = true }: TerminalProps) {
       </div>
       <div className="flex items-baseline gap-[1ch]">
         <label htmlFor="terminal-input" className="shrink-0">
-          <PromptLabel />
+          <Prompt />
           <span className="sr-only"> Type a command, or "help"</span>
         </label>
         <input

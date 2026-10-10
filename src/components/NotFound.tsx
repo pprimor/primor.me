@@ -1,3 +1,5 @@
+import Prompt from "../terminal/Prompt";
+
 export default function NotFound() {
   const path = typeof window === "undefined" ? "" : window.location.pathname;
 
@@ -5,7 +7,7 @@ export default function NotFound() {
     <main className="mx-auto min-h-screen max-w-4xl px-4 py-6 font-mono text-base leading-relaxed sm:px-8 sm:py-10 sm:text-[15px]">
       <h1 className="sr-only">Page not found</h1>
       <p className="whitespace-pre-wrap break-words">
-        <span className="text-term-accent">guest@primor.me:~$</span> cd {path}
+        <Prompt /> cd {path}
       </p>
       <p className="whitespace-pre-wrap break-words text-term-error">
         bash: cd: {path}: No such file or directory

@@ -1,4 +1,4 @@
-export type Tone = "muted" | "accent" | "heading" | "error";
+export type Tone = "muted" | "accent" | "heading" | "error" | "warn";
 
 /** A run of text on one line; `href` makes it a link, `run` makes it a clickable command. */
 export type Segment = {
