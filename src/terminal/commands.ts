@@ -121,7 +121,15 @@ const contact: Command = {
       line("  email     ", link(site.contactEmail, `mailto:${site.contactEmail}`)),
       line("  github    ", link(displayUrl(site.profiles.github), site.profiles.github)),
       line("  linkedin  ", link(displayUrl(site.profiles.linkedin), site.profiles.linkedin)),
+      blank,
+      line("Or run ", cmd("hire"), " to send a message from here."),
     ]),
+};
+
+const hire: Command = {
+  name: "hire",
+  summary: "tell me about your project",
+  run: () => ({ lines: [line(tone("Opening the contact form…", "muted"))], open: "hire" }),
 };
 
 const cv: Command = {
@@ -228,7 +236,7 @@ const help: Command = {
 };
 
 const registry: readonly Command[] = [
-  help, whoami, about, experience, projects, skills, contact, cv,
+  help, whoami, about, experience, projects, skills, contact, hire, cv,
   ls, cat, history, clear, echo, date, exit, sudo,
 ];
 
@@ -239,3 +247,6 @@ export const commands: ReadonlyMap<string, Command> = new Map(
 export const commandNames = registry.map((c) => c.name);
 
 export type { ShellContext };
+
+/** Tappable shortcuts shown under the terminal on small screens. */
+export const quickCommands = ["about", "experience", "projects", "skills", "contact", "cv", "hire"] as const;

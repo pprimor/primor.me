@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { experienceData, projects, skills } from "../lib/data";
 import { siteMetadata } from "../lib/site-metadata";
-import { commands, files } from "./commands";
+import { commands, files, quickCommands } from "./commands";
 import { linesToText, type Line } from "./lines";
 import {
   complete,
@@ -160,6 +160,19 @@ describe("run", () => {
     expect(run("clear", ctx)).toEqual({ lines: [], clear: true });
   });
 
+  it("hire asks the desktop to open the contact form", () => {
+    const result = run("hire", ctx);
+    expect(result.open).toBe("hire");
+    expect(linesToText(result.lines)).toContain("Opening");
+  });
+
+  it("contact offers hire as a clickable command", () => {
+    const segments = run("contact", ctx).lines.flatMap((l) =>
+      "segments" in l ? l.segments : [],
+    );
+    expect(segments).toContainEqual(expect.objectContaining({ run: "hire" }));
+  });
+
   it("exit asks the shell to close", () => {
     expect(run("exit", ctx)).toEqual({ lines: [], exit: true });
   });
@@ -207,5 +220,16 @@ describe("stepHistory", () => {
 
   it("walks forward back to an empty live line", () => {
     expect(stepHistory(history, 2, "down")).toEqual({ cursor: 3, value: "" });
+  });
+});
+
+describe("quickCommands", () => {
+  it("are visible commands that run cleanly, ending with hire", () => {
+    expect(quickCommands.length).toBeGreaterThan(3);
+    for (const name of quickCommands) {
+      expect(commands.get(name)?.hidden).toBeFalsy();
+      expect(output(name)).not.toMatch(/command not found/);
+    }
+    expect(quickCommands.at(-1)).toBe("hire");
   });
 });

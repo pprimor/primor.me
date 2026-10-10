@@ -31,6 +31,23 @@ describe("initialRect", () => {
     expect(rect.x).toBe(16);
     expect(rect.y).toBe(28 + 16);
   });
+
+  it("takes a preferred size and a cascade offset", () => {
+    const rect = initialRect(desktop, { width: 480, height: 460 }, 32);
+    expect(rect).toEqual({
+      x: (1280 - 480) / 2 + 32,
+      y: 28 + (772 - 460) / 2 + 32,
+      width: 480,
+      height: 460,
+    });
+  });
+
+  it("keeps a cascaded window on a small desktop", () => {
+    const small: Rect = { x: 0, y: 28, width: 600, height: 400 };
+    const rect = initialRect(small, { width: 480, height: 460 }, 32);
+    expect(clampRect(rect, small)).toEqual(rect);
+    expect(rect.y + rect.height).toBeLessThanOrEqual(28 + 400);
+  });
 });
 
 describe("clampRect", () => {

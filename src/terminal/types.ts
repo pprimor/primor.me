@@ -16,7 +16,10 @@ export type ShellContext = {
   now: () => Date;
 };
 
-export type RunResult = { lines: Line[]; clear?: true; exit?: true };
+/** Desktop windows a command can ask to open. */
+export type App = "hire";
+
+export type RunResult = { lines: Line[]; clear?: true; exit?: true; open?: App };
 
 export type Command = {
   name: string;

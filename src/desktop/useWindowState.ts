@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { clampRect, initialRect, type Rect } from "./geometry";
+import { clampRect, initialRect, type Rect, type Size } from "./geometry";
 
 export const PANEL_HEIGHT = 28;
 const COMPACT_BREAKPOINT = 640;
@@ -26,9 +26,14 @@ export function useDesktopArea(): { desktop: Rect; compact: boolean } {
   return { desktop, compact: desktop.width < COMPACT_BREAKPOINT };
 }
 
-export function useWindowState(desktop: Rect) {
-  const [rect, setRect] = useState(() => initialRect(desktop));
-  const [mode, setMode] = useState<WindowMode>("normal");
+type WindowOptions = { size?: Size; offset?: number; initialMode?: WindowMode };
+
+export function useWindowState(
+  desktop: Rect,
+  { size, offset = 0, initialMode = "normal" }: WindowOptions = {},
+) {
+  const [rect, setRect] = useState(() => initialRect(desktop, size, offset));
+  const [mode, setMode] = useState<WindowMode>(initialMode);
   // Bumped on close so the next open starts a fresh terminal session.
   const [sessionKey, setSessionKey] = useState(0);
   const [lastShown, setLastShown] = useState<"normal" | "maximized">("normal");
@@ -47,8 +52,8 @@ export function useWindowState(desktop: Rect) {
     setMode("closed");
     setLastShown("normal");
     setSessionKey((k) => k + 1);
-    setRect(initialRect(desktop));
-  }, [desktop]);
+    setRect(initialRect(desktop, size, offset));
+  }, [desktop, size, offset]);
 
   const toggleMaximize = useCallback(() => {
     const next = mode === "maximized" ? "normal" : "maximized";

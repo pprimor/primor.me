@@ -100,11 +100,13 @@ function ApplicationsMenu({ items }: { items: readonly MenuItem[] }) {
 
 type PanelProps = {
   menu: readonly MenuItem[];
-  /** The taskbar entry for the terminal, or null when it's closed. */
-  task: { label: string; pressed: boolean; onClick: () => void } | null;
+  /** Taskbar entries, one per open window. */
+  tasks: readonly Task[];
 };
 
-export default function Panel({ menu, task }: PanelProps) {
+export type Task = { label: string; pressed: boolean; onClick: () => void };
+
+export default function Panel({ menu, tasks }: PanelProps) {
   return (
     <nav
       aria-label="Panel"
@@ -112,8 +114,9 @@ export default function Panel({ menu, task }: PanelProps) {
       style={{ height: PANEL_HEIGHT }}
     >
       <ApplicationsMenu items={menu} />
-      {task && (
+      {tasks.map((task) => (
         <button
+          key={task.label}
           type="button"
           aria-pressed={task.pressed}
           onClick={task.onClick}
@@ -121,7 +124,7 @@ export default function Panel({ menu, task }: PanelProps) {
         >
           {task.label}
         </button>
-      )}
+      ))}
       <div className="ml-auto">
         <Clock />
       </div>
