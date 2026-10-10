@@ -52,9 +52,8 @@ describe("run", () => {
     expect(run("  ", ctx)).toEqual({ lines: [] });
   });
 
-  it("reports unknown commands", () => {
-    expect(output("rm -rf /")).toContain("command not found: rm");
-    expect(output("rm -rf /")).toContain("help");
+  it("reports unknown commands the way bash does", () => {
+    expect(output("rm -rf /")).toBe("bash: rm: command not found");
   });
 
   it("is case-insensitive for command names", () => {

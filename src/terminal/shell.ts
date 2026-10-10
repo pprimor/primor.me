@@ -19,7 +19,7 @@ export function run(input: string, ctx: ShellContext): RunResult {
   const command = commands.get(name.toLowerCase());
   if (!command) {
     return {
-      lines: [line(tone(`command not found: ${name} — try 'help'`, "error"))],
+      lines: [line(tone(`bash: ${name}: command not found`, "error"))],
     };
   }
   return command.run(args, ctx);
