@@ -99,6 +99,15 @@ describe("deskReducer", () => {
     expect(deskReducer(desk(), { type: "blur" }).focused).toBeNull();
   });
 
+  it("fit keeps where a window reopens fully inside a smaller desktop", () => {
+    const wide = { ...desk(), windows: { ...desk().windows, word: windowState({ x: 994, y: 400, width: 432, height: 300 }) } };
+    const small: Rect = { x: 0, y: 28, width: 900, height: 572 };
+    const { home } = deskReducer(wide, { type: "fit", desktop: small }).windows.word;
+    expect(home.x).toBeGreaterThanOrEqual(small.x);
+    expect(home.x + home.width).toBeLessThanOrEqual(small.x + small.width);
+    expect(home.y + home.height).toBeLessThanOrEqual(small.y + small.height);
+  });
+
   it("fit pulls every window, and where it reopens, back inside a smaller desktop", () => {
     const far = deskReducer(desk(), { type: "move", id: "word", rect: { x: 1300, y: 900, width: 400, height: 300 } });
     const small: Rect = { x: 0, y: 28, width: 800, height: 572 };

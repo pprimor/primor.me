@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { PANEL_IDS } from "../hosts/ids";
 import type { Rect } from "./geometry";
-import { ICON_COLUMN, bandFor, initialDesk } from "./layout";
+import { integrations, isWindowed } from "../lib/data";
+import { ICON_COLUMN, bandFor, iconRows, initialDesk } from "./layout";
 import { isVisible } from "./windows";
 
 const screen = (width: number, height: number): Rect => ({ x: 0, y: 28, width, height: height - 28 });
@@ -32,7 +33,7 @@ describe("initialDesk", () => {
     expect(d.windows.hire.mode).toBe("closed");
   });
 
-  for (const [w, h] of [[1280, 720], [1440, 900], [2560, 1440]] as const) {
+  for (const [w, h] of [[1280, 600], [1366, 657], [1280, 720], [1440, 900], [2560, 1440]] as const) {
     it(`wide ${w}×${h}: open windows fit the desktop, clear of the icon column`, () => {
       const desktop = screen(w, h);
       const d = initialDesk(desktop);
@@ -50,6 +51,11 @@ describe("initialDesk", () => {
     expect(word.rect.height).toBeGreaterThanOrEqual(290);
     expect(canva.rect.y).toBeGreaterThanOrEqual(readme.rect.y + readme.rect.height);
     expect(word.rect.y).toBeGreaterThanOrEqual(jira.rect.y + jira.rect.height);
+  });
+
+  it("the desktop icons fit one column on a short laptop viewport", () => {
+    const icons = 2 + integrations.filter((i) => !isWindowed(i) && i.desktopIcon).length;
+    expect(icons).toBeLessThanOrEqual(iconRows(screen(1280, 600)));
   });
 
   it("medium: only README is open; host windows wait in the taskbar", () => {

@@ -1,6 +1,7 @@
 # Integrations shown on the desktop. `plugin` names an entry in experience.yaml's
 # plugins, which supplies the listing URL. Entries with `window` get a themed
-# host window; their id must be one of src/hosts/ids.ts PANEL_IDS.
+# host window; their id must be one of src/hosts/ids.ts PANEL_IDS. The rest get a
+# desktop icon unless `desktopIcon: false` (the column must fit short screens).
 - id: photoshop
   host: Adobe Photoshop
   plugin: PageProof for Adobe Photoshop
@@ -56,12 +57,14 @@
   stack: Swift · SwiftUI
   icon: "#5a5a5a"
 - id: canto
+  desktopIcon: false
   host: Canto
   plugin: PageProof for Canto
   listing: pageproof.com
   stack: FinalFile delivery
   icon: "#c2410c"
 - id: bynder
+  desktopIcon: false
   host: Bynder
   plugin: PageProof for Bynder
   listing: pageproof.com

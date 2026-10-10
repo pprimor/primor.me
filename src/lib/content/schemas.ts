@@ -74,6 +74,8 @@ export const integrationSchema = z.object({
   listing: z.string().min(1),
   stack: z.string().min(1),
   icon: z.string().regex(/^#[0-9a-f]{6}$/i),
+  /** Windowless integrations get a desktop icon unless this is false. */
+  desktopIcon: z.boolean().default(true),
   service: z.string().regex(/^[a-z0-9-]+$/).optional(),
   window: z
     .object({ title: z.string().min(1), caption: z.string().min(1) })

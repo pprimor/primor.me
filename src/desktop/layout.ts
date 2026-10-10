@@ -53,9 +53,10 @@ function wideRects(desktop: Rect): Record<"readme" | PanelId, Rect> {
     width: Math.round(desktop.width * c.w),
     height,
   });
+  // Below its upper window when there's room; otherwise overlap it upward rather than run off screen.
   const under = (above: Rect, c: Column, id: PanelId) => {
-    const y = above.y + above.height + GAP;
-    return place(c, y, Math.max(bottom - y, MIN_HEIGHT[id]));
+    const y = Math.max(top, Math.min(above.y + above.height + GAP, bottom - MIN_HEIGHT[id]));
+    return place(c, y, bottom - y);
   };
   const readme = place(LEFT, top, tall("readme", 0.33));
   const jira = place(RIGHT, top, tall("jira", 0.42));
@@ -69,6 +70,11 @@ function wideRects(desktop: Rect): Record<"readme" | PanelId, Rect> {
   return Object.fromEntries(
     Object.entries(rects).map(([id, r]) => [id, clampRect(r, desktop)]),
   ) as Record<"readme" | PanelId, Rect>;
+}
+
+/** Icons one column holds; mirrors DesktopIcons' 5rem rows, 0.5rem gaps and 0.75rem margins. */
+export function iconRows(desktop: Rect): number {
+  return Math.floor((desktop.height - 24 + 8) / 88);
 }
 
 function besideIcons(rect: Rect, desktop: Rect): Rect {
@@ -99,7 +105,8 @@ export function initialDesk(desktop: Rect): Desk {
       term: windowState(besideIcons(initialRect(desktop), desktop), "minimized"),
       hire: windowState(besideIcons(initialRect(desktop, HIRE_SIZE, 40), desktop), "closed"),
     },
-    stack: wide ? [...PANEL_IDS, "readme"] : ["readme"],
+    // Lower windows first, so an upper window that overlaps one draws above it.
+    stack: wide ? ["canva", "word", "photoshop", "jira", "readme"] : ["readme"],
     focused: "readme",
   };
 }

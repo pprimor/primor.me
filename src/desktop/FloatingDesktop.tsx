@@ -59,7 +59,7 @@ export default function FloatingDesktop({ desktop }: { desktop: Rect }) {
     terminalItem,
     ...profileItems(),
   ];
-  const icons: MenuItem[] = [hireItem, terminalItem, ...listedItems];
+  const icons: MenuItem[] = [hireItem, terminalItem, ...listedItems.filter((_, n) => listed[n].desktopIcon)];
 
   const tasks: Task[] = WINDOW_IDS.filter((id) => desk.windows[id].mode !== "closed").map((id) => ({
     label: FRAMES[id].task,

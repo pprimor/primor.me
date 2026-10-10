@@ -84,6 +84,7 @@ export function parseIntegrationsYaml(raw: string, plugins: readonly PluginLink[
       host: entry.host,
       stack: entry.stack,
       icon: entry.icon,
+      desktopIcon: entry.desktopIcon,
       listing: { label: entry.listing, url: plugin.url },
       service: entry.service,
       window: entry.window,

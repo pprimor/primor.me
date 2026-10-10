@@ -13,13 +13,18 @@ function desktopArea(): Rect {
   };
 }
 
-/** The desktop area below the panel, tracked across browser resizes. */
+/**
+ * The desktop area below the panel, tracked across browser resizes.
+ * `compact` is decided once per page load: switching layouts unmounts every window,
+ * so rotating a phone would otherwise throw away a half-written hire form.
+ */
 export function useDesktopArea(): { desktop: Rect; compact: boolean } {
   const [desktop, setDesktop] = useState(desktopArea);
+  const [compact] = useState(() => window.innerWidth < COMPACT_MAX);
   useEffect(() => {
     const onResize = () => setDesktop(desktopArea());
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
-  return { desktop, compact: desktop.width < COMPACT_MAX };
+  return { desktop, compact };
 }

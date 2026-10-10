@@ -52,6 +52,18 @@ function hide(desk: Desk, id: WindowId, patch: Partial<WindowState>): Desk {
   return desk.focused === id ? { ...next, focused: null } : next;
 }
 
+/** Shrinks a rect to the desktop and moves it fully inside, so a window reopens on screen. */
+function fitInside(rect: Rect, desktop: Rect): Rect {
+  const width = Math.min(rect.width, desktop.width);
+  const height = Math.min(rect.height, desktop.height);
+  return {
+    x: Math.min(Math.max(rect.x, desktop.x), desktop.x + desktop.width - width),
+    y: Math.min(Math.max(rect.y, desktop.y), desktop.y + desktop.height - height),
+    width,
+    height,
+  };
+}
+
 export function deskReducer(desk: Desk, action: DeskAction): Desk {
   switch (action.type) {
     case "show":
@@ -82,7 +94,7 @@ export function deskReducer(desk: Desk, action: DeskAction): Desk {
       const windows = Object.fromEntries(
         Object.entries(desk.windows).map(([id, w]) => [
           id,
-          { ...w, rect: clampRect(w.rect, action.desktop), home: clampRect(w.home, action.desktop) },
+          { ...w, rect: clampRect(w.rect, action.desktop), home: fitInside(w.home, action.desktop) },
         ]),
       ) as Record<WindowId, WindowState>;
       return { ...desk, windows };
