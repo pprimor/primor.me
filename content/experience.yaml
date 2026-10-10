@@ -14,6 +14,7 @@
     - Led the development of the Final Cut Pro workflow extension using Swift and SwiftUI, improving review efficiency for video editing teams
     - Built and maintained PageProof's cross-platform UXP plug-in integrations for Adobe Photoshop and InDesign, streamlining creative workflows and ensuring seamless integration with PageProof
     - Built the PageProof XTension for QuarkXPress with a cross-platform native extension and embedded React and TypeScript UI, enabling proof creation and in-layout comment review directly within QuarkXPress
+    - Built the Canto and Bynder integrations for PageProof's FinalFile® delivery, automatically sending approved files into each digital asset management platform and logging every delivery in the proof's audit trail
     - Contributed to enhancing the PageProof web app, with a focus on optimizing the mobile user experience and UI responsiveness
   skills:
     - React
@@ -48,6 +49,18 @@
       url: https://www.pageproof.com/integrations/final-cut-pro
       description: Workflow extension for video editing teams
       image: /images/final-cut-pro-preview.png
+    - name: PageProof for Jira
+      url: https://pageproof.com/integrations/jira
+      description: Atlassian Forge app linking proofs to Jira issues
+    - name: PageProof for QuarkXPress
+      url: https://pageproof.com/integrations/quark-xpress
+      description: XTension for proofing and in-layout comment review
+    - name: PageProof for Canto
+      url: https://pageproof.com/integrations/canto
+      description: Automatic delivery of approved files into Canto
+    - name: PageProof for Bynder
+      url: https://pageproof.com/integrations/bynder
+      description: Automatic delivery of approved files into Bynder
 - title: Operations Research Analyst
   company: CTT – Correios de Portugal, S.A.
   companyUrl: https://www.ctt.pt/
