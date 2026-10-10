@@ -18,8 +18,11 @@ export default function ReadmeBody({ onHire, onOpenPath }: ReadmeBodyProps) {
     <div className="flex h-full flex-col gap-2.5 overflow-y-auto bg-white px-4 py-3 font-ui text-black">
       <p className="m-0 text-lg font-bold">{siteMetadata.author} — integrations engineer</p>
       <p className="m-0 text-[13px] leading-normal">
-        My code runs inside other people’s apps. Each window on this desktop is one of them,
-        running a PageProof integration I built and shipped.
+        I build integrations that live inside other people’s apps. Each window on this desktop
+        is one of them: a PageProof integration I built and shipped, drawn in its host’s style.
+      </p>
+      <p className="m-0 text-[13px] leading-normal">
+        Based in {siteMetadata.location}. Open to select freelance projects.
       </p>
       <p className="m-0 text-xs leading-normal text-[#404040]">{hosts}</p>
       <div className="mt-auto flex flex-wrap gap-2 pt-1">

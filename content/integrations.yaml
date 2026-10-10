@@ -11,7 +11,7 @@
   service: adobe-uxp-plugins
   window:
     title: Photoshop — PageProof
-    caption: "PageProof's Photoshop panel: three proofs of the open document, one approved, one with four change requests and one in review, with a button to create a proof from the document."
+    caption: "Illustration of PageProof's Photoshop panel: three proofs of the open document, one approved, one with four change requests and one in review, with a button to create a proof from the document."
 - id: jira
   host: Jira
   plugin: PageProof for Jira
@@ -21,7 +21,7 @@
   service: atlassian-forge-apps
   window:
     title: Jira — DES-142
-    caption: "PageProof's Jira issue panel: a linked proof approved by three of three reviewers, with the approved file attached to the issue."
+    caption: "Illustration of PageProof's Jira issue panel: a linked proof approved by three of three reviewers, with the approved file attached to the issue."
 - id: canva
   host: Canva
   plugin: PageProof for Canva
@@ -31,7 +31,7 @@
   service: canva-apps
   window:
     title: Canva — PageProof app
-    caption: "PageProof's Canva app: sending the open design for review, with reviewers and a due date."
+    caption: "Illustration of PageProof's Canva app: sending the open design for review, with reviewers and a due date."
 - id: word
   host: Microsoft Word
   plugin: PageProof for Microsoft Office
@@ -41,7 +41,7 @@
   service: office-add-ins
   window:
     title: Word — PageProof add-in
-    caption: "PageProof's Office add-in in Word: a taskpane beside the document with reviewer comments and a button to upload a new version."
+    caption: "Illustration of PageProof's Office add-in in Word: a taskpane beside the document with reviewer comments and a button to upload a new version."
 - id: indesign
   host: Adobe InDesign
   plugin: PageProof for Adobe InDesign
