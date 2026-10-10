@@ -14,16 +14,23 @@ export function bandFor(width: number): Band {
   return width < COMPACT_MAX ? "compact" : width < WIDE_MIN ? "medium" : "wide";
 }
 
-type Fraction = { x: number; y: number; w: number; h: number };
+type Column = { x: number; w: number };
 
-/** Wide-band tiling, as fractions of the desktop area. */
-const WIDE: Record<"readme" | PanelId, Fraction> = {
-  readme: { x: 0.1, y: 0.03, w: 0.31, h: 0.33 },
-  photoshop: { x: 0.44, y: 0.03, w: 0.22, h: 0.56 },
-  jira: { x: 0.69, y: 0.07, w: 0.3, h: 0.42 },
-  canva: { x: 0.1, y: 0.39, w: 0.23, h: 0.52 },
-  word: { x: 0.69, y: 0.53, w: 0.3, h: 0.4 },
+/** Wide-band columns, as fractions of the desktop width. */
+const LEFT: Column = { x: 0.1, w: 0.31 };
+const LEFT_LOWER: Column = { x: 0.1, w: 0.23 };
+const MIDDLE: Column = { x: 0.44, w: 0.22 };
+const RIGHT: Column = { x: 0.69, w: 0.3 };
+
+/** Height each window needs to show its content without clipping. */
+const MIN_HEIGHT: Record<"readme" | PanelId, number> = {
+  readme: 280,
+  photoshop: 430,
+  jira: 330,
+  canva: 340,
+  word: 290,
 };
+const GAP = 12;
 
 const README_SIZE: Size = { width: 560, height: 340 };
 const HIRE_SIZE: Size = { width: 480, height: 480 };
@@ -34,16 +41,34 @@ const PANEL_SIZE: Record<PanelId, Size> = {
   word: { width: 480, height: 360 },
 };
 
-function fromFraction(desktop: Rect, f: Fraction): Rect {
-  return clampRect(
-    {
-      x: desktop.x + Math.round(desktop.width * f.x),
-      y: desktop.y + Math.round(desktop.height * f.y),
-      width: Math.round(desktop.width * f.w),
-      height: Math.round(desktop.height * f.h),
-    },
-    desktop,
-  );
+/** Three columns; each column's lower window starts below its upper one. */
+function wideRects(desktop: Rect): Record<"readme" | PanelId, Rect> {
+  const top = desktop.y + Math.round(desktop.height * 0.03);
+  const bottom = desktop.y + Math.round(desktop.height * 0.97);
+  const tall = (id: "readme" | PanelId, share: number) =>
+    Math.max(Math.round(desktop.height * share), MIN_HEIGHT[id]);
+  const place = (c: Column, y: number, height: number): Rect => ({
+    x: desktop.x + Math.round(desktop.width * c.x),
+    y,
+    width: Math.round(desktop.width * c.w),
+    height,
+  });
+  const under = (above: Rect, c: Column, id: PanelId) => {
+    const y = above.y + above.height + GAP;
+    return place(c, y, Math.max(bottom - y, MIN_HEIGHT[id]));
+  };
+  const readme = place(LEFT, top, tall("readme", 0.33));
+  const jira = place(RIGHT, top, tall("jira", 0.42));
+  const rects = {
+    readme,
+    photoshop: place(MIDDLE, top, tall("photoshop", 0.56)),
+    jira,
+    canva: under(readme, LEFT_LOWER, "canva"),
+    word: under(jira, RIGHT, "word"),
+  };
+  return Object.fromEntries(
+    Object.entries(rects).map(([id, r]) => [id, clampRect(r, desktop)]),
+  ) as Record<"readme" | PanelId, Rect>;
 }
 
 function besideIcons(rect: Rect, desktop: Rect): Rect {
@@ -55,16 +80,17 @@ function besideIcons(rect: Rect, desktop: Rect): Rect {
 /** Where every window starts: tiled on wide screens, README alone below that. */
 export function initialDesk(desktop: Rect): Desk {
   const wide = bandFor(desktop.width) === "wide";
+  const tiles = wideRects(desktop);
   const panels = Object.fromEntries(
     PANEL_IDS.map((id, i) => [
       id,
       wide
-        ? windowState(fromFraction(desktop, WIDE[id]))
+        ? windowState(tiles[id])
         : windowState(besideIcons(initialRect(desktop, PANEL_SIZE[id], 32 * (i + 1)), desktop), "minimized"),
     ]),
   ) as Record<PanelId, WindowState>;
   const readme = windowState(
-    wide ? fromFraction(desktop, WIDE.readme) : besideIcons(initialRect(desktop, README_SIZE), desktop),
+    wide ? tiles.readme : besideIcons(initialRect(desktop, README_SIZE), desktop),
   );
   return {
     windows: {

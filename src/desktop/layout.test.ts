@@ -40,6 +40,18 @@ describe("initialDesk", () => {
     });
   }
 
+  it("wide 1280×720: windows keep room for their content and don't overlap within a column", () => {
+    const d = initialDesk(screen(1280, 720));
+    const { readme, photoshop, jira, canva, word } = d.windows;
+    expect(readme.rect.height).toBeGreaterThanOrEqual(280);
+    expect(photoshop.rect.height).toBeGreaterThanOrEqual(430);
+    expect(jira.rect.height).toBeGreaterThanOrEqual(330);
+    expect(canva.rect.height).toBeGreaterThanOrEqual(340);
+    expect(word.rect.height).toBeGreaterThanOrEqual(290);
+    expect(canva.rect.y).toBeGreaterThanOrEqual(readme.rect.y + readme.rect.height);
+    expect(word.rect.y).toBeGreaterThanOrEqual(jira.rect.y + jira.rect.height);
+  });
+
   it("medium: only README is open; host windows wait in the taskbar", () => {
     const d = initialDesk(screen(1024, 768));
     expect(isVisible(d.windows.readme)).toBe(true);
