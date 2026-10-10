@@ -4,8 +4,6 @@
       "staticDistDir": "./dist",
       "url": [
         "http://localhost/index.html",
-        "http://localhost/index.html#experience",
-        "http://localhost/index.html#contact",
         "http://localhost/404.html"
       ],
       "numberOfRuns": 3

@@ -1,48 +1,9 @@
-@font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-display: swap;
-  font-weight: 400;
-  src: url("@fontsource/inter/files/inter-latin-400-normal.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-display: swap;
-  font-weight: 600;
-  src: url("@fontsource/inter/files/inter-latin-600-normal.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-display: swap;
-  font-weight: 700;
-  src: url("@fontsource/inter/files/inter-latin-700-normal.woff2") format("woff2");
-}
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html {
-  --line-color: #e5e7eb;
-  overflow-x: hidden;
-}
-
-body {
-  overflow-x: hidden;
-}
-
-html.dark {
-  --line-color: rgba(255, 255, 255, 0.2);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
+::selection {
+  @apply bg-term-link/30;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -53,20 +14,4 @@ html.dark {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-.borderBlack {
-  @apply border border-black/10;
-}
-
-.field-error {
-  @apply mt-1 text-sm text-rose-600/90 dark:text-rose-300/90;
-}
-
-.input-error {
-  @apply border-rose-400/40 dark:border-rose-400/30;
-}
-
-.focus-ring {
-  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 dark:focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-50 dark:focus-visible:ring-offset-gray-900;
 }

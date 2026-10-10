@@ -1,12 +1,14 @@
 # primor.me
 
-Personal portfolio site — a React SPA built with Vite.
+Personal site — a React SPA built with Vite.
+
+The site is being rebuilt. For now it's a single-page terminal ([`src/terminal/`](src/terminal/)): `help` lists the commands, which print the content from [`content/`](content/). Command logic is plain TypeScript in `commands.ts` and `shell.ts`, tested in `shell.test.ts`; `Terminal.tsx` only renders it.
 
 **Live:** https://primor.me
 
 ## Stack
 
-- **Frontend:** Vite, React 18, TypeScript, Tailwind CSS, Framer Motion
+- **Frontend:** Vite, React 19, TypeScript, Tailwind CSS
 - **Hosting:** Cloudflare Pages (static `dist/`)
 - **API:** Cloudflare Pages Function at `/api/contact` ([`functions/api/contact.ts`](functions/api/contact.ts)) → [Resend](https://resend.com) for email
 - **CI/CD:** GitHub Actions ([`.github/workflows/vite.yml`](.github/workflows/vite.yml))
@@ -24,7 +26,7 @@ npm run dev          # Vite only → http://localhost:5173
 npm run preview      # after build
 ```
 
-`npm run dev` does **not** run the contact API; form POSTs to `/api/contact` will fail unless you use the full stack below.
+`npm run dev` does **not** run the contact API. The terminal doesn't use it yet, but the Function is still deployed.
 
 ## Local development with contact API
 
@@ -70,27 +72,24 @@ Pull requests and pushes to `main` run lint, typecheck, tests, and build via Git
 
 ## Editing content
 
-Portfolio copy (projects, experience, skills) lives in [`content/`](content/) as YAML. Files are validated at build and test time with [Zod](https://zod.dev/) in [`src/lib/content/`](src/lib/content/).
+Content (projects, experience, skills) lives in [`content/`](content/) as YAML. Files are validated at build and test time with [Zod](https://zod.dev/) in [`src/lib/content/`](src/lib/content/).
 
 | File | What it drives |
 |------|----------------|
-| [`content/projects.yaml`](content/projects.yaml) | Projects section |
-| [`content/experience.yaml`](content/experience.yaml) | Experience timeline |
-| [`content/skills.yaml`](content/skills.yaml) | Skills grid |
+| [`content/projects.yaml`](content/projects.yaml) | `projects` command |
+| [`content/experience.yaml`](content/experience.yaml) | `experience` command |
+| [`content/skills.yaml`](content/skills.yaml) | `skills` command |
 
 **Workflow**
 
 1. Edit the relevant YAML file(s).
 2. Run `npm run dev` and check the site locally.
-3. Run `npm test` (or push a PR) — invalid dates, unknown experience `icon` keys, or missing skill icons fail with a Zod or parser error.
+3. Run `npm test` (or push a PR) — invalid YAML or dates fail with a Zod or parser error.
 
 **Dates** — use ISO `YYYY-MM-DD` (e.g. `2023-03-01`). Use `endDate: null` for current roles.
 
-**Experience icons** — `icon` must be one of: `work`, `school`, `research`, `travel` (mapped in [`src/lib/icons.ts`](src/lib/icons.ts)).
 
-**Skill icons** — category skills and [`additionalSkills`](content/skills.yaml) must have a matching entry in `skillIconComponents` inside [`src/lib/icons.ts`](src/lib/icons.ts). Skills referenced only on experience cards (e.g. CPLEX) can omit an icon; the UI shows the name without an icon.
-
-Components still import from [`src/lib/data.ts`](src/lib/data.ts), which re-exports the loaded content.
+The terminal imports content from [`src/lib/data.ts`](src/lib/data.ts), which re-exports the loaded content.
 
 ### Lighthouse CI
 

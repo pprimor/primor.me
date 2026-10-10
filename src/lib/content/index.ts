@@ -1,5 +1,4 @@
 import {
-  getExperienceSkillIcons,
   parseExperienceYaml,
   parseProjectsYaml,
   parseSkillsYaml,
@@ -22,8 +21,7 @@ function getContentYaml(basename: string): string {
 
 export const projects = parseProjectsYaml(getContentYaml("projects"));
 export const experienceData = parseExperienceYaml(getContentYaml("experience"));
-export const skillsByCategory = parseSkillsYaml(getContentYaml("skills"));
+export const skills = parseSkillsYaml(getContentYaml("skills"));
 
-export { getExperienceSkillIcons };
-export type { Project, ExperienceEntry, SkillCategory, SkillWithIcon } from "./parse";
+export type { Project, ExperienceEntry, SkillCategory, Skills } from "./parse";
 export type { ProjectYaml, ExperienceEntryYaml, SkillsFileYaml } from "./schemas";

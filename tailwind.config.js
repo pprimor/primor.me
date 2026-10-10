@@ -11,24 +11,27 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: [
-          "Inter",
-          "ui-sans-serif",
-          "system-ui",
-          "sans-serif",
-          "Apple Color Emoji",
-          "Segoe UI Emoji",
-          "Segoe UI Symbol",
-          "Noto Color Emoji",
+        mono: [
+          "ui-monospace",
+          "SFMono-Regular",
+          "Menlo",
+          "Consolas",
+          "Liberation Mono",
+          "monospace",
         ],
       },
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      colors: {
+        term: {
+          bg: "#0d1117",
+          fg: "#e6edf3",
+          muted: "#8b949e",
+          accent: "#3fb950",
+          heading: "#d2a8ff",
+          link: "#58a6ff",
+          error: "#ff7b72",
+        },
       },
     },
   },
   plugins: [],
-  darkMode: "class",
 };

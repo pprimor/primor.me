@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { ZodError } from "zod";
-import { getSkillIcon } from "../icons";
 import {
   parseExperienceYaml,
   parseProjectsYaml,
@@ -42,7 +41,6 @@ describe("parseExperienceYaml", () => {
     expect(experience[0]?.company).toBe("PageProof");
     expect(experience[0]?.endDate).toBeNull();
     expect(experience[0]?.startDate).toEqual(new Date(2023, 2, 1));
-    expect(experience[0]?.icon).toBeDefined();
   });
 
   it("throws ZodError for invalid fixture", () => {
@@ -53,24 +51,11 @@ describe("parseExperienceYaml", () => {
 });
 
 describe("parseSkillsYaml", () => {
-  it("parses production skills.yaml with icons on every category skill", () => {
-    const categories = parseSkillsYaml(readContent("skills"));
+  it("parses production skills.yaml into categories and additional skills", () => {
+    const { categories, additional } = parseSkillsYaml(readContent("skills"));
     expect(categories).toHaveLength(5);
     const backend = categories.find((c) => c.category === "Backend & Cloud");
-    expect(
-      backend?.skills.some(
-        (s) => s.name === "Azure Functions" && s.icon,
-      ),
-    ).toBe(true);
-  });
-});
-
-describe("getSkillIcon", () => {
-  it("returns an element for a known skill name", () => {
-    expect(getSkillIcon("TypeScript")).not.toBeNull();
-  });
-
-  it("returns null for an unknown skill name", () => {
-    expect(getSkillIcon("CPLEX")).toBeNull();
+    expect(backend?.skills).toContain("Azure Functions");
+    expect(additional).toContain("JavaScript");
   });
 });

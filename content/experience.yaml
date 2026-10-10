@@ -5,7 +5,6 @@
   location: Remote
   startDate: "2023-03-01"
   endDate: null
-  icon: work
   description:
     - Enhanced cross-platform desktop application functionalities using Electron and Node.js, improving integration scalability and feature parity across operating systems
     - Developed a company-wide OAuth 2.0 (RFC 6749) Authorization Server with OpenID Connect (OIDC) support, standardizing authentication across PageProof integrations
@@ -56,7 +55,6 @@
   location: Lisbon, Portugal
   startDate: "2022-01-01"
   endDate: "2022-09-01"
-  icon: research
   description:
     - Led an operations research and data analytics project focused on optimizing the last-mile delivery process
     - Modeled and solved a vehicle routing problem tailored to postal delivery constraints
@@ -75,7 +73,6 @@
   location: Lisbon, Portugal
   startDate: "2020-04-01"
   endDate: "2020-07-01"
-  icon: work
   description:
     - Rebuilt legacy ASP.NET components using React, modernizing the user interface of a contact center management platform
     - Improved maintainability and user experience of the platform
@@ -93,7 +90,6 @@
   location: Lisbon, Portugal
   startDate: "2020-09-01"
   endDate: "2022-12-01"
-  icon: school
   description:
     - Master of Science in Computer Science
     - "Relevant coursework: Artificial Intelligence, Data Modelling, Information Retrieval, and Machine Learning"
@@ -108,7 +104,6 @@
   location: Dresden, Germany
   startDate: "2021-04-01"
   endDate: "2021-10-01"
-  icon: travel
   description:
     - Exchange program studying Computer Science at Technische Universität Dresden
   skills: []
@@ -120,7 +115,6 @@
   location: Lisbon, Portugal
   startDate: "2017-09-01"
   endDate: "2020-09-01"
-  icon: school
   description:
     - Bachelor of Science in Computer Science
     - "Relevant coursework: Algorithms and Data Structures, Object-Oriented Programming, Sensors and Image Processing"

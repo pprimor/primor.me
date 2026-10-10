@@ -1,0 +1,253 @@
+import {
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type MouseEvent,
+} from "react";
+import { experienceData, projects, skills } from "../lib/data";
+import { siteMetadata } from "../lib/site-metadata";
+import { blank, line, tone, type Line, type Segment } from "./lines";
+import { complete, run, stepHistory, type ShellContext } from "./shell";
+
+const PROMPT = "guest@primor.me:~$";
+
+const content = { projects, experience: experienceData, skills, site: siteMetadata };
+
+const BANNER = String.raw`            _
+ _ __  _ __(_)_ __ ___   ___  _ __
+| '_ \| '__| | '_ ${"`"} _ \ / _ \| '__|
+| |_) | |  | | | | | | | (_) | |
+| .__/|_|  |_|_| |_| |_|\___/|_|
+|_|`;
+
+type Entry = { id: number; input?: string; lines: readonly Line[] };
+
+let nextId = 0;
+
+function entry(lines: readonly Line[], input?: string): Entry {
+  return { id: nextId++, input, lines };
+}
+
+function initialEntries(): Entry[] {
+  const ctx: ShellContext = { content, history: [], now: () => new Date() };
+  return [
+    entry([
+      { art: BANNER, label: "primor" },
+      blank,
+      line(tone("🚧 primor.me is being rebuilt. This terminal is what's here for now.", "accent")),
+    ]),
+    entry(run("whoami", ctx).lines, "whoami"),
+    entry(run("help", ctx).lines, "help"),
+  ];
+}
+
+const toneClass: Record<NonNullable<Segment["tone"]>, string> = {
+  muted: "text-term-muted",
+  accent: "text-term-accent",
+  heading: "font-bold text-term-heading",
+  error: "text-term-error",
+};
+
+const interactiveClass =
+  "underline decoration-term-muted underline-offset-4 hover:decoration-current focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-term-fg";
+
+function SegmentView({
+  segment,
+  onRun,
+}: {
+  segment: Segment;
+  onRun: (command: string) => void;
+}) {
+  const className = segment.tone ? toneClass[segment.tone] : undefined;
+  if (segment.href) {
+    const external = !segment.href.startsWith("mailto:");
+    return (
+      <a
+        href={segment.href}
+        className={`text-term-link ${interactiveClass}`}
+        {...(external && { target: "_blank", rel: "noopener noreferrer" })}
+      >
+        {segment.text}
+      </a>
+    );
+  }
+  if (segment.run) {
+    const command = segment.run;
+    return (
+      <button
+        type="button"
+        onClick={() => onRun(command)}
+        className={`indent-0 ${className ?? ""} ${interactiveClass}`}
+      >
+        {segment.text}
+      </button>
+    );
+  }
+  return <span className={className}>{segment.text}</span>;
+}
+
+function LineView({
+  value,
+  onRun,
+}: {
+  value: Line;
+  onRun: (command: string) => void;
+}) {
+  if ("art" in value) {
+    return (
+      <div>
+        <pre
+          aria-hidden="true"
+          className="overflow-x-auto text-[11px] leading-tight text-term-accent sm:text-sm"
+        >
+          {value.art}
+        </pre>
+        <span className="sr-only">{value.label}</span>
+      </div>
+    );
+  }
+  return (
+    <div
+      className="min-h-[1lh] whitespace-pre-wrap break-words"
+      style={
+        value.hang
+          ? { paddingLeft: `${value.hang}ch`, textIndent: `-${value.hang}ch` }
+          : undefined
+      }
+    >
+      {value.segments.map((segment, i) => (
+        <SegmentView key={i} segment={segment} onRun={onRun} />
+      ))}
+    </div>
+  );
+}
+
+function PromptLabel() {
+  return <span className="text-term-accent">{PROMPT}</span>;
+}
+
+export default function Terminal() {
+  const [entries, setEntries] = useState<Entry[]>(initialEntries);
+  const [history, setHistory] = useState<string[]>([]);
+  const [cursor, setCursor] = useState(0);
+  const [input, setInput] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const hasInteracted = useRef(false);
+
+  useEffect(() => {
+    // Keep the banner in view on load; follow the prompt once the visitor starts typing.
+    if (hasInteracted.current) {
+      inputRef.current?.scrollIntoView({ block: "end" });
+    }
+  }, [entries]);
+
+  useEffect(() => {
+    // Avoid popping the on-screen keyboard on touch devices.
+    if (window.matchMedia("(pointer: fine)").matches) {
+      inputRef.current?.focus({ preventScroll: true });
+    }
+  }, []);
+
+  function execute(command: string) {
+    hasInteracted.current = true;
+    const ctx: ShellContext = { content, history, now: () => new Date() };
+    const result = run(command, ctx);
+    const nextHistory = command.trim() ? [...history, command] : history;
+    setHistory(nextHistory);
+    setCursor(nextHistory.length);
+    setInput("");
+    setEntries((prev) =>
+      result.clear ? [] : [...prev, entry(result.lines, command)],
+    );
+  }
+
+  function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      execute(input);
+    } else if (event.key === "Tab") {
+      event.preventDefault();
+      const { value, options } = complete(input);
+      if (options.length > 0) {
+        hasInteracted.current = true;
+        setEntries((prev) => [
+          ...prev,
+          entry([line(tone(options.join("  "), "muted"))], input),
+        ]);
+      }
+      setInput(value);
+    } else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+      event.preventDefault();
+      const step = stepHistory(
+        history,
+        cursor,
+        event.key === "ArrowUp" ? "up" : "down",
+      );
+      setCursor(step.cursor);
+      setInput(step.value);
+    } else if (event.ctrlKey && event.key.toLowerCase() === "l") {
+      event.preventDefault();
+      setEntries([]);
+    } else if (event.ctrlKey && event.key.toLowerCase() === "c") {
+      if (window.getSelection()?.toString()) return;
+      event.preventDefault();
+      hasInteracted.current = true;
+      setEntries((prev) => [...prev, entry([], `${input}^C`)]);
+      setInput("");
+      setCursor(history.length);
+    }
+  }
+
+  function focusInput(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (target.closest("a, button") || window.getSelection()?.toString()) {
+      return;
+    }
+    inputRef.current?.focus();
+  }
+
+  return (
+    <main
+      className="mx-auto min-h-screen max-w-4xl cursor-text px-4 py-6 font-mono text-base leading-relaxed sm:px-8 sm:py-10 sm:text-[15px]"
+      onClick={focusInput}
+    >
+      <h1 className="sr-only">
+        {siteMetadata.author} — {siteMetadata.jobTitle}
+      </h1>
+      <div role="log" aria-live="polite" aria-label="Terminal output">
+        {entries.map((e) => (
+          <div key={e.id} className="[&+&]:mt-3">
+            {e.input !== undefined && (
+              <div className="whitespace-pre-wrap break-words">
+                <PromptLabel /> {e.input}
+              </div>
+            )}
+            {e.lines.map((l, i) => (
+              <LineView key={i} value={l} onRun={execute} />
+            ))}
+          </div>
+        ))}
+      </div>
+      <div className="flex items-baseline gap-[1ch]">
+        <label htmlFor="terminal-input" className="shrink-0">
+          <PromptLabel />
+          <span className="sr-only"> Type a command, or "help"</span>
+        </label>
+        <input
+          id="terminal-input"
+          ref={inputRef}
+          value={input}
+          onChange={(event) => setInput(event.target.value)}
+          onKeyDown={onKeyDown}
+          autoComplete="off"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
+          enterKeyHint="go"
+          className="min-w-0 flex-1 bg-transparent text-term-fg caret-term-accent outline-none"
+        />
+      </div>
+    </main>
+  );
+}
