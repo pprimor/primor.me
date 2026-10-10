@@ -25,3 +25,16 @@ export function isPlainLeftClick(click: Click): boolean {
 export function isServicesPath(href: string): boolean {
   return href.startsWith(SERVICES_PATH);
 }
+
+/**
+ * A link click handler: a plain click shows `path` in the desktop's browser window;
+ * modified clicks, or a page with no desktop (`onOpen` undefined), navigate as usual.
+ */
+export function openInDesktop(onOpen: ((path: string) => void) | undefined, path: string) {
+  return (event: Click & { preventDefault: () => void }) => {
+    if (onOpen && isPlainLeftClick(event)) {
+      event.preventDefault();
+      onOpen(path);
+    }
+  };
+}

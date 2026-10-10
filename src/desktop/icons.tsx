@@ -147,6 +147,21 @@ export function BriefcaseIcon() {
   );
 }
 
+/** A generic app window, its title band in the host's colour. */
+export function HostIcon({ color }: { color: string }) {
+  return (
+    <Pixels>
+      {rects([
+        [3, 4, 26, 22, "#1f1f1f"],
+        [4, 5, 24, 20, "#c0c0c0"],
+        [4, 5, 24, 5, color],
+        [7, 13, 18, 2, "#808080"],
+        [7, 17, 12, 2, "#808080"],
+      ])}
+    </Pixels>
+  );
+}
+
 export function PuzzleIcon() {
   return (
     <Pixels>

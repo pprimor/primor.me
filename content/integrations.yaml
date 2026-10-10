@@ -1,0 +1,77 @@
+# Integrations shown on the desktop. `plugin` names an entry in experience.yaml's
+# plugins, which supplies the listing URL. Entries with `window` get a themed
+# host window; their id must be one of src/hosts/ids.ts PANEL_IDS. The rest get a
+# desktop icon unless `desktopIcon: false` (the column must fit short screens).
+- id: photoshop
+  host: Adobe Photoshop
+  plugin: PageProof for Adobe Photoshop
+  listing: Adobe Exchange
+  stack: UXP · React · TypeScript
+  icon: "#31a8ff"
+  service: adobe-uxp-plugins
+  window:
+    title: Photoshop — PageProof
+    caption: "Illustration of PageProof's Photoshop panel: three proofs of the open document, one approved, one with four change requests and one in review, with a button to create a proof from the document."
+- id: jira
+  host: Jira
+  plugin: PageProof for Jira
+  listing: pageproof.com
+  stack: Atlassian Forge · Azure Functions · TypeScript
+  icon: "#0c66e4"
+  service: atlassian-forge-apps
+  window:
+    title: Jira — DES-142
+    caption: "Illustration of PageProof's Jira issue panel: a linked proof approved by three of three reviewers, with the approved file attached to the issue."
+- id: canva
+  host: Canva
+  plugin: PageProof for Canva
+  listing: pageproof.com
+  stack: Canva Apps SDK · React · TypeScript
+  icon: "#7d2ae8"
+  service: canva-apps
+  window:
+    title: Canva — PageProof app
+    caption: "Illustration of PageProof's Canva app: sending the open design for review, with reviewers and a due date."
+- id: word
+  host: Microsoft Word
+  plugin: PageProof for Microsoft Office
+  listing: Microsoft Marketplace
+  stack: Office.js · React · TypeScript
+  icon: "#d83b01"
+  service: office-add-ins
+  window:
+    title: Word — PageProof add-in
+    caption: "Illustration of PageProof's Office add-in in Word: a taskpane beside the document with reviewer comments and a button to upload a new version."
+- id: indesign
+  host: Adobe InDesign
+  plugin: PageProof for Adobe InDesign
+  listing: Adobe Exchange
+  stack: UXP · React · TypeScript
+  icon: "#ff3366"
+  service: adobe-uxp-plugins
+- id: quarkxpress
+  host: QuarkXPress
+  plugin: PageProof for QuarkXPress
+  listing: pageproof.com
+  stack: Native XTension · React · TypeScript
+  icon: "#008a4b"
+- id: finalcut
+  host: Final Cut Pro
+  plugin: PageProof for Final Cut Pro
+  listing: pageproof.com
+  stack: Swift · SwiftUI
+  icon: "#5a5a5a"
+- id: canto
+  desktopIcon: false
+  host: Canto
+  plugin: PageProof for Canto
+  listing: pageproof.com
+  stack: FinalFile delivery
+  icon: "#c2410c"
+- id: bynder
+  desktopIcon: false
+  host: Bynder
+  plugin: PageProof for Bynder
+  listing: pageproof.com
+  stack: FinalFile delivery
+  icon: "#1f3c88"

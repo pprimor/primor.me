@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isPlainLeftClick, isServicesPath } from "./link-intercept";
+import { isPlainLeftClick, isServicesPath, openInDesktop } from "./link-intercept";
 
 const click = { button: 0, metaKey: false, ctrlKey: false, shiftKey: false, altKey: false, defaultPrevented: false };
 
@@ -24,5 +24,25 @@ describe("isServicesPath", () => {
     expect(isServicesPath("/")).toBe(false);
     expect(isServicesPath("https://primor.me/services/")).toBe(false);
     expect(isServicesPath("mailto:hello@primor.me")).toBe(false);
+  });
+});
+
+describe("openInDesktop", () => {
+  it("opens the path in the desktop on a plain click and stops the navigation", () => {
+    const opened: string[] = [];
+    let prevented = false;
+    openInDesktop((path) => opened.push(path), "/services/canva-apps/")({ ...click, preventDefault: () => (prevented = true) });
+    expect(opened).toEqual(["/services/canva-apps/"]);
+    expect(prevented).toBe(true);
+  });
+
+  it("leaves modified clicks, and pages without a desktop, to the browser", () => {
+    const opened: string[] = [];
+    let prevented = false;
+    const preventDefault = () => (prevented = true);
+    openInDesktop((path) => opened.push(path), "/services/")({ ...click, metaKey: true, preventDefault });
+    openInDesktop(undefined, "/services/")({ ...click, preventDefault });
+    expect(opened).toEqual([]);
+    expect(prevented).toBe(false);
   });
 });

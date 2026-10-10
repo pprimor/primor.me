@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { stringify } from "yaml";
+import { parse as parseYaml, stringify } from "yaml";
 import { ZodError } from "zod";
+import { PANEL_IDS } from "../../hosts/ids";
 import {
   parseExperienceYaml,
+  parseIntegrationsYaml,
   parseProjectsYaml,
   parseServicesYaml,
   parseSkillsYaml,
@@ -59,6 +61,60 @@ describe("parseSkillsYaml", () => {
     const backend = categories.find((c) => c.category === "Backend & Cloud");
     expect(backend?.skills).toContain("Azure Functions");
     expect(additional).toContain("JavaScript");
+  });
+});
+
+describe("parseIntegrationsYaml", () => {
+  const plugins = parseExperienceYaml(readContent("experience")).flatMap(
+    (e) => e.plugins ?? [],
+  );
+  const base = () =>
+    parseYaml(readContent("integrations")) as Record<string, unknown>[];
+
+  it("parses production integrations.yaml, resolving listing URLs from experience.yaml", () => {
+    const integrations = parseIntegrationsYaml(readContent("integrations"), plugins);
+    expect(integrations).toHaveLength(9);
+    const jira = integrations.find((i) => i.id === "jira");
+    expect(jira?.listing.url).toBe(
+      plugins.find((p) => p.name === "PageProof for Jira")?.url,
+    );
+    const windowed = integrations.filter((i) => i.window).map((i) => i.id);
+    expect([...windowed].sort()).toEqual([...PANEL_IDS].sort());
+  });
+
+  it("links each host window, and InDesign, to a service page that exists", () => {
+    const integrations = parseIntegrationsYaml(readContent("integrations"), plugins);
+    const slugs = parseServicesYaml(readContent("services"), plugins).services.map((s) => s.slug);
+    const linked = integrations.filter((i) => i.service);
+    expect(linked.map((i) => i.id).sort()).toEqual([...PANEL_IDS, "indesign"].sort());
+    for (const i of linked) expect(slugs).toContain(i.service);
+  });
+
+  it("rejects a plugin name experience.yaml doesn't have", () => {
+    const entries = base();
+    entries[0]!.plugin = "PageProof for Nothing";
+    expect(() => parseIntegrationsYaml(stringify(entries), plugins)).toThrow(
+      /unknown plugin/,
+    );
+  });
+
+  it("rejects duplicate ids", () => {
+    const entries = base();
+    entries.push({ ...entries.at(-1)! });
+    expect(() => parseIntegrationsYaml(stringify(entries), plugins)).toThrow(ZodError);
+  });
+
+  it("rejects a window on an integration that has no panel", () => {
+    const entries = base();
+    const indesign = entries.find((e) => e.id === "indesign")!;
+    indesign.window = { title: "InDesign", caption: "x" };
+    expect(() => parseIntegrationsYaml(stringify(entries), plugins)).toThrow(ZodError);
+  });
+
+  it("rejects a panel integration without its window", () => {
+    const entries = base();
+    delete entries.find((e) => e.id === "jira")!.window;
+    expect(() => parseIntegrationsYaml(stringify(entries), plugins)).toThrow(ZodError);
   });
 });
 

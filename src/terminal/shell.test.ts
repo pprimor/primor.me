@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { experienceData, projects, services, skills } from "../lib/data";
+import { experienceData, integrations, projects, services, skills } from "../lib/data";
 import { siteMetadata } from "../lib/site-metadata";
 import { commands, files, quickCommands } from "./commands";
 import { linesToText, type Line } from "./lines";
@@ -12,7 +12,7 @@ import {
 } from "./shell";
 
 const ctx: ShellContext = {
-  content: { projects, experience: experienceData, skills, services: services.services, site: siteMetadata },
+  content: { projects, experience: experienceData, skills, services: services.services, site: siteMetadata, integrations },
   history: ["help", "whoami"],
   now: () => new Date(2026, 9, 11, 9, 30),
 };
@@ -47,7 +47,48 @@ describe("tokenize", () => {
   });
 });
 
+function segmentsOf(lines: readonly Line[]) {
+  return lines.flatMap((line) => ("segments" in line ? line.segments : []));
+}
+
 describe("run", () => {
+  it("ls shows an integrations folder you can click into", () => {
+    expect(segmentsOf(run("ls", ctx).lines)).toContainEqual(
+      expect.objectContaining({ text: "integrations/", run: "ls integrations" }),
+    );
+  });
+
+  it("ls integrations lists every integration: windows open, the rest link out", () => {
+    const result = run("ls integrations/", ctx);
+    const text = linesToText(result.lines);
+    for (const i of integrations) expect(text).toContain(i.id);
+    expect(segmentsOf(result.lines)).toContainEqual(expect.objectContaining({ run: "open jira" }));
+    const indesign = integrations.find((i) => i.id === "indesign")!;
+    expect(hrefs(result.lines)).toContain(indesign.listing.url);
+  });
+
+  it("ls reports directories that don't exist", () => {
+    expect(output("ls nope")).toContain("ls: cannot access 'nope': No such file or directory");
+  });
+
+  it("open asks the desktop to open a window", () => {
+    expect(run("open jira", ctx).open).toBe("jira");
+    expect(run("open README", ctx).open).toBe("readme");
+    expect(run("open hire", ctx).open).toBe("hire");
+  });
+
+  it("open links to the listing for integrations without a window", () => {
+    const result = run("open indesign", ctx);
+    expect(result.open).toBeUndefined();
+    const indesign = integrations.find((i) => i.id === "indesign")!;
+    expect(hrefs(result.lines)).toContain(indesign.listing.url);
+  });
+
+  it("open reports unknown windows and missing operands", () => {
+    expect(output("open nope")).toContain("open: nope: no such window");
+    expect(output("open")).toContain("open: missing operand");
+  });
+
   it("does nothing for blank input", () => {
     expect(run("  ", ctx)).toEqual({ lines: [] });
   });

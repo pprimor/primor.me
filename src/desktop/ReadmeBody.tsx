@@ -1,0 +1,43 @@
+import { integrations } from "../lib/data";
+import { openInDesktop } from "../lib/link-intercept";
+import { SERVICES_PATH } from "../lib/service-paths";
+import { siteMetadata } from "../lib/site-metadata";
+
+const hosts = integrations.map((i) => i.host).join(" · ");
+const hasServices = integrations.some((i) => i.service);
+const linkButton = "x11-button inline-flex h-7 items-center px-3.5 font-normal no-underline";
+
+type ReadmeBodyProps = {
+  onHire: () => void;
+  /** Shows a same-site page in the desktop browser window. */
+  onOpenPath?: (path: string) => void;
+};
+
+export default function ReadmeBody({ onHire, onOpenPath }: ReadmeBodyProps) {
+  return (
+    <div className="flex h-full flex-col gap-2.5 overflow-y-auto bg-white px-4 py-3 font-ui text-black">
+      <p className="m-0 text-lg font-bold">{siteMetadata.author} — integrations engineer</p>
+      <p className="m-0 text-[13px] leading-normal">
+        I build integrations that live inside other people’s apps. Each window on this desktop
+        is one of them: a PageProof integration I built and shipped, drawn in its host’s style.
+      </p>
+      <p className="m-0 text-[13px] leading-normal">
+        Based in {siteMetadata.location}. Open to select freelance projects.
+      </p>
+      <p className="m-0 text-xs leading-normal text-[#404040]">{hosts}</p>
+      <div className="mt-auto flex flex-wrap gap-2 pt-1">
+        <button type="button" onClick={onHire} className="x11-button h-7 px-3.5">
+          Hire me
+        </button>
+        {hasServices && (
+          <a href={SERVICES_PATH} className={linkButton} onClick={openInDesktop(onOpenPath, SERVICES_PATH)}>
+            Services
+          </a>
+        )}
+        <a href={siteMetadata.cvUrl} target="_blank" rel="noopener noreferrer" className={linkButton}>
+          CV.pdf
+        </a>
+      </div>
+    </div>
+  );
+}

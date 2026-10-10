@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { formatClock } from "./geometry";
-import { PANEL_HEIGHT } from "./useWindowState";
+import { PANEL_HEIGHT } from "./useDesktopArea";
 import { isPlainLeftClick } from "../lib/link-intercept";
 import { linkTargetProps } from "../lib/link-target";
 

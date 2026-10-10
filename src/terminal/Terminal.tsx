@@ -5,7 +5,7 @@ import {
   type KeyboardEvent,
   type MouseEvent,
 } from "react";
-import { experienceData, projects, services, skills } from "../lib/data";
+import { experienceData, integrations, projects, services, skills } from "../lib/data";
 import { isPlainLeftClick, isServicesPath } from "../lib/link-intercept";
 import { linkTargetProps } from "../lib/link-target";
 import { siteMetadata } from "../lib/site-metadata";
@@ -15,7 +15,7 @@ import Prompt from "./Prompt";
 import { complete, run, stepHistory, type ShellContext } from "./shell";
 import type { App } from "./types";
 
-const content = { projects, experience: experienceData, skills, services: services.services, site: siteMetadata };
+const content = { projects, experience: experienceData, skills, services: services.services, site: siteMetadata, integrations };
 
 const BANNER = String.raw`            _
  _ __  _ __(_)_ __ ___   ___  _ __

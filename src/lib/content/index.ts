@@ -1,5 +1,6 @@
 import {
   parseExperienceYaml,
+  parseIntegrationsYaml,
   parseProjectsYaml,
   parseServicesYaml,
   parseSkillsYaml,
@@ -23,10 +24,25 @@ function getContentYaml(basename: string): string {
 export const projects = parseProjectsYaml(getContentYaml("projects"));
 export const experienceData = parseExperienceYaml(getContentYaml("experience"));
 export const skills = parseSkillsYaml(getContentYaml("skills"));
+export const integrations = parseIntegrationsYaml(
+  getContentYaml("integrations"),
+  experienceData.flatMap((entry) => entry.plugins ?? []),
+);
 export const services = parseServicesYaml(
   getContentYaml("services"),
   experienceData.flatMap((entry) => entry.plugins ?? []),
 );
 
-export type { Project, ExperienceEntry, SkillCategory, Skills, Service, ServicesContent } from "./parse";
+export { isWindowed } from "./parse";
+
+export type {
+  Project,
+  ExperienceEntry,
+  SkillCategory,
+  Skills,
+  Integration,
+  WindowedIntegration,
+  Service,
+  ServicesContent,
+} from "./parse";
 export type { ProjectYaml, ExperienceEntryYaml, SkillsFileYaml } from "./schemas";
