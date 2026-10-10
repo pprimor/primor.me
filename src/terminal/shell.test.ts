@@ -120,6 +120,10 @@ describe("run", () => {
     ]);
   });
 
+  it("offers services as a mobile quick command", () => {
+    expect(quickCommands).toContain("services");
+  });
+
   it("cat services.txt prints the services list", () => {
     expect(output("cat services.txt")).toBe(output("services"));
   });

@@ -334,6 +334,11 @@ describe("onRequestPost", () => {
     expect(payload.subject).not.toMatch(/[\r\n]/);
   });
 
+  it("strips control and bidi format characters from the service", async () => {
+    const payload = await sentPayload("Canva\u0000\u001b\u202e Apps\u0085");
+    expect(payload.subject).toBe("New inquiry: Canva Apps");
+  });
+
   it("ignores a non-string service", async () => {
     const payload = await sentPayload({ name: "Canva" });
     expect(payload.subject).toBe("Contact from primor.me");

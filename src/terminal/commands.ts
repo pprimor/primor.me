@@ -273,4 +273,4 @@ export const commandNames = registry.map((c) => c.name);
 export type { ShellContext };
 
 /** Tappable shortcuts shown under the terminal on small screens. */
-export const quickCommands = ["about", "experience", "projects", "skills", "contact", "cv", "hire"] as const;
+export const quickCommands = ["about", "experience", "projects", "skills", "services", "contact", "cv", "hire"] as const;
