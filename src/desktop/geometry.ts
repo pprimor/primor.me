@@ -11,13 +11,16 @@ function clamp(value: number, lo: number, hi: number): number {
   return Math.min(Math.max(value, lo), hi);
 }
 
-/** A window centred on the desktop, shrunk to leave a margin on small screens. */
-export function initialRect(desktop: Rect): Rect {
-  const width = Math.min(PREFERRED.width, desktop.width - MARGIN * 2);
-  const height = Math.min(PREFERRED.height, desktop.height - MARGIN * 2);
+/**
+ * A window centred on the desktop, shrunk to leave a margin on small screens.
+ * `offset` cascades it down and right, as far as the desktop allows.
+ */
+export function initialRect(desktop: Rect, preferred: Size = PREFERRED, offset = 0): Rect {
+  const width = Math.min(preferred.width, desktop.width - MARGIN * 2);
+  const height = Math.min(preferred.height, desktop.height - MARGIN * 2);
   return {
-    x: desktop.x + (desktop.width - width) / 2,
-    y: desktop.y + (desktop.height - height) / 2,
+    x: Math.min(desktop.x + (desktop.width - width) / 2 + offset, desktop.x + desktop.width - width),
+    y: Math.min(desktop.y + (desktop.height - height) / 2 + offset, desktop.y + desktop.height - height),
     width,
     height,
   };

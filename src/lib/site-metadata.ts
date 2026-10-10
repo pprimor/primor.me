@@ -13,7 +13,7 @@ export const siteMetadata = {
     "Software Engineer at PageProof in Portugal. Cross-platform integrations for Canva, Office, Adobe & Final Cut Pro. Open to select freelance projects.",
   author: "Pedro Primor",
   ogImagePath: "/images/og.png",
-  ogImageAlt: "Pedro Primor",
+  ogImageAlt: "An X11 desktop with an xterm open on primor.me, showing whoami: Pedro Primor, software engineer building integrations for creative teams",
   locale: "en",
   jobTitle: "Software Engineer",
   worksFor: {

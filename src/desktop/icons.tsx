@@ -128,3 +128,21 @@ export function MailIcon() {
     </Pixels>
   );
 }
+
+export function BriefcaseIcon() {
+  return (
+    <Pixels>
+      {rects([
+        [11, 4, 10, 2, "#1f1f1f"],
+        [11, 6, 2, 4, "#1f1f1f"],
+        [19, 6, 2, 4, "#1f1f1f"],
+        [2, 9, 28, 19, "#1f1f1f"],
+        [3, 10, 26, 17, "#8b5a2b"],
+        [3, 10, 26, 2, "#a8743f"],
+        [3, 17, 26, 1, "#5c3a1a"],
+        [14, 15, 4, 5, "#1f1f1f"],
+        [15, 16, 2, 3, "#e8b63c"],
+      ])}
+    </Pixels>
+  );
+}

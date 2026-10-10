@@ -8,6 +8,9 @@ type Drag = { kind: "move" | "resize"; startX: number; startY: number; start: Re
 type WindowProps = {
   id: string;
   title: string;
+  /** A short glyph drawn before the title. */
+  glyph: string;
+  zIndex: number;
   rect: Rect;
   desktop: Rect;
   maximized: boolean;
@@ -49,6 +52,8 @@ function TitleButton({
 export default function Window({
   id,
   title,
+  glyph,
+  zIndex,
   rect,
   desktop,
   maximized,
@@ -96,7 +101,7 @@ export default function Window({
       onPointerDownCapture={onFocus}
       onFocusCapture={onFocus}
       className={`bevel-out absolute flex-col bg-x11-face p-[3px] ${hidden ? "hidden" : "flex"}`}
-      style={{ left: box.x, top: box.y, width: box.width, height: box.height }}
+      style={{ left: box.x, top: box.y, width: box.width, height: box.height, zIndex }}
     >
       <div
         onPointerDown={(e) => begin("move", e)}
@@ -113,7 +118,7 @@ export default function Window({
         }}
       >
         <span aria-hidden="true" className="font-mono text-[11px]">
-          {">_"}
+          {glyph}
         </span>
         <h2 id={`${id}-title`} className="min-w-0 flex-1 truncate">
           {title}

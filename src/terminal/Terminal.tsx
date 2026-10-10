@@ -8,8 +8,10 @@ import {
 import { experienceData, projects, skills } from "../lib/data";
 import { siteMetadata } from "../lib/site-metadata";
 import { blank, line, tone, type Line, type Segment } from "./lines";
+import { quickCommands } from "./commands";
 import Prompt from "./Prompt";
 import { complete, run, stepHistory, type ShellContext } from "./shell";
+import type { App } from "./types";
 
 const content = { projects, experience: experienceData, skills, site: siteMetadata };
 
@@ -126,11 +128,15 @@ function LineView({
 type TerminalProps = {
   /** Called when the visitor runs `exit`. */
   onExit?: () => void;
+  /** Called when a command asks the desktop to open a window, e.g. `hire`. */
+  onOpen?: (app: App) => void;
   /** Focus the prompt whenever this becomes true (pointer devices only). */
   active?: boolean;
+  /** Small screens: show tappable shortcuts under the output. */
+  compact?: boolean;
 };
 
-export default function Terminal({ onExit, active = true }: TerminalProps) {
+export default function Terminal({ onExit, onOpen, active = true, compact = false }: TerminalProps) {
   const [entries, setEntries] = useState<Entry[]>(initialEntries);
   const [history, setHistory] = useState<string[]>([]);
   const [cursor, setCursor] = useState(0);
@@ -169,6 +175,7 @@ export default function Terminal({ onExit, active = true }: TerminalProps) {
     setEntries((prev) =>
       result.clear ? [] : [...prev, entry(result.lines, command)],
     );
+    if (result.open) onOpen?.(result.open);
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
@@ -217,44 +224,67 @@ export default function Terminal({ onExit, active = true }: TerminalProps) {
   }
 
   return (
-    <div
-      ref={scrollRef}
-      className="h-full cursor-text overflow-y-auto overscroll-contain bg-term-bg px-3 py-2 font-mono text-base leading-snug text-term-fg sm:text-[13px] sm:leading-[1.2]"
-      onClick={focusInput}
-    >
-      <div role="log" aria-live="polite" aria-label="Terminal output">
-        {entries.map((e) => (
-          <div key={e.id}>
-            {e.input !== undefined && (
-              <div className="whitespace-pre-wrap break-words">
-                <Prompt /> {e.input}
-              </div>
-            )}
-            {e.lines.map((l, i) => (
-              <LineView key={i} value={l} onRun={execute} />
-            ))}
-          </div>
-        ))}
+    <div className="flex h-full flex-col bg-term-bg">
+      <div
+        ref={scrollRef}
+        className="min-h-0 flex-1 cursor-text overflow-y-auto overscroll-contain px-3 py-2 font-mono text-base leading-snug text-term-fg sm:text-[13px] sm:leading-[1.2]"
+        onClick={focusInput}
+      >
+        <div role="log" aria-live="polite" aria-label="Terminal output">
+          {entries.map((e) => (
+            <div key={e.id}>
+              {e.input !== undefined && (
+                <div className="whitespace-pre-wrap break-words">
+                  <Prompt /> {e.input}
+                </div>
+              )}
+              {e.lines.map((l, i) => (
+                <LineView key={i} value={l} onRun={execute} />
+              ))}
+            </div>
+          ))}
+        </div>
+        <div className="flex items-baseline gap-[1ch]">
+          <label htmlFor="terminal-input" className="shrink-0">
+            <Prompt />
+            <span className="sr-only"> Type a command, or "help"</span>
+          </label>
+          <input
+            id="terminal-input"
+            ref={inputRef}
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            onKeyDown={onKeyDown}
+            autoComplete="off"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
+            enterKeyHint="go"
+            className="min-w-0 flex-1 bg-transparent text-term-fg caret-term-accent outline-none"
+          />
+        </div>
       </div>
-      <div className="flex items-baseline gap-[1ch]">
-        <label htmlFor="terminal-input" className="shrink-0">
-          <Prompt />
-          <span className="sr-only"> Type a command, or "help"</span>
-        </label>
-        <input
-          id="terminal-input"
-          ref={inputRef}
-          value={input}
-          onChange={(event) => setInput(event.target.value)}
-          onKeyDown={onKeyDown}
-          autoComplete="off"
-          autoCapitalize="none"
-          autoCorrect="off"
-          spellCheck={false}
-          enterKeyHint="go"
-          className="min-w-0 flex-1 bg-transparent text-term-fg caret-term-accent outline-none"
-        />
-      </div>
+      {compact && (
+        <nav
+          aria-label="Quick commands"
+          className="flex shrink-0 gap-2 overflow-x-auto border-t border-term-muted/40 px-3 py-2 font-mono text-sm"
+        >
+          {quickCommands.map((name) => (
+            <button
+              key={name}
+              type="button"
+              onClick={() => execute(name)}
+              className={`shrink-0 border px-3 py-1.5 ${
+                name === "hire"
+                  ? "border-term-accent text-term-accent"
+                  : "border-term-muted text-term-fg"
+              } active:bg-term-fg/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-term-fg`}
+            >
+              {name}
+            </button>
+          ))}
+        </nav>
+      )}
     </div>
   );
 }
