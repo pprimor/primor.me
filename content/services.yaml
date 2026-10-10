@@ -1,0 +1,120 @@
+overview:
+  title: Plugin & integration development
+  metaTitle: Plugin & Integration Developer · Pedro Primor
+  metaDescription: I build plugins and integrations for Adobe, Canva, Microsoft Office and Jira, from first prototype to marketplace listing.
+  pitch: >-
+    I build plugins and integrations for the tools creative teams already work
+    in. Since 2023 I've built PageProof's integrations for Adobe, Canva,
+    Microsoft Office, Jira and more, and I can build yours.
+  also:
+    - name: QuarkXPress XTensions
+      description: Native cross-platform extensions with an embedded React UI, like PageProof for QuarkXPress.
+    - name: Final Cut Pro extensions
+      description: Workflow extensions in Swift and SwiftUI for video teams.
+    - name: DAM delivery integrations
+      description: Send approved files to Canto, Bynder and other asset libraries, with every delivery logged.
+    - name: OAuth 2.0 and OpenID Connect
+      description: Authorization servers and sign-in flows that let one account work across all your integrations.
+process:
+  - A call to understand the workflow you want inside the host app.
+  - A written scope with a fixed quote and timeline.
+  - Early builds you can try, with regular check-ins.
+  - Store submission, then handover of the code and documentation.
+services:
+  - slug: adobe-uxp-plugins
+    name: Adobe UXP plugins
+    title: Adobe UXP plugin development
+    metaTitle: Adobe UXP Plugin Developer · Pedro Primor
+    metaDescription: I build Adobe UXP plugins for Photoshop and InDesign, from the first panel to an approved Adobe Exchange listing.
+    summary: Photoshop and InDesign plugins, from the first panel to Adobe Exchange.
+    pitch: >-
+      I build and maintain PageProof's UXP plugins for Photoshop and InDesign,
+      both listed on Adobe Exchange. If your product needs to live inside
+      Adobe's apps, I can take it from the first prototype to an approved
+      listing.
+    shipped:
+      - PageProof for Adobe Photoshop
+      - PageProof for Adobe InDesign
+    handles:
+      - UXP manifest, permissions and host-app version support
+      - Panel UI in React and TypeScript that sits naturally inside the host app
+      - Reading and changing documents through the Photoshop and InDesign APIs
+      - Sign-in and calls to your own API from inside the plugin
+      - Packaging, Adobe Exchange submission and the review back-and-forth
+    faq:
+      - q: Can you move an existing CEP extension to UXP?
+        a: Yes. Adobe is moving its apps from CEP to UXP. I can port an existing CEP panel, keeping its features while moving it to UXP's APIs and manifest.
+      - q: Which Adobe apps do you work with?
+        a: I've shipped UXP plugins for Photoshop and InDesign. Ask about the app you have in mind.
+      - q: Can you take over a plugin someone else started?
+        a: Yes. I'll review the code first and tell you plainly what I'd keep and what I'd change.
+  - slug: canva-apps
+    name: Canva Apps
+    title: Canva app development
+    metaTitle: Canva App Developer · Pedro Primor
+    metaDescription: I build Canva Apps with React, TypeScript and the Canva Apps SDK, connecting your product to the designs your users make in Canva.
+    summary: Apps on the Canva Apps SDK that connect your product to Canva designs.
+    pitch: >-
+      I built PageProof for Canva, which lets teams send a Canva design for
+      review without leaving the editor. If your users design in Canva, I can
+      bring your product to them there.
+    shipped:
+      - PageProof for Canva
+    handles:
+      - App UI in React and TypeScript using Canva's App UI Kit
+      - Exporting designs and reading design content through the Apps SDK
+      - Signing users in to your own service
+      - A backend for the app, if it needs one
+      - Canva's app review and publishing
+    faq:
+      - q: Does a Canva App need a backend?
+        a: Not always. An app that only works with the design can run entirely in Canva. If it talks to your product, it needs an API to call, and I can build that too.
+      - q: Can you work on an app that's already published?
+        a: Yes. I can pick up an existing app, address review feedback, or add features.
+  - slug: atlassian-forge-apps
+    name: Atlassian Forge & Jira apps
+    title: Atlassian Forge and Jira app development
+    metaTitle: Atlassian Forge & Jira App Developer · Pedro Primor
+    metaDescription: I build Atlassian Forge apps for Jira that connect your product to issues, with panels, status sync, file delivery and the backend behind them.
+    summary: Forge apps that bring your product into Jira issues.
+    pitch: >-
+      I built the backend for PageProof for Jira, a Forge app that links proofs
+      to Jira issues, syncs approval status and delivers approved files into
+      Jira. I can build the same kind of connection for your product.
+    shipped:
+      - PageProof for Jira
+    handles:
+      - Forge issue panels and their UI
+      - Keeping status in sync between your product and Jira issues
+      - The backend service Forge talks to, for example on Azure Functions
+      - OAuth 2.0 sign-in between Jira and your product
+      - Atlassian Marketplace listing
+    faq:
+      - q: Forge or Connect?
+        a: Atlassian recommends Forge for new Jira Cloud apps, and that's what I build on.
+      - q: Can the app talk to our existing API?
+        a: Yes. Forge apps can call external services. I'll set up the authentication and permissions it needs.
+  - slug: office-add-ins
+    name: Microsoft Office add-ins
+    title: Microsoft Office add-in development
+    metaTitle: Microsoft Office Add-in Developer · Pedro Primor
+    metaDescription: I build Microsoft Office add-ins with Office.js, React and TypeScript, bringing your product into Word, Excel and PowerPoint.
+    summary: Office.js taskpane add-ins for Word, Excel and PowerPoint.
+    pitch: >-
+      I built PageProof's Office add-in, which brings proofing into Microsoft
+      Office and is listed on Microsoft Marketplace. I can build a taskpane
+      add-in that puts your product inside the documents your users already
+      work in.
+    shipped:
+      - PageProof for Microsoft Office
+    handles:
+      - Taskpane UI in React and TypeScript
+      - Reading and inserting document content with Office.js
+      - Signing in to your service from inside Office
+      - Support across Office on Windows, Mac and the web
+      - Microsoft Marketplace submission and validation
+    faq:
+      - q: Can one add-in cover Word, Excel and PowerPoint?
+        a: Often, yes. A single add-in can run in several Office apps, with app-specific code where their APIs differ.
+      - q: Do add-ins work in Office on the web?
+        a: Yes. Office.js add-ins run in Office on Windows, Mac and the web.
