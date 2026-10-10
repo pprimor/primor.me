@@ -4,17 +4,28 @@
       "staticDistDir": "./dist",
       "url": [
         "http://localhost/index.html",
-        "http://localhost/404.html"
+        "http://localhost/404.html",
+        "http://localhost/services/index.html",
+        "http://localhost/services/adobe-uxp-plugins/index.html"
       ],
       "numberOfRuns": 3
     },
     "assert": {
       "assertMatrix": [
         {
-          "matchingUrlPattern": "index\\.html$",
+          "matchingUrlPattern": "localhost/index\\.html$",
           "assertions": {
             "categories:performance": ["error", { "minScore": 0.85, "aggregationMethod": "median" }],
             "categories:accessibility": ["warn", { "minScore": 0.9 }],
+            "categories:best-practices": ["warn", { "minScore": 0.9 }],
+            "categories:seo": ["error", { "minScore": 0.95 }]
+          }
+        },
+        {
+          "matchingUrlPattern": "/services/.*index\\.html$",
+          "assertions": {
+            "categories:performance": ["error", { "minScore": 0.9, "aggregationMethod": "median" }],
+            "categories:accessibility": ["error", { "minScore": 0.95 }],
             "categories:best-practices": ["warn", { "minScore": 0.9 }],
             "categories:seo": ["error", { "minScore": 0.95 }]
           }
