@@ -3,7 +3,7 @@ import { defineWorkersConfig } from "@cloudflare/vitest-pool-workers/config";
 export default defineWorkersConfig({
   test: {
     include: ["**/*.{test,spec}.ts"],
-    exclude: ["node_modules", "dist", ".lighthouseci"],
+    exclude: ["node_modules", "dist", "dist-ssr", ".lighthouseci"],
     poolOptions: {
       workers: {
         wrangler: { configPath: "./wrangler.toml" },

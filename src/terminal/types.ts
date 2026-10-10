@@ -1,4 +1,4 @@
-import type { ExperienceEntry, Project, Skills } from "../lib/data";
+import type { ExperienceEntry, Project, Service, Skills } from "../lib/data";
 import type { siteMetadata } from "../lib/site-metadata";
 import type { Line } from "./lines";
 
@@ -6,6 +6,7 @@ export type Content = {
   projects: readonly Project[];
   experience: readonly ExperienceEntry[];
   skills: Skills;
+  services: readonly Service[];
   site: typeof siteMetadata;
 };
 
@@ -17,7 +18,7 @@ export type ShellContext = {
 };
 
 /** Desktop windows a command can ask to open. */
-export type App = "hire";
+export type App = "hire" | "web";
 
 export type RunResult = { lines: Line[]; clear?: true; exit?: true; open?: App };
 

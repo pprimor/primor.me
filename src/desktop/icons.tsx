@@ -146,3 +146,21 @@ export function BriefcaseIcon() {
     </Pixels>
   );
 }
+
+export function PuzzleIcon() {
+  return (
+    <Pixels>
+      {rects([
+        [6, 8, 20, 20, "#1f1f1f"],
+        [13, 4, 6, 6, "#1f1f1f"],
+        [25, 15, 5, 7, "#1f1f1f"],
+        [7, 9, 18, 18, "#3b82c4"],
+        [14, 5, 4, 5, "#3b82c4"],
+        [24, 16, 5, 5, "#3b82c4"],
+        [7, 9, 18, 2, "#6fa8dc"],
+        [14, 5, 4, 1, "#6fa8dc"],
+        [7, 25, 18, 2, "#285f91"],
+      ])}
+    </Pixels>
+  );
+}

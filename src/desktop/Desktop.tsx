@@ -1,22 +1,28 @@
 import { useCallback, useMemo, useState } from "react";
+import { SERVICES_PATH } from "../lib/service-paths";
 import { siteMetadata } from "../lib/site-metadata";
 import Terminal from "../terminal/Terminal";
+import Browser, { type BrowserRequest } from "./Browser";
 import DesktopIcons from "./DesktopIcons";
 import HireForm from "./HireForm";
-import { BriefcaseIcon, CardIcon, DocumentIcon, FolderIcon, MailIcon, TerminalIcon } from "./icons";
+import { BriefcaseIcon, CardIcon, DocumentIcon, FolderIcon, MailIcon, PuzzleIcon, TerminalIcon } from "./icons";
 import Panel, { type MenuItem, type Task } from "./Panel";
 import { raise, zIndex, type Stack } from "./stacking";
 import { useDesktopArea, useWindowState } from "./useWindowState";
 import Window from "./Window";
 
-type WindowId = "term" | "hire";
+type WindowId = "term" | "hire" | "web";
 
 const HIRE_WINDOW = { size: { width: 480, height: 480 }, offset: 40, initialMode: "closed" } as const;
+const WEB_WINDOW = { size: { width: 820, height: 600 }, offset: 70, initialMode: "closed" } as const;
 
 export default function Desktop() {
   const { desktop, compact } = useDesktopArea();
   const term = useWindowState(desktop);
   const hire = useWindowState(desktop, HIRE_WINDOW);
+  const web = useWindowState(desktop, WEB_WINDOW);
+  const [webRequest, setWebRequest] = useState<BrowserRequest>({ path: SERVICES_PATH, n: 0 });
+  const [webTitle, setWebTitle] = useState("");
   const [focused, setFocused] = useState<WindowId | null>("term");
   const [stack, setStack] = useState<Stack<WindowId>>(["term"]);
 
@@ -35,26 +41,36 @@ export default function Desktop() {
     showHire();
     focus("hire");
   }, [showHire, focus]);
+  const showWeb = web.show;
+  const openWeb = useCallback(
+    (path: string = SERVICES_PATH) => {
+      setWebRequest((r) => ({ path, n: r.n + 1 }));
+      showWeb();
+      focus("web");
+    },
+    [showWeb, focus],
+  );
 
   const items: MenuItem[] = useMemo(
     () => [
       { label: "Hire me", icon: <BriefcaseIcon />, onSelect: openHire },
+      { label: "Services", icon: <PuzzleIcon />, href: SERVICES_PATH, onOpen: () => openWeb() },
       { label: "Terminal", icon: <TerminalIcon />, onSelect: openTerm },
       { label: "CV.pdf", icon: <DocumentIcon />, href: siteMetadata.cvUrl },
       { label: "GitHub", icon: <FolderIcon />, href: siteMetadata.profiles.github },
       { label: "LinkedIn", icon: <CardIcon />, href: siteMetadata.profiles.linkedin },
       { label: "Email", icon: <MailIcon />, href: `mailto:${siteMetadata.contactEmail}` },
     ],
-    [openHire, openTerm],
+    [openHire, openTerm, openWeb],
   );
 
-  const windows = { term, hire };
-  const tasks: Task[] = (["term", "hire"] as const)
+  const windows = { term, hire, web };
+  const tasks: Task[] = (["term", "hire", "web"] as const)
     .filter((id) => windows[id].mode !== "closed")
     .map((id) => {
       const w = windows[id];
       return {
-        label: id === "term" ? "xterm" : "hire",
+        label: { term: "xterm", hire: "hire", web: "browser" }[id],
         pressed: w.visible,
         onClick: () => {
           if (w.visible && focused === id) {
@@ -100,7 +116,7 @@ export default function Desktop() {
               key={term.sessionKey}
               active={term.visible && focused === "term"}
               onExit={term.close}
-              onOpen={openHire}
+              onOpen={(app, path) => (app === "hire" ? openHire() : openWeb(path))}
               compact={compact}
             />
           </Window>
@@ -124,6 +140,27 @@ export default function Desktop() {
             onClose={hire.close}
           >
             <HireForm key={hire.sessionKey} />
+          </Window>
+        )}
+        {web.mode !== "closed" && (
+          <Window
+            id="web-window"
+            title={`browser — ${webTitle || "primor.me"}`}
+            glyph="www"
+            zIndex={zIndex(stack, "web")}
+            rect={web.rect}
+            desktop={desktop}
+            maximized={web.mode === "maximized"}
+            compact={compact}
+            hidden={!web.visible}
+            focused={focused === "web" && web.visible}
+            onRectChange={web.setRect}
+            onFocus={() => focus("web")}
+            onMinimize={web.minimize}
+            onToggleMaximize={web.toggleMaximize}
+            onClose={web.close}
+          >
+            <Browser key={web.sessionKey} request={webRequest} onTitle={setWebTitle} />
           </Window>
         )}
       </main>

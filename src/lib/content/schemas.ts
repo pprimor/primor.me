@@ -62,6 +62,52 @@ export const skillsFileSchema = z.object({
   additionalSkills: z.array(z.string().min(1)),
 });
 
+const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const metaTitleSchema = z.string().min(1).max(60);
+const metaDescriptionSchema = z.string().min(50).max(160);
+
+export const serviceSchema = z.object({
+  slug: z.string().regex(slugRegex, "Expected a lowercase kebab-case slug"),
+  name: z.string().min(1),
+  title: z.string().min(1),
+  metaTitle: metaTitleSchema,
+  metaDescription: metaDescriptionSchema,
+  summary: z.string().min(1),
+  pitch: z.string().min(1),
+  shipped: z.array(z.string().min(1)).min(1),
+  handles: z.array(z.string().min(1)).min(1),
+  faq: z.array(z.object({ q: z.string().min(1), a: z.string().min(1) })).min(1),
+});
+
+export const servicesFileSchema = z
+  .object({
+    overview: z.object({
+      title: z.string().min(1),
+      metaTitle: metaTitleSchema,
+      metaDescription: metaDescriptionSchema,
+      pitch: z.string().min(1),
+      also: z
+        .array(z.object({ name: z.string().min(1), description: z.string().min(1) }))
+        .min(1),
+    }),
+    process: z.array(z.string().min(1)).min(1),
+    services: z.array(serviceSchema).min(1),
+  })
+  .superRefine((file, ctx) => {
+    const seen = new Set<string>();
+    file.services.forEach((service, index) => {
+      if (seen.has(service.slug)) {
+        ctx.addIssue({
+          code: "custom",
+          message: `Duplicate slug "${service.slug}"`,
+          path: ["services", index, "slug"],
+        });
+      }
+      seen.add(service.slug);
+    });
+  });
+
 export type ProjectYaml = z.infer<typeof projectSchema>;
 export type ExperienceEntryYaml = z.infer<typeof experienceEntrySchema>;
 export type SkillsFileYaml = z.infer<typeof skillsFileSchema>;
+export type ExperiencePluginYaml = z.infer<typeof experiencePluginSchema>;

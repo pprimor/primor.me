@@ -1,3 +1,4 @@
+import { SERVICES_PATH, servicePath } from "../lib/service-paths";
 import { calculateDuration, formatDateRange } from "../lib/utils";
 import { blank, cmd, hanging, line, link, tone, type Line } from "./lines";
 import type { Command, RunResult, ShellContext } from "./types";
@@ -126,6 +127,31 @@ const contact: Command = {
     ]),
 };
 
+const services: Command = {
+  name: "services",
+  summary: "what I can build for you",
+  run: (_args, { content }) => {
+    const width = Math.max(...content.services.map((s) => s.name.length)) + 2;
+    return {
+      open: "web",
+      lines: [
+        heading("Services"),
+        ...content.services.map((s) =>
+          hanging(
+            2 + width,
+            "  ",
+            link(s.name, servicePath(s.slug)),
+            " ".repeat(width - s.name.length),
+            tone(s.summary, "muted"),
+          ),
+        ),
+        blank,
+        line("  ", link("All services and a contact form", SERVICES_PATH)),
+      ],
+    };
+  },
+};
+
 const hire: Command = {
   name: "hire",
   summary: "tell me about your project",
@@ -145,6 +171,7 @@ export const files: Record<string, Command> = {
   "experience.txt": experience,
   "projects.txt": projects,
   "skills.txt": skills,
+  "services.txt": services,
   "contact.txt": contact,
 };
 
@@ -236,7 +263,7 @@ const help: Command = {
 };
 
 const registry: readonly Command[] = [
-  help, whoami, about, experience, projects, skills, contact, hire, cv,
+  help, whoami, about, experience, projects, skills, contact, services, hire, cv,
   ls, cat, history, clear, echo, date, exit, sudo,
 ];
 
@@ -249,4 +276,4 @@ export const commandNames = registry.map((c) => c.name);
 export type { ShellContext };
 
 /** Tappable shortcuts shown under the terminal on small screens. */
-export const quickCommands = ["about", "experience", "projects", "skills", "contact", "cv", "hire"] as const;
+export const quickCommands = ["about", "experience", "projects", "skills", "services", "contact", "cv", "hire"] as const;

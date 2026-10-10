@@ -5,7 +5,9 @@ import {
   type KeyboardEvent,
   type MouseEvent,
 } from "react";
-import { experienceData, projects, skills } from "../lib/data";
+import { experienceData, projects, services, skills } from "../lib/data";
+import { isPlainLeftClick, isServicesPath } from "../lib/link-intercept";
+import { linkTargetProps } from "../lib/link-target";
 import { siteMetadata } from "../lib/site-metadata";
 import { blank, line, tone, type Line, type Segment } from "./lines";
 import { quickCommands } from "./commands";
@@ -13,7 +15,7 @@ import Prompt from "./Prompt";
 import { complete, run, stepHistory, type ShellContext } from "./shell";
 import type { App } from "./types";
 
-const content = { projects, experience: experienceData, skills, site: siteMetadata };
+const content = { projects, experience: experienceData, skills, services: services.services, site: siteMetadata };
 
 const BANNER = String.raw`            _
  _ __  _ __(_)_ __ ___   ___  _ __
@@ -56,18 +58,26 @@ const interactiveClass =
 function SegmentView({
   segment,
   onRun,
+  onOpenPath,
 }: {
   segment: Segment;
   onRun: (command: string) => void;
+  onOpenPath?: (path: string) => void;
 }) {
   const className = segment.tone ? toneClass[segment.tone] : undefined;
   if (segment.href) {
-    const external = !segment.href.startsWith("mailto:");
+    const href = segment.href;
     return (
       <a
         href={segment.href}
         className={`text-term-link ${interactiveClass}`}
-        {...(external && { target: "_blank", rel: "noopener noreferrer" })}
+        {...linkTargetProps(segment.href)}
+        onClick={(event) => {
+          if (onOpenPath && isServicesPath(href) && isPlainLeftClick(event)) {
+            event.preventDefault();
+            onOpenPath(href);
+          }
+        }}
       >
         {segment.text}
       </a>
@@ -91,9 +101,11 @@ function SegmentView({
 function LineView({
   value,
   onRun,
+  onOpenPath,
 }: {
   value: Line;
   onRun: (command: string) => void;
+  onOpenPath?: (path: string) => void;
 }) {
   if ("art" in value) {
     return (
@@ -118,7 +130,7 @@ function LineView({
       }
     >
       {value.segments.map((segment, i) => (
-        <SegmentView key={i} segment={segment} onRun={onRun} />
+        <SegmentView key={i} segment={segment} onRun={onRun} onOpenPath={onOpenPath} />
       ))}
     </div>
   );
@@ -127,8 +139,8 @@ function LineView({
 type TerminalProps = {
   /** Called when the visitor runs `exit`. */
   onExit?: () => void;
-  /** Called when a command asks the desktop to open a window, e.g. `hire`. */
-  onOpen?: (app: App) => void;
+  /** Called when a command or a link asks the desktop to open a window, e.g. `hire`. */
+  onOpen?: (app: App, path?: string) => void;
   /** Focus the prompt whenever this becomes true (pointer devices only). */
   active?: boolean;
   /** Small screens: show tappable shortcuts under the output. */
@@ -238,7 +250,7 @@ export default function Terminal({ onExit, onOpen, active = true, compact = fals
                 </div>
               )}
               {e.lines.map((l, i) => (
-                <LineView key={i} value={l} onRun={execute} />
+                <LineView key={i} value={l} onRun={execute} onOpenPath={onOpen && ((path) => onOpen("web", path))} />
               ))}
             </div>
           ))}

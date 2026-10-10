@@ -3,9 +3,10 @@ import ContactEmail from "./email";
 
 export async function renderContactEmailHtml(
   senderEmail: string,
-  message: string
+  message: string,
+  service: string | null = null
 ): Promise<string> {
   return render(
-    <ContactEmail senderEmail={senderEmail} message={message} />
+    <ContactEmail senderEmail={senderEmail} message={message} service={service} />
   );
 }

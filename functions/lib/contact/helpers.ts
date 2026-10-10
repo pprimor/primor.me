@@ -51,3 +51,16 @@ export function getClientIp(request: Request): string {
 
   return "unknown";
 }
+
+export const MAX_SERVICE_LENGTH = 64;
+
+/** The service an inquiry is about: one line, at most 64 characters, or null. */
+export function normalizeService(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const service = value
+    .replace(/\s+/g, " ")
+    .replace(/[\p{Cc}\p{Cf}]/gu, "")
+    .replace(/ {2,}/g, " ")
+    .trim();
+  return service && service.length <= MAX_SERVICE_LENGTH ? service : null;
+}

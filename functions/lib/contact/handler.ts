@@ -1,6 +1,7 @@
 import {
   getClientIp,
   isAllowedOrigin,
+  normalizeService,
   isValidEmail,
 } from "./helpers";
 import { logContactEvent, sanitizeResendError } from "./logger";
@@ -18,6 +19,7 @@ type ContactBody = {
   senderEmail?: string;
   message?: string;
   company?: string;
+  service?: unknown;
   turnstileToken?: string;
 };
 
@@ -209,7 +211,8 @@ export async function handleContactPost(
 
   const toEmail = env.CONTACT_TO_EMAIL ?? DEFAULT_TO_EMAIL;
   const fromEmail = env.RESEND_FROM_EMAIL ?? DEFAULT_FROM_EMAIL;
-  const html = await renderContactEmailHtml(senderEmail, message);
+  const service = normalizeService(body.service);
+  const html = await renderContactEmailHtml(senderEmail, message, service);
 
   const resendResponse = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -221,7 +224,7 @@ export async function handleContactPost(
       from: fromEmail,
       to: [toEmail],
       reply_to: senderEmail,
-      subject: "Contact from primor.me",
+      subject: service ? `New inquiry: ${service}` : "Contact from primor.me",
       html,
     }),
   });

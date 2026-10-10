@@ -10,7 +10,7 @@ export const siteMetadata = {
   cvUrl: "https://cv.primor.me/CV.pdf",
   location: "Portugal",
   description:
-    "Software Engineer at PageProof in Portugal. Cross-platform integrations for Canva, Office, Adobe & Final Cut Pro. Open to select freelance projects.",
+    "Software engineer in Portugal building plugins and integrations for Adobe, Canva, Microsoft Office and Jira. Available for freelance projects.",
   author: "Pedro Primor",
   ogImagePath: "/images/og.png",
   ogImageAlt: "An X11 desktop with an xterm open on primor.me, showing whoami: Pedro Primor, software engineer building integrations for creative teams",

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 const SCRIPT_ID = "cf-turnstile-script";
 const SCRIPT_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js";
-const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+const envSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
 
 type TurnstileApi = {
   render: (
@@ -31,22 +31,30 @@ declare global {
  */
 export type TurnstileStatus = "disabled" | "loading" | "ready" | "failed";
 
+type TurnstileOptions = {
+  /** Defaults to VITE_TURNSTILE_SITE_KEY; null disables the widget. */
+  siteKey?: string | null;
+  theme?: "light" | "dark";
+  /** False defers loading the script until it becomes true. */
+  load?: boolean;
+};
+
 /** Renders a Cloudflare Turnstile widget into `container` and tracks its token. */
-export function useTurnstile() {
+export function useTurnstile({ siteKey = envSiteKey ?? null, theme = "light", load = true }: TurnstileOptions = {}) {
   const container = useRef<HTMLDivElement>(null);
   const widgetId = useRef<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [status, setStatus] = useState<TurnstileStatus>(siteKey ? "loading" : "disabled");
 
   useEffect(() => {
-    if (!siteKey) return;
+    if (!siteKey || !load) return;
 
     const fail = () => setStatus("failed");
     const render = () => {
       if (!window.turnstile || !container.current || widgetId.current) return;
       widgetId.current = window.turnstile.render(container.current, {
         sitekey: siteKey,
-        theme: "light",
+        theme,
         callback: setToken,
         "expired-callback": () => setToken(null),
         "error-callback": () => {
@@ -78,7 +86,7 @@ export function useTurnstile() {
       if (widgetId.current && window.turnstile) window.turnstile.remove(widgetId.current);
       widgetId.current = null;
     };
-  }, []);
+  }, [siteKey, theme, load]);
 
   const reset = useCallback(() => {
     if (widgetId.current && window.turnstile) window.turnstile.reset(widgetId.current);
