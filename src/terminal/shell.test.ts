@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { experienceData, projects, skills } from "../lib/data";
+import { experienceData, projects, services, skills } from "../lib/data";
 import { siteMetadata } from "../lib/site-metadata";
 import { commands, files, quickCommands } from "./commands";
 import { linesToText, type Line } from "./lines";
@@ -12,7 +12,7 @@ import {
 } from "./shell";
 
 const ctx: ShellContext = {
-  content: { projects, experience: experienceData, skills, site: siteMetadata },
+  content: { projects, experience: experienceData, skills, services: services.services, site: siteMetadata },
   history: ["help", "whoami"],
   now: () => new Date(2026, 9, 11, 9, 30),
 };
@@ -110,6 +110,18 @@ describe("run", () => {
     expect(text).toContain("Backend & Cloud");
     expect(text).toContain("Azure Functions");
     expect(text).toContain("JavaScript");
+  });
+
+  it("services links every service page and the overview", () => {
+    const links = hrefs(run("services", ctx).lines);
+    expect(links).toEqual([
+      ...services.services.map((s) => `/services/${s.slug}/`),
+      "/services/",
+    ]);
+  });
+
+  it("cat services.txt prints the services list", () => {
+    expect(output("cat services.txt")).toBe(output("services"));
   });
 
   it("contact links email and profiles", () => {

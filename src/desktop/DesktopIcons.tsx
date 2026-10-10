@@ -1,4 +1,5 @@
 import type { MenuItem } from "./Panel";
+import { linkTargetProps } from "../lib/link-target";
 
 const iconClass =
   "group flex w-20 flex-col items-center gap-1 p-1 text-center font-ui text-xs text-white focus-visible:outline-none";
@@ -18,10 +19,7 @@ export default function DesktopIcons({ items }: { items: readonly MenuItem[] }) 
             <a
               href={item.href}
               className={iconClass}
-              {...(!item.href.startsWith("mailto:") && {
-                target: "_blank",
-                rel: "noopener noreferrer",
-              })}
+              {...linkTargetProps(item.href)}
             >
               {item.icon}
               <span className={labelClass}>{item.label}</span>

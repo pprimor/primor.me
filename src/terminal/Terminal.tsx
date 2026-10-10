@@ -5,7 +5,8 @@ import {
   type KeyboardEvent,
   type MouseEvent,
 } from "react";
-import { experienceData, projects, skills } from "../lib/data";
+import { experienceData, projects, services, skills } from "../lib/data";
+import { linkTargetProps } from "../lib/link-target";
 import { siteMetadata } from "../lib/site-metadata";
 import { blank, line, tone, type Line, type Segment } from "./lines";
 import { quickCommands } from "./commands";
@@ -13,7 +14,7 @@ import Prompt from "./Prompt";
 import { complete, run, stepHistory, type ShellContext } from "./shell";
 import type { App } from "./types";
 
-const content = { projects, experience: experienceData, skills, site: siteMetadata };
+const content = { projects, experience: experienceData, skills, services: services.services, site: siteMetadata };
 
 const BANNER = String.raw`            _
  _ __  _ __(_)_ __ ___   ___  _ __
@@ -62,12 +63,11 @@ function SegmentView({
 }) {
   const className = segment.tone ? toneClass[segment.tone] : undefined;
   if (segment.href) {
-    const external = !segment.href.startsWith("mailto:");
     return (
       <a
         href={segment.href}
         className={`text-term-link ${interactiveClass}`}
-        {...(external && { target: "_blank", rel: "noopener noreferrer" })}
+        {...linkTargetProps(segment.href)}
       >
         {segment.text}
       </a>

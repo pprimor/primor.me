@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { formatClock } from "./geometry";
 import { PANEL_HEIGHT } from "./useWindowState";
+import { linkTargetProps } from "../lib/link-target";
 
 export type MenuItem =
   | { label: string; icon: ReactNode; onSelect: () => void }
@@ -68,10 +69,7 @@ function ApplicationsMenu({ items }: { items: readonly MenuItem[] }) {
                   href={item.href}
                   className={itemClass}
                   onClick={() => setOpen(false)}
-                  {...(!item.href.startsWith("mailto:") && {
-                    target: "_blank",
-                    rel: "noopener noreferrer",
-                  })}
+                  {...linkTargetProps(item.href)}
                 >
                   {item.icon}
                   {item.label}

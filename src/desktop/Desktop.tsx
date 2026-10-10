@@ -1,9 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
+import { SERVICES_PATH } from "../lib/service-paths";
 import { siteMetadata } from "../lib/site-metadata";
 import Terminal from "../terminal/Terminal";
 import DesktopIcons from "./DesktopIcons";
 import HireForm from "./HireForm";
-import { BriefcaseIcon, CardIcon, DocumentIcon, FolderIcon, MailIcon, TerminalIcon } from "./icons";
+import { BriefcaseIcon, CardIcon, DocumentIcon, FolderIcon, MailIcon, PuzzleIcon, TerminalIcon } from "./icons";
 import Panel, { type MenuItem, type Task } from "./Panel";
 import { raise, zIndex, type Stack } from "./stacking";
 import { useDesktopArea, useWindowState } from "./useWindowState";
@@ -39,6 +40,7 @@ export default function Desktop() {
   const items: MenuItem[] = useMemo(
     () => [
       { label: "Hire me", icon: <BriefcaseIcon />, onSelect: openHire },
+      { label: "Services", icon: <PuzzleIcon />, href: SERVICES_PATH },
       { label: "Terminal", icon: <TerminalIcon />, onSelect: openTerm },
       { label: "CV.pdf", icon: <DocumentIcon />, href: siteMetadata.cvUrl },
       { label: "GitHub", icon: <FolderIcon />, href: siteMetadata.profiles.github },
