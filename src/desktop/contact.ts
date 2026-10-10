@@ -57,3 +57,14 @@ export async function submitContact(
     return { ok: false, error: GENERIC_ERROR };
   }
 }
+
+/** A prefilled email, for when the form can't post (e.g. verification is blocked). */
+export function mailtoLink({ senderEmail, message }: ContactFields): string {
+  const email = senderEmail.trim();
+  const body = email ? `${message}\n\nReply to: ${email}` : message;
+  const query = [
+    `subject=${encodeURIComponent("Project enquiry from primor.me")}`,
+    `body=${encodeURIComponent(body)}`,
+  ].join("&");
+  return `mailto:${siteMetadata.contactEmail}?${query}`;
+}

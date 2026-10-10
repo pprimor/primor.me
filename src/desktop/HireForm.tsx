@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { siteMetadata } from "../lib/site-metadata";
-import { submitContact, validateContact, type ContactErrors } from "./contact";
+import { mailtoLink, submitContact, validateContact, type ContactErrors } from "./contact";
 import { useTurnstile } from "./useTurnstile";
 
 type Status = { kind: "idle" | "sending" | "sent" } | { kind: "error"; message: string };
@@ -17,13 +17,30 @@ export default function HireForm() {
   const [errors, setErrors] = useState<ContactErrors>({});
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const turnstile = useTurnstile();
+  // Without verification the API rejects every post, so hand the message to the mail app.
+  const viaEmail = turnstile.status === "disabled" || turnstile.status === "failed";
+  const fields = { senderEmail: senderEmail.trim(), message, company };
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
-    const fields = { senderEmail: senderEmail.trim(), message, company };
     const found = validateContact(fields);
     setErrors(found);
     if (Object.keys(found).length > 0) return;
+
+    if (viaEmail) {
+      window.location.href = mailtoLink(fields);
+      return;
+    }
+    if (!turnstile.token) {
+      setStatus({
+        kind: "error",
+        message:
+          turnstile.status === "loading"
+            ? "Verification is still loading. Give it a second and try again."
+            : "Please complete the verification check.",
+      });
+      return;
+    }
 
     setStatus({ kind: "sending" });
     const result = await submitContact(fields, turnstile.token);
@@ -111,24 +128,37 @@ export default function HireForm() {
         )}
       </div>
 
-      {turnstile.enabled && <div ref={turnstile.container} className="min-h-[65px]" />}
+      {turnstile.status !== "disabled" && (
+        <div ref={turnstile.container} className={viaEmail ? "hidden" : "min-h-[65px]"} />
+      )}
+
+      {viaEmail && (
+        <p className="text-xs">
+          The spam check couldn't load, so this opens your email app with your message filled in.
+        </p>
+      )}
 
       {status.kind === "error" && (
         <p role="alert" className={errorClass}>
-          {status.message}
+          {status.message}{" "}
+          <a href={mailtoLink(fields)} className="text-[#000080] underline">
+            Send it by email instead
+          </a>
         </p>
       )}
 
       <div className="flex flex-wrap items-center gap-3">
         <button type="submit" disabled={status.kind === "sending"} className="x11-button h-7 px-4 disabled:text-x11-shadow">
-          {status.kind === "sending" ? "Sending…" : "Send"}
+          {status.kind === "sending" ? "Sending…" : viaEmail ? "Open in email app" : "Send"}
         </button>
-        <span className="text-xs">
-          or email{" "}
-          <a href={`mailto:${siteMetadata.contactEmail}`} className="text-[#000080] underline">
-            {siteMetadata.contactEmail}
-          </a>
-        </span>
+        {!viaEmail && (
+          <span className="text-xs">
+            or email{" "}
+            <a href={`mailto:${siteMetadata.contactEmail}`} className="text-[#000080] underline">
+              {siteMetadata.contactEmail}
+            </a>
+          </span>
+        )}
       </div>
     </form>
   );

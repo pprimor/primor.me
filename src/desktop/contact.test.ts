@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { GENERIC_ERROR, submitContact, validateContact } from "./contact";
+import { GENERIC_ERROR, mailtoLink, submitContact, validateContact } from "./contact";
 
 const valid = { senderEmail: "ana@example.com", message: "We need a Canva app." };
 
@@ -49,5 +49,22 @@ describe("submitContact", () => {
     const result = await submitContact(valid, null, fetchFn);
     expect(result).toEqual({ ok: false, error: "Please complete the verification check." });
     expect(fetchFn).not.toHaveBeenCalled();
+  });
+});
+
+describe("mailtoLink", () => {
+  it("prefills the message and reply-to for when the form can't post", () => {
+    const href = mailtoLink({ senderEmail: "ana@example.com", message: "A Canva app & more\nThanks" });
+    const url = new URL(href);
+    expect(url.protocol).toBe("mailto:");
+    expect(url.pathname).toBe("hello@primor.me");
+    expect(url.searchParams.get("subject")).toBe("Project enquiry from primor.me");
+    expect(url.searchParams.get("body")).toBe("A Canva app & more\nThanks\n\nReply to: ana@example.com");
+    expect(href).not.toContain("+");
+  });
+
+  it("leaves out the reply-to line when no email was given", () => {
+    const body = new URL(mailtoLink({ senderEmail: " ", message: "hi" })).searchParams.get("body");
+    expect(body).toBe("hi");
   });
 });

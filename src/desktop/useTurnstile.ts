@@ -25,15 +25,23 @@ declare global {
   }
 }
 
+/**
+ * `disabled`: no site key in this build. `failed`: the script or widget couldn't load
+ * (blocked, offline). Either way the form can't post and should fall back to email.
+ */
+export type TurnstileStatus = "disabled" | "loading" | "ready" | "failed";
+
 /** Renders a Cloudflare Turnstile widget into `container` and tracks its token. */
 export function useTurnstile() {
   const container = useRef<HTMLDivElement>(null);
   const widgetId = useRef<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [status, setStatus] = useState<TurnstileStatus>(siteKey ? "loading" : "disabled");
 
   useEffect(() => {
     if (!siteKey) return;
 
+    const fail = () => setStatus("failed");
     const render = () => {
       if (!window.turnstile || !container.current || widgetId.current) return;
       widgetId.current = window.turnstile.render(container.current, {
@@ -41,8 +49,12 @@ export function useTurnstile() {
         theme: "light",
         callback: setToken,
         "expired-callback": () => setToken(null),
-        "error-callback": () => setToken(null),
+        "error-callback": () => {
+          setToken(null);
+          fail();
+        },
       });
+      setStatus("ready");
     };
 
     let script = document.getElementById(SCRIPT_ID) as HTMLScriptElement | null;
@@ -57,10 +69,12 @@ export function useTurnstile() {
         document.head.appendChild(script);
       }
       script.addEventListener("load", render);
+      script.addEventListener("error", fail);
     }
 
     return () => {
       script?.removeEventListener("load", render);
+      script?.removeEventListener("error", fail);
       if (widgetId.current && window.turnstile) window.turnstile.remove(widgetId.current);
       widgetId.current = null;
     };
@@ -71,5 +85,5 @@ export function useTurnstile() {
     setToken(null);
   }, []);
 
-  return { container, token, reset, enabled: Boolean(siteKey) };
+  return { container, token, reset, status };
 }
