@@ -1,3 +1,10 @@
-export { projects, experienceData, skills } from "./content";
+export { projects, experienceData, skills, integrations, isWindowed } from "./content";
 
-export type { Project, ExperienceEntry, SkillCategory, Skills } from "./content";
+export type {
+  Project,
+  ExperienceEntry,
+  SkillCategory,
+  Skills,
+  Integration,
+  WindowedIntegration,
+} from "./content";

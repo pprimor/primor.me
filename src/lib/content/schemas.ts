@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PANEL_IDS } from "../../hosts/ids";
 
 const isoDateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -65,3 +66,46 @@ export const skillsFileSchema = z.object({
 export type ProjectYaml = z.infer<typeof projectSchema>;
 export type ExperienceEntryYaml = z.infer<typeof experienceEntrySchema>;
 export type SkillsFileYaml = z.infer<typeof skillsFileSchema>;
+
+export const integrationSchema = z.object({
+  id: z.string().regex(/^[a-z]+$/),
+  host: z.string().min(1),
+  plugin: z.string().min(1),
+  listing: z.string().min(1),
+  stack: z.string().min(1),
+  icon: z.string().regex(/^#[0-9a-f]{6}$/i),
+  service: z.string().regex(/^[a-z0-9-]+$/).optional(),
+  window: z
+    .object({ title: z.string().min(1), caption: z.string().min(1) })
+    .optional(),
+});
+
+const panelIds: readonly string[] = PANEL_IDS;
+
+export const integrationsFileSchema = z
+  .array(integrationSchema)
+  .min(1)
+  .superRefine((entries, ctx) => {
+    const seen = new Set<string>();
+    entries.forEach((entry, i) => {
+      if (seen.has(entry.id)) {
+        ctx.addIssue({ code: "custom", path: [i, "id"], message: `Duplicate id ${entry.id}` });
+      }
+      seen.add(entry.id);
+      const isPanel = panelIds.includes(entry.id);
+      if (isPanel !== Boolean(entry.window)) {
+        ctx.addIssue({
+          code: "custom",
+          path: [i, "window"],
+          message: isPanel ? `${entry.id} needs a window` : `${entry.id} has no panel, so no window`,
+        });
+      }
+    });
+    for (const id of PANEL_IDS) {
+      if (!seen.has(id)) {
+        ctx.addIssue({ code: "custom", path: [], message: `Missing integration for panel ${id}` });
+      }
+    }
+  });
+
+export type IntegrationYaml = z.infer<typeof integrationSchema>;

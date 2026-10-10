@@ -1,6 +1,8 @@
 import { parse as parseYaml } from "yaml";
+import { PANEL_IDS, type PanelId } from "../../hosts/ids";
 import {
   experienceFileSchema,
+  integrationsFileSchema,
   projectsFileSchema,
   skillsFileSchema,
   type ExperienceEntryYaml,
@@ -66,4 +68,38 @@ export function parseSkillsYaml(raw: string): Skills {
     })),
     additional: [...file.additionalSkills],
   };
+}
+
+type PluginLink = { name: string; url: string };
+
+export function parseIntegrationsYaml(raw: string, plugins: readonly PluginLink[]) {
+  const entries = integrationsFileSchema.parse(parseYaml(raw));
+  return entries.map((entry) => {
+    const plugin = plugins.find((p) => p.name === entry.plugin);
+    if (!plugin) {
+      throw new Error(`integrations.yaml: ${entry.id} names unknown plugin "${entry.plugin}"`);
+    }
+    return {
+      id: entry.id,
+      host: entry.host,
+      stack: entry.stack,
+      icon: entry.icon,
+      listing: { label: entry.listing, url: plugin.url },
+      service: entry.service,
+      window: entry.window,
+    };
+  });
+}
+
+export type Integration = ReturnType<typeof parseIntegrationsYaml>[number];
+
+export type WindowedIntegration = Integration & {
+  id: PanelId;
+  window: NonNullable<Integration["window"]>;
+};
+
+const panelIds: readonly string[] = PANEL_IDS;
+
+export function isWindowed(integration: Integration): integration is WindowedIntegration {
+  return integration.window !== undefined && panelIds.includes(integration.id);
 }
