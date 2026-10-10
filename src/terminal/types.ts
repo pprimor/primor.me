@@ -16,7 +16,7 @@ export type ShellContext = {
   now: () => Date;
 };
 
-export type RunResult = { lines: Line[]; clear?: true };
+export type RunResult = { lines: Line[]; clear?: true; exit?: true };
 
 export type Command = {
   name: string;

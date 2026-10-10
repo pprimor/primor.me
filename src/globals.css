@@ -2,6 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  /* Raised and sunken 2px bevels, X11/Motif style. */
+  .bevel-out {
+    box-shadow:
+      inset -1px -1px theme("colors.x11.dark"),
+      inset 1px 1px theme("colors.x11.light"),
+      inset -2px -2px theme("colors.x11.shadow"),
+      inset 2px 2px #dfdfdf;
+  }
+
+  .bevel-in {
+    box-shadow:
+      inset 1px 1px theme("colors.x11.dark"),
+      inset -1px -1px theme("colors.x11.light"),
+      inset 2px 2px theme("colors.x11.shadow"),
+      inset -2px -2px #dfdfdf;
+  }
+
+  .x11-button {
+    @apply bevel-out bg-x11-face font-ui text-xs font-bold text-black active:bevel-in focus-visible:outline focus-visible:outline-1 focus-visible:-outline-offset-4 focus-visible:outline-black;
+  }
+
+  .x11-button[aria-pressed="true"] {
+    @apply bevel-in bg-[#d4d4d4];
+  }
+
+  .wallpaper {
+    background-color: theme("colors.x11.desktop");
+    background-image: radial-gradient(rgb(0 0 0 / 0.14) 1px, transparent 1px);
+    background-size: 4px 4px;
+  }
+}
+
 ::selection {
   @apply bg-term-link/30;
 }

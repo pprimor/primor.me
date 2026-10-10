@@ -11,6 +11,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        ui: ["Tahoma", "Verdana", "DejaVu Sans", "Segoe UI", "sans-serif"],
         mono: [
           "ui-monospace",
           "SFMono-Regular",
@@ -21,6 +22,13 @@ export default {
         ],
       },
       colors: {
+        x11: {
+          face: "#c0c0c0",
+          light: "#ffffff",
+          shadow: "#808080",
+          dark: "#1f1f1f",
+          desktop: "#2f6f6f",
+        },
         term: {
           bg: "#0d1117",
           fg: "#e6edf3",

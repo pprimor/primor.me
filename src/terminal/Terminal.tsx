@@ -99,7 +99,7 @@ function LineView({
       <div>
         <pre
           aria-hidden="true"
-          className="overflow-x-auto text-[11px] leading-tight text-term-accent sm:text-sm"
+          className="overflow-x-auto text-[11px] leading-tight text-term-accent sm:text-[13px]"
         >
           {value.art}
         </pre>
@@ -127,32 +127,45 @@ function PromptLabel() {
   return <span className="text-term-accent">{PROMPT}</span>;
 }
 
-export default function Terminal() {
+type TerminalProps = {
+  /** Called when the visitor runs `exit`. */
+  onExit?: () => void;
+  /** Focus the prompt whenever this becomes true (pointer devices only). */
+  active?: boolean;
+};
+
+export default function Terminal({ onExit, active = true }: TerminalProps) {
   const [entries, setEntries] = useState<Entry[]>(initialEntries);
   const [history, setHistory] = useState<string[]>([]);
   const [cursor, setCursor] = useState(0);
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const hasInteracted = useRef(false);
 
   useEffect(() => {
     // Keep the banner in view on load; follow the prompt once the visitor starts typing.
-    if (hasInteracted.current) {
-      inputRef.current?.scrollIntoView({ block: "end" });
+    const scroller = scrollRef.current;
+    if (hasInteracted.current && scroller) {
+      scroller.scrollTop = scroller.scrollHeight;
     }
   }, [entries]);
 
   useEffect(() => {
     // Avoid popping the on-screen keyboard on touch devices.
-    if (window.matchMedia("(pointer: fine)").matches) {
+    if (active && window.matchMedia("(pointer: fine)").matches) {
       inputRef.current?.focus({ preventScroll: true });
     }
-  }, []);
+  }, [active]);
 
   function execute(command: string) {
     hasInteracted.current = true;
     const ctx: ShellContext = { content, history, now: () => new Date() };
     const result = run(command, ctx);
+    if (result.exit) {
+      onExit?.();
+      return;
+    }
     const nextHistory = command.trim() ? [...history, command] : history;
     setHistory(nextHistory);
     setCursor(nextHistory.length);
@@ -208,13 +221,11 @@ export default function Terminal() {
   }
 
   return (
-    <main
-      className="mx-auto min-h-screen max-w-4xl cursor-text px-4 py-6 font-mono text-base leading-relaxed sm:px-8 sm:py-10 sm:text-[15px]"
+    <div
+      ref={scrollRef}
+      className="h-full cursor-text overflow-y-auto overscroll-contain bg-term-bg px-3 py-2 font-mono text-base leading-relaxed text-term-fg sm:text-sm"
       onClick={focusInput}
     >
-      <h1 className="sr-only">
-        {siteMetadata.author} — {siteMetadata.jobTitle}
-      </h1>
       <div role="log" aria-live="polite" aria-label="Terminal output">
         {entries.map((e) => (
           <div key={e.id} className="[&+&]:mt-3">
@@ -248,6 +259,6 @@ export default function Terminal() {
           className="min-w-0 flex-1 bg-transparent text-term-fg caret-term-accent outline-none"
         />
       </div>
-    </main>
+    </div>
   );
 }

@@ -196,6 +196,13 @@ const clear: Command = {
   run: () => ({ lines: [], clear: true }),
 };
 
+const exit: Command = {
+  name: "exit",
+  summary: "close the terminal",
+  hidden: true,
+  run: () => ({ lines: [], exit: true }),
+};
+
 const sudo: Command = {
   name: "sudo",
   summary: "nice try",
@@ -222,7 +229,7 @@ const help: Command = {
 
 const registry: readonly Command[] = [
   help, whoami, about, experience, projects, skills, contact, cv,
-  ls, cat, history, clear, echo, date, sudo,
+  ls, cat, history, clear, echo, date, exit, sudo,
 ];
 
 export const commands: ReadonlyMap<string, Command> = new Map(

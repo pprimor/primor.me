@@ -1,6 +1,6 @@
 import './src/globals.css';
-import Terminal from './src/terminal/Terminal';
+import Desktop from './src/desktop/Desktop';
 
 export default function App() {
-  return <Terminal />;
+  return <Desktop />;
 }

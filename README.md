@@ -2,7 +2,7 @@
 
 Personal site — a React SPA built with Vite.
 
-The site is being rebuilt. For now it's a single-page terminal ([`src/terminal/`](src/terminal/)): `help` lists the commands, which print the content from [`content/`](content/). Command logic is plain TypeScript in `commands.ts` and `shell.ts`, tested in `shell.test.ts`; `Terminal.tsx` only renders it.
+The site is being rebuilt. For now it's a retro X11 desktop ([`src/desktop/`](src/desktop/)) with a draggable terminal window ([`src/terminal/`](src/terminal/)): `help` lists the commands, which print the content from [`content/`](content/). Command logic and window geometry are plain TypeScript (`shell.ts`, `commands.ts`, `geometry.ts`) with tests alongside; the `.tsx` files only render them.
 
 **Live:** https://primor.me
 

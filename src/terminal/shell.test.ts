@@ -161,6 +161,10 @@ describe("run", () => {
     expect(run("clear", ctx)).toEqual({ lines: [], clear: true });
   });
 
+  it("exit asks the shell to close", () => {
+    expect(run("exit", ctx)).toEqual({ lines: [], exit: true });
+  });
+
   it("sudo refuses politely", () => {
     expect(output("sudo rm -rf /")).toContain("not in the sudoers file");
   });
