@@ -14,6 +14,7 @@ function desk(): Desk {
       word: windowState(at(140)),
       term: windowState(at(150), "minimized"),
       hire: windowState(at(160), "closed"),
+      web: windowState(at(170), "closed"),
     },
     stack: ["photoshop", "jira", "canva", "word", "readme"],
     focused: "readme",

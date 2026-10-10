@@ -34,6 +34,7 @@ const GAP = 12;
 
 const README_SIZE: Size = { width: 560, height: 340 };
 const HIRE_SIZE: Size = { width: 480, height: 480 };
+const WEB_SIZE: Size = { width: 820, height: 600 };
 const PANEL_SIZE: Record<PanelId, Size> = {
   photoshop: { width: 320, height: 520 },
   jira: { width: 460, height: 380 },
@@ -104,6 +105,7 @@ export function initialDesk(desktop: Rect): Desk {
       ...panels,
       term: windowState(besideIcons(initialRect(desktop), desktop), "minimized"),
       hire: windowState(besideIcons(initialRect(desktop, HIRE_SIZE, 40), desktop), "closed"),
+      web: windowState(besideIcons(initialRect(desktop, WEB_SIZE, 70), desktop), "closed"),
     },
     // Lower windows first, so an upper window that overlaps one draws above it.
     stack: wide ? ["canva", "word", "photoshop", "jira", "readme"] : ["readme"],

@@ -4,8 +4,10 @@ import {
   experienceFileSchema,
   integrationsFileSchema,
   projectsFileSchema,
+  servicesFileSchema,
   skillsFileSchema,
   type ExperienceEntryYaml,
+  type ExperiencePluginYaml,
 } from "./schemas";
 
 function parseIsoDate(iso: string): Date {
@@ -104,3 +106,29 @@ const panelIds: readonly string[] = PANEL_IDS;
 export function isWindowed(integration: Integration): integration is WindowedIntegration {
   return integration.window !== undefined && panelIds.includes(integration.id);
 }
+export function parseServicesYaml(
+  raw: string,
+  plugins: readonly ExperiencePluginYaml[],
+) {
+  const file = servicesFileSchema.parse(parseYaml(raw));
+  const byName = new Map(plugins.map((plugin) => [plugin.name, plugin]));
+  return {
+    overview: file.overview,
+    process: file.process,
+    services: file.services.map((service) => ({
+      ...service,
+      shipped: service.shipped.map((name) => {
+        const plugin = byName.get(name);
+        if (!plugin) {
+          throw new Error(
+            `services.yaml: "${service.slug}" lists shipped plugin "${name}", which is not in experience.yaml`,
+          );
+        }
+        return plugin;
+      }),
+    })),
+  };
+}
+
+export type ServicesContent = ReturnType<typeof parseServicesYaml>;
+export type Service = ServicesContent["services"][number];

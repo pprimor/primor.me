@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { ZodError } from "zod";
 import { parse as parseYaml, stringify } from "yaml";
+import { ZodError } from "zod";
 import { PANEL_IDS } from "../../hosts/ids";
 import {
   parseExperienceYaml,
   parseIntegrationsYaml,
   parseProjectsYaml,
+  parseServicesYaml,
   parseSkillsYaml,
 } from "./parse";
 
@@ -81,6 +82,14 @@ describe("parseIntegrationsYaml", () => {
     expect([...windowed].sort()).toEqual([...PANEL_IDS].sort());
   });
 
+  it("links each host window, and InDesign, to a service page that exists", () => {
+    const integrations = parseIntegrationsYaml(readContent("integrations"), plugins);
+    const slugs = parseServicesYaml(readContent("services"), plugins).services.map((s) => s.slug);
+    const linked = integrations.filter((i) => i.service);
+    expect(linked.map((i) => i.id).sort()).toEqual([...PANEL_IDS, "indesign"].sort());
+    for (const i of linked) expect(slugs).toContain(i.service);
+  });
+
   it("rejects a plugin name experience.yaml doesn't have", () => {
     const entries = base();
     entries[0]!.plugin = "PageProof for Nothing";
@@ -106,5 +115,99 @@ describe("parseIntegrationsYaml", () => {
     const entries = base();
     delete entries.find((e) => e.id === "jira")!.window;
     expect(() => parseIntegrationsYaml(stringify(entries), plugins)).toThrow(ZodError);
+  });
+});
+
+const plugins = [
+  { name: "PageProof for Canva", url: "https://example.com/canva", description: "Canva app" },
+  { name: "PageProof for Jira", url: "https://example.com/jira" },
+];
+
+function validServicesFile() {
+  return {
+    overview: {
+      title: "Plugin & integration development",
+      metaTitle: "Plugin & Integration Developer · Pedro Primor",
+      metaDescription: "I build plugins and integrations for Adobe, Canva, Microsoft Office and Jira.",
+      pitch: "Pitch.",
+      also: [{ name: "QuarkXPress XTensions", description: "Native extensions." }],
+    },
+    process: ["Call", "Quote"],
+    services: [
+      {
+        slug: "canva-apps",
+        name: "Canva Apps",
+        title: "Canva app development",
+        metaTitle: "Canva App Developer · Pedro Primor",
+        metaDescription: "I build Canva Apps with React, TypeScript and the Canva Apps SDK for your product.",
+        summary: "Summary.",
+        pitch: "Pitch.",
+        shipped: ["PageProof for Canva"],
+        handles: ["App UI"],
+        faq: [{ q: "Q?", a: "A." }],
+      },
+    ],
+  };
+}
+
+describe("parseServicesYaml", () => {
+  it("parses production services.yaml against production plugins", () => {
+    const allPlugins = parseExperienceYaml(readContent("experience")).flatMap((e) => e.plugins ?? []);
+    const { services } = parseServicesYaml(readContent("services"), allPlugins);
+    expect(services.map((s) => s.slug)).toEqual([
+      "adobe-uxp-plugins",
+      "canva-apps",
+      "atlassian-forge-apps",
+      "office-add-ins",
+    ]);
+    const uxp = services[0]!;
+    expect(uxp.shipped.map((p) => p.name)).toEqual([
+      "PageProof for Adobe Photoshop",
+      "PageProof for Adobe InDesign",
+    ]);
+    expect(uxp.shipped[0]?.url).toMatch(/^https:\/\/exchange\.adobe\.com\//);
+  });
+
+  it("resolves shipped names to the full plugin record", () => {
+    const { services } = parseServicesYaml(stringify(validServicesFile()), plugins);
+    expect(services[0]?.shipped).toEqual([plugins[0]]);
+  });
+
+  it("rejects a shipped plugin missing from experience.yaml, naming both", () => {
+    const file = validServicesFile();
+    file.services[0]!.shipped = ["PageProof for Nothing"];
+    expect(() => parseServicesYaml(stringify(file), plugins)).toThrow(
+      /canva-apps.*PageProof for Nothing/,
+    );
+  });
+
+  it("rejects duplicate slugs", () => {
+    const file = validServicesFile();
+    file.services.push({ ...file.services[0]! });
+    expect(() => parseServicesYaml(stringify(file), plugins)).toThrow(/Duplicate slug.*canva-apps/);
+  });
+
+  it("rejects a metaDescription over 160 characters", () => {
+    const file = validServicesFile();
+    file.services[0]!.metaDescription = "x".repeat(161);
+    expect(() => parseServicesYaml(stringify(file), plugins)).toThrow(ZodError);
+  });
+
+  it("rejects a metaTitle over 60 characters", () => {
+    const file = validServicesFile();
+    file.services[0]!.metaTitle = "x".repeat(61);
+    expect(() => parseServicesYaml(stringify(file), plugins)).toThrow(ZodError);
+  });
+
+  it("rejects a non-kebab-case slug", () => {
+    const file = validServicesFile();
+    file.services[0]!.slug = "Canva Apps";
+    expect(() => parseServicesYaml(stringify(file), plugins)).toThrow(ZodError);
+  });
+
+  it("rejects a service with no FAQ", () => {
+    const file = validServicesFile();
+    file.services[0]!.faq = [];
+    expect(() => parseServicesYaml(stringify(file), plugins)).toThrow(ZodError);
   });
 });

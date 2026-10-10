@@ -297,4 +297,50 @@ describe("onRequestPost", () => {
     );
     expect(payload.html).not.toContain("<script>");
   });
+
+  async function sentPayload(service: unknown) {
+    const fetchMock = mockFetch();
+    const response = await postContact({
+      turnstileToken: TURNSTILE_TEST_TOKEN,
+      senderEmail: "user@example.com",
+      message: "Hello",
+      service,
+    });
+    expect(response.status).toBe(200);
+    const resendCall = fetchMock.mock.calls.find(([url]) => url === RESEND_URL);
+    return JSON.parse(String(resendCall?.[1]?.body)) as { subject: string; html: string };
+  }
+
+  it("puts the service in the subject and the email body", async () => {
+    const payload = await sentPayload("Adobe UXP plugins");
+    expect(payload.subject).toBe("New inquiry: Adobe UXP plugins");
+    expect(payload.html).toContain("Adobe UXP plugins");
+  });
+
+  it("keeps the default subject when no service is sent", async () => {
+    const payload = await sentPayload(undefined);
+    expect(payload.subject).toBe("Contact from primor.me");
+  });
+
+  it("ignores a service over 64 characters", async () => {
+    const payload = await sentPayload("x".repeat(65));
+    expect(payload.subject).toBe("Contact from primor.me");
+    expect(payload.html).not.toContain("x".repeat(65));
+  });
+
+  it("collapses newlines in the service before it reaches the subject", async () => {
+    const payload = await sentPayload("Canva\r\nBcc: evil@example.com");
+    expect(payload.subject).toBe("New inquiry: Canva Bcc: evil@example.com");
+    expect(payload.subject).not.toMatch(/[\r\n]/);
+  });
+
+  it("strips control and bidi format characters from the service", async () => {
+    const payload = await sentPayload("Canva\u0000\u001b\u202e Apps\u0085");
+    expect(payload.subject).toBe("New inquiry: Canva Apps");
+  });
+
+  it("ignores a non-string service", async () => {
+    const payload = await sentPayload({ name: "Canva" });
+    expect(payload.subject).toBe("Contact from primor.me");
+  });
 });

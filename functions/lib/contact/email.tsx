@@ -13,11 +13,13 @@ import {
 type ContactEmailProps = {
   senderEmail: string;
   message: string;
+  service?: string | null;
 };
 
 export default function ContactEmail({
   senderEmail,
   message,
+  service,
 }: ContactEmailProps) {
   return (
     <Html lang="en">
@@ -40,6 +42,11 @@ export default function ContactEmail({
             <Text>
               <strong>From:</strong> {senderEmail}
             </Text>
+            {service && (
+              <Text>
+                <strong>Service:</strong> {service}
+              </Text>
+            )}
             <Hr />
             <Text style={{ whiteSpace: "pre-wrap" }}>{message}</Text>
           </Section>

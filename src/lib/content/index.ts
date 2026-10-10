@@ -2,6 +2,7 @@ import {
   parseExperienceYaml,
   parseIntegrationsYaml,
   parseProjectsYaml,
+  parseServicesYaml,
   parseSkillsYaml,
 } from "./parse";
 
@@ -27,8 +28,21 @@ export const integrations = parseIntegrationsYaml(
   getContentYaml("integrations"),
   experienceData.flatMap((entry) => entry.plugins ?? []),
 );
+export const services = parseServicesYaml(
+  getContentYaml("services"),
+  experienceData.flatMap((entry) => entry.plugins ?? []),
+);
 
 export { isWindowed } from "./parse";
 
-export type { Project, ExperienceEntry, SkillCategory, Skills, Integration, WindowedIntegration } from "./parse";
+export type {
+  Project,
+  ExperienceEntry,
+  SkillCategory,
+  Skills,
+  Integration,
+  WindowedIntegration,
+  Service,
+  ServicesContent,
+} from "./parse";
 export type { ProjectYaml, ExperienceEntryYaml, SkillsFileYaml } from "./schemas";

@@ -31,6 +31,7 @@ describe("initialDesk", () => {
     for (const id of PANEL_IDS) expect(d.windows[id].mode).toBe("normal");
     expect(d.windows.term.mode).toBe("minimized");
     expect(d.windows.hire.mode).toBe("closed");
+    expect(d.windows.web.mode).toBe("closed");
   });
 
   for (const [w, h] of [[1280, 600], [1366, 657], [1280, 720], [1440, 900], [2560, 1440]] as const) {
@@ -54,7 +55,8 @@ describe("initialDesk", () => {
   });
 
   it("the desktop icons fit one column on a short laptop viewport", () => {
-    const icons = 2 + integrations.filter((i) => !isWindowed(i) && i.desktopIcon).length;
+    // Hire me, Services and Terminal, then the windowless integrations.
+    const icons = 3 + integrations.filter((i) => !isWindowed(i) && i.desktopIcon).length;
     expect(icons).toBeLessThanOrEqual(iconRows(screen(1280, 600)));
   });
 

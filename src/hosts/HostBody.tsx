@@ -1,11 +1,19 @@
 import type { WindowedIntegration } from "../lib/data";
+import { openInDesktop } from "../lib/link-intercept";
+import { servicePath } from "../lib/service-paths";
 import { panels } from "./panels";
 import { themes, themeStyle } from "./themes";
 
 const linkClass = "shrink-0 text-[#000080] underline hover:text-[#1084d0]";
 
 /** A host window's inside: the themed mock panel, then an X11 status bar with the real links. */
-export default function HostBody({ integration }: { integration: WindowedIntegration }) {
+type HostBodyProps = {
+  integration: WindowedIntegration;
+  /** Shows a same-site page in the desktop browser window. */
+  onOpenPath?: (path: string) => void;
+};
+
+export default function HostBody({ integration, onOpenPath }: HostBodyProps) {
   const Panel = panels[integration.id];
   return (
     <div className="flex h-full flex-col">
@@ -21,7 +29,11 @@ export default function HostBody({ integration }: { integration: WindowedIntegra
           {integration.listing.label} ↗
         </a>
         {integration.service && (
-          <a href={`/services/${integration.service}/`} className={linkClass}>
+          <a
+            href={servicePath(integration.service)}
+            className={linkClass}
+            onClick={openInDesktop(onOpenPath, servicePath(integration.service))}
+          >
             Service page →
           </a>
         )}

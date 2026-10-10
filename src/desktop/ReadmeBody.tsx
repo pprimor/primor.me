@@ -1,11 +1,19 @@
 import { integrations } from "../lib/data";
+import { openInDesktop } from "../lib/link-intercept";
+import { SERVICES_PATH } from "../lib/service-paths";
 import { siteMetadata } from "../lib/site-metadata";
 
 const hosts = integrations.map((i) => i.host).join(" · ");
 const hasServices = integrations.some((i) => i.service);
 const linkButton = "x11-button inline-flex h-7 items-center px-3.5 font-normal no-underline";
 
-export default function ReadmeBody({ onHire }: { onHire: () => void }) {
+type ReadmeBodyProps = {
+  onHire: () => void;
+  /** Shows a same-site page in the desktop browser window. */
+  onOpenPath?: (path: string) => void;
+};
+
+export default function ReadmeBody({ onHire, onOpenPath }: ReadmeBodyProps) {
   return (
     <div className="flex h-full flex-col gap-2.5 overflow-y-auto bg-white px-4 py-3 font-ui text-black">
       <p className="m-0 text-lg font-bold">{siteMetadata.author} — integrations engineer</p>
@@ -19,7 +27,7 @@ export default function ReadmeBody({ onHire }: { onHire: () => void }) {
           Hire me
         </button>
         {hasServices && (
-          <a href="/services/" className={linkButton}>
+          <a href={SERVICES_PATH} className={linkButton} onClick={openInDesktop(onOpenPath, SERVICES_PATH)}>
             Services
           </a>
         )}

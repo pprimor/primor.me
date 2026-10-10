@@ -1,6 +1,6 @@
 import { siteMetadata } from "../lib/site-metadata";
 
-export type ContactFields = { senderEmail: string; message: string; company?: string };
+export type ContactFields = { senderEmail: string; message: string; company?: string; service?: string };
 export type ContactErrors = Partial<Record<"senderEmail" | "message", string>>;
 export type SubmitResult = { ok: true } | { ok: false; error: string };
 

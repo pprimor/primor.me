@@ -1,4 +1,4 @@
-export { projects, experienceData, skills, integrations, isWindowed } from "./content";
+export { projects, experienceData, skills, integrations, isWindowed, services } from "./content";
 
 export type {
   Project,
@@ -7,4 +7,6 @@ export type {
   Skills,
   Integration,
   WindowedIntegration,
+  Service,
+  ServicesContent,
 } from "./content";
