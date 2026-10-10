@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "dev:full": "wrangler pages dev --proxy 5173",
-    "build": "vite build",
+    "build": "vite build && vite build --ssr src/services/render.tsx --outDir dist-ssr && node scripts/prerender-services.mjs",
     "preview": "vite preview",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",

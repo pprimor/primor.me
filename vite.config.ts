@@ -2,6 +2,7 @@ import { defineConfig, loadEnv, type HtmlTagDescriptor, type Plugin } from 'vite
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import { analyticsTag, buildHeadTags, homePageMeta, type HeadTag } from './src/lib/head-tags';
+import { servicePagesPlugin } from './src/lib/service-pages-plugin';
 import { siteMetadata } from './src/lib/site-metadata';
 
 const notFoundTitle = `Page not found — ${siteMetadata.author}`;
@@ -37,17 +38,19 @@ function siteMetaPlugin(mode: string): Plugin {
 }
 
 export default defineConfig(({ mode }) => ({
-  plugins: [react(), siteMetaPlugin(mode)],
+  plugins: [react(), siteMetaPlugin(mode), servicePagesPlugin()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './'),
     },
   },
   build: {
+    manifest: true,
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, 'index.html'),
         notFound: path.resolve(__dirname, '404.html'),
+        servicesIsland: path.resolve(__dirname, 'src/services/island.tsx'),
       },
       output: {
         manualChunks(id) {
